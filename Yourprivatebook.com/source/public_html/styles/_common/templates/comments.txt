@@ -1,0 +1,6 @@
+<h1>Comments </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+#%comments%#
+<tr><td align="left"><a href="#a_enter_comment" onclick="show_hide_div_id(0,'comments_show_box#%what%##%n%#'); show_hide_div_id(1,'enter_comment_box#%what%##%n%#');">Enter comment</a></td></tr>
+</table>
+

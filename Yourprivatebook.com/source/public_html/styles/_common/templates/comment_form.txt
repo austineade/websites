@@ -1,0 +1,28 @@
+
+#%info%#
+
+<div id="enter_comment_wait#%n%#" name="enter_comment_wait#%n%#"></div>
+
+<form method="post" id="enter_comment_form#%n%#" name="enter_comment_form#%n%#" action="javascript:parse_ajax_request(document.getElementById('enter_comment_form#%n%#'),'#%site_url%#/comments.php','enter_comment_box#%n%#');">
+<input type="hidden" name="action" value="comment_entered">
+<input type="hidden" name="what" value="">
+<input type="hidden" name="n" value="#%n%#">
+
+<h1>Enter Your Comment </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr>
+<td nowrap align="left" valign="top" style="width:200px;">Your Comment </td>
+<td align="left"><textarea class="form-control" name="comment" rows="15" style="height:300px;">#%comment%#</textarea></td>
+</tr>
+#%field_name%#
+#%field_email%#
+#%field_captcha_test%#
+<tr>
+ <td align="center" colspan=2><input type="submit" value="Submit" name="B1" class="btn btn-primary" onclick="show_waiting('enter_comment_wait#%n%#');"></td>
+</tr>
+</table>
+
+</form>
+
+
+

@@ -1,0 +1,73 @@
+
+
+
+
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <a onMouseover="window.status='Previous page'; return true" onMouseout="window.status=' '; return true" href="javascript: history.go(-1)">Previous Page</a> &raquo; <h1>Join Now</h1>
+</div>
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+#%info%#
+
+<div class="well">
+<h1>Reasons To Join </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr><td align="left">
+If you are not registered, you can create a classified ad but registered users have these advantages:<br>
+<ul>
+<li>Registration is FREE;</li>
+<li>You can add extra features to your classified ads. You can mark your classifieds by Bold font, Highlight them, add more pictures and files, add the classifieds to our Home page etc.;</li>
+<li>Your contact info can be entered automatically to the form to enter new classified ads;</li>
+<li>Your can edit your classified ads later on;</li>
+<li>Registered users can choose their own default style of our pages.</li>
+</ul>
+</td></tr></table>
+</div>
+
+
+
+<form action="#%site_url%#/user.php" method="post">
+<input type="hidden" name="action" value="user_joined">
+<div class="well">
+<h1>Join Now </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+#%field_email%#
+<tr>
+<td nowrap align="left">Password * </td>
+<td align="left"><input class="form-control" maxlength="15" name="password" value="#%password%#"></td>
+</tr>
+#%field_name%#
+#%field_nick%#
+#%field_company%#
+#%field_address1%#
+#%field_address2%#
+#%field_address3%#
+#%field_country%#
+#%field_phone1%#
+#%field_phone2%#
+#%field_site_info%#
+#%field_detail%#
+#%field_styles%#
+#%field_newsletters%#
+#%field_captcha_test%#
+#%field_terms%#
+<tr><td align="center" colspan=3><input type="submit" value="Submit" name="B1" class="btn btn-primary"></td></tr>
+</table>
+</div>
+
+
+</form>
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

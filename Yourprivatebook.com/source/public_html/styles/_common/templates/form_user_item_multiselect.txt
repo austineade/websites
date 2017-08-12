@@ -1,0 +1,6 @@
+<tr>
+<td nowrap align="left" valign="top" style="width:200px;">#%description%# </td>
+<td nowrap align="left"><select class="form-control" style="height:200px;" name="user_item_#%n%#[]" size="10" multiple class="form-control">#%options%#</select></td>
+</tr>
+
+

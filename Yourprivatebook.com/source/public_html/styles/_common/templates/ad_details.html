@@ -1,0 +1,165 @@
+
+
+
+
+  
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <a onMouseover="window.status='Previous page'; return true" onMouseout="window.status=' '; return true" href="javascript: history.go(-1)">Previous Page</a> &raquo; <h1>Classified Ad Details</h1>
+</div>
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+#%info%#
+
+
+
+
+
+
+
+
+
+
+
+<a name="item_top"></a>
+
+<h1 id="tabs" class="page-header">#%title%#</h1>
+
+<div class="well">
+<ul id="myTab" class="nav nav-tabs" role="tablist">
+
+<li class="active"><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_1');">Basic Info</a></li>
+#%hide_videos_begin%#<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_2');">Video</a></li>#%hide_videos_end%#
+#%hide_files_begin%#<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_3');">Files</a></li>#%hide_files_end%#
+<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_4');">Comments</a></li>
+<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_5');">Info&nbsp;&&nbsp;Links</a></li>
+<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_6');">Tell friend</a></li>
+<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_7');">Report abuse</a></li>
+<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_8');">Contact</a></li>
+#%hide_owner_begin%#<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_9');">Owner</a></li>#%hide_owner_end%#
+#%hide_for_no_user_begin%#<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_10');">Private</a></li>#%hide_for_no_user_end%#
+</ul>
+<div id="myTabContent" class="tab-content">
+
+
+<div id="div_details_1" style="display:block;">
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr><td align="left" valign="top" colspan="2"><b>#%description%#</b><br /></td></tr>
+#%hide_phones_begin%#<tr><td align="left" valign="top" colspan="2">Phones: #%phones%#</td></tr>#%hide_phones_end%#
+#%hide_usit_begin%#<tr><td align="left" valign="top" colspan="2">#%user_defined%#</td></tr>#%hide_usit_end%#
+#%hide_tags_begin%#<tr><td align="left" valign="top" colspan="2"><span class="text_bold">Tags:</span> #%tags%#</td></tr>#%hide_tags_end%#
+#%hide_price_begin%#<tr><td align="left" valign="top" colspan="2"><span class="text_bold">Price: #%currency%##%price%#</span></td></tr>#%hide_price_end%#
+#%hide_ad_type_begin%#<tr><td align="left" valign="top" colspan="2"><span class="text_bold">Ad type: #%ad_type%#</span></td></tr>#%hide_ad_type_end%#
+#%hide_paypal_button_begin%#<td align="center" nowrap" colspan="2">#%paypal_button%#</td></tr>#%hide_paypal_button_end%#
+<tr><td align="left" valign="top" colspan="2">#%detail%#<br /></td></tr>
+<tr>
+<td align="left" valign="top"><img border="0" src="#%site_url%#/images/pdf.gif">&nbsp;<a href="#%site_url%#/pdf.php?what=l&amp;n=#%n%#" target="_blank">PDF</a></td>
+#%hide_url_begin%#<td align="left" valign="top"><img border="0" src="#%site_url%#/images/icon_related_url.png">&nbsp;<a target="_blank" href="#%url%#">Related site</a></td>#%hide_url_end%#
+</tr>
+<tr><td align="left" valign="top" colspan="5"><div style="float:left;padding:5px;">Bookmark and share this classified: </div> #%share_it%#</td></tr>
+<tr><td align="center" valign="top" colspan="2">
+#%pictures_gallery%#
+</td></tr>
+#%hide_map_begin%#
+<tr><td align="center" valign="top" colspan="2">
+<iframe marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no" style="width:100%; height:570px; border:0px;" frameborder="0" src="#%site_url%#/map.php?ad=#%map_n%#"></iframe>
+</td></tr>
+#%hide_map_end%#
+</table>
+</div>
+
+<div id="div_details_2" style="display:none;">
+<h1>Video</h1>
+#%all_videos%#
+</div>
+
+<div id="div_details_3" style="display:none;">
+<h1>Attached Files</h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+#%all_files%#
+</table>
+</div>
+
+<div id="div_details_4" style="display:none;">
+<div id="comments_show_box#%n%#">
+#%show_comments%#
+</div>
+<div id="enter_comment_box#%n%#" style="display:none;">
+#%enter_comment_box%#
+<div style="padding:10px;"><a href="#a_comments_show" onclick="javascript:parse_ajax_request(document.getElementById('comments_show_form#%n%#'),'#%site_url%#/comments.php?n=#%n%#','comments_show_box#%n%#'); check_show_hide_div('comments_show_box#%n%#'); show_hide_div_id(0,'enter_comment_box#%n%#');">Show comments</a></div>
+</div>
+</div>
+
+<div id="div_details_5" style="display:none;">
+<h1>Info & Links</h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr><td>Created: #%created%# #%hide_updated_begin%#:: Updated: #%updated%# :: #%hide_updated_end%# :: Total clicks: #%clicks%#</td></tr>
+<tr><td><span class="text_bold">Categories & Areas</span></td></tr>
+<tr><td>#%categories_incl%#</td></tr>
+<tr><td>#%areas_incl%#</td></tr>
+</table>
+</div>
+
+<div id="div_details_6" style="display:none;">
+<div id="tell_friend_box#%n%#">
+#%tell_friend_box%#
+</div>
+</div>
+
+<div id="div_details_7" style="display:none;">
+<div id="report_box#%n%#">
+#%report_box%#
+</div>
+</div>
+
+<div id="div_details_8" style="display:none;">
+<div id="contact_boxa#%n%#">
+#%contact_box%#
+</div>
+</div>
+
+
+<div id="div_details_9" style="display:none;">
+<h1>Owner</h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+#%hide_owner_begin%#
+<tr><td align="left" colspan="5">
+<img alt="#%user_nick%#" src="#%user_picture%#" border="0" style="float: left; margin: 3px 5px 0px 3px; border: 1px solid #666; padding: 2px;"> 
+#%user_nick%#
+Rating: #%user_rating%# #%user_rateicon%# (#%user_votes%# votes)<br>
+<br><a href="#%owner_url%#">Show profile, rating and all ads of this user</a>
+</td></tr>
+#%hide_owner_end%#
+#%hide_owner_items_begin%#
+<tr><td align="left" colspan="5"><span class="text_bold">Latest Classifieds Owned by This User&nbsp;</span></td></tr>
+#%owner_items%#
+#%hide_owner_items_end%#
+</table>
+</div>
+
+<div id="div_details_10" style="display:none;">
+<div id="notes_edit_boxad#%n%#">
+#%notes_edit_box%#
+</div>
+<br>#%add_delete_favorites%#
+</div>
+
+
+</div>
+</div>
+
+#%edit_link%#
+
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

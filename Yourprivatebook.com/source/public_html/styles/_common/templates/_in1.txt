@@ -1,0 +1,55 @@
+<div class="left_right_main">
+
+<div class="well">
+<div class="panel">
+<div class="panel-footer">SKIP TO</div>
+<div class="left_right_inside" style="text-align:center;">
+<form method="get" action="#%site_url%#/">
+<p style="text-align:center;"><select class="form-control" name="c" style="width:100%;">#%first_cats_select%#</select></p>
+<p style="text-align:center;"><select class="form-control" name="a" style="width:100%;">#%first_areas_select%#</select></p>
+<p style="text-align:center;"><input type="submit" value="Go" name="B1" class="btn btn-primary"></p>
+</form>
+</div>
+</div>
+</div>
+
+#_hide_offer_wanted_begin_#
+<div class="well">
+<div class="panel">
+<div class="panel-footer">NAVIGATION</div>
+<div class="left_right_inside">
+#_offer_wanted_#
+</div>
+</div>
+</div>
+#_hide_offer_wanted_end_#
+
+#%banner_code_left%#
+
+#_hide_categories_begin_#
+<div class="well">
+<div class="panel">
+<div class="panel-footer">Categories</div>
+<div class="left_right_inside">
+<p><img alt="" src="#%site_url%#/images/icon_folder_main.png" style="margin-bottom:-3px;">&nbsp;<a class="link10" href="#_url_all_categories_#">#_ALL_CATEGORIES_#</a></p>
+#_categories_#
+</div>
+</div>
+</div>
+#_hide_categories_end_#
+
+#_hide_areas_begin_#
+<div class="well">
+<div class="panel">
+<div class="panel-footer">Areas</div>
+<div class="left_right_inside">
+<p #_hide_all_areas_#><img alt="" src="#%site_url%#/images/icon_folder_main.png" style="margin-bottom:-3px;">&nbsp;<a class="link10" href="#_url_all_areas_#">#_ALL_AREAS_#</a></p>
+#_areas_#
+</div>
+</div>
+</div>
+#_hide_areas_end_#
+
+#_qrimage_#
+
+</div>

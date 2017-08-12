@@ -1,0 +1,39 @@
+<div class="left_right_main">
+
+
+
+<div class="well">
+<div class="panel">
+<div class="panel-footer"><img alt="" src="#%site_url%#/images/icon_top_tags.gif" style="margin-bottom:-3px;">&nbsp;&nbsp;Top Tags</div>
+<div class="left_right_inside">
+<div style="overflow:hidden;width:100%;padding:5px;">
+#%top_tags%#
+</div>
+</div>
+</div>
+</div>
+
+<a name="poll"></a>
+<div id="poll_results"></div>
+<div id="poll_show"><script type="text/javascript" language="javascript" src="#%site_url%#/poll.php"></script></div>
+
+<div class="well">
+<div class="panel">
+<div class="panel-footer">RSS Feeds</div>
+<div class="left_right_inside">
+<p><a href="#%site_url%#/rss.php?action=videos_new"><img alt="" border="0" src="#%site_url%#/images/rss.gif"><a href="#%site_url%#/rss.php?action=new">New classifieds</a></p>
+<p><a href="#%site_url%#/rss.php?action=videos_new"><img alt="" border="0" src="#%site_url%#/images/rss.gif"><a href="#%site_url%#/rss.php?action=popular">Popular classifieds</a></p>
+<p><a href="#%site_url%#/rss.php?action=videos_new"><img alt="" border="0" src="#%site_url%#/images/rss.gif"><a href="#%site_url%#/rss.php?action=most_comments">Most comments</a></p>
+<p><a href="#%site_url%#/rss.php?action=videos_new"><img alt="" border="0" src="#%site_url%#/images/rss.gif"><a href="#%site_url%#/rss.php?action=featured">Featured classifieds</a></p>
+#_hide_rss_category_begin_#
+<p><a href="#%site_url%#/rss.php?action=videos_new"><img alt="" border="0" src="#%site_url%#/images/rss.gif"><a href="#_rss_category_url_#">#_rss_category_info_#</a></p>
+#_hide_rss_category_end_#
+</div>
+</div>
+</div>
+
+#%banner_code_right%#
+
+</div>
+
+

@@ -1,0 +1,27 @@
+
+</div>
+</div>
+
+<div id="complete_footer" style="display:#%show_complete_footer%#">
+
+<div id="footer">
+<div class="panel-footer">
+<div class="container">
+<a href="#%site_url%#/">Home</a>
+<a href="#%site_url%#/contact.php">Contact</a>
+<a href="#%site_url%#/search.php">Search</a>
+</div>
+<div class="container">
+Copyright &copy; #%site_name%# #%current_year%#
+</div>
+</div>
+</div>
+
+<ul class="nav pull-right scroll-top">
+  <li><a href="#" title="Scroll to top"><i class="glyphicon glyphicon-chevron-up"></i></a></li>
+</ul>
+
+</div>
+    
+</body></html>
+

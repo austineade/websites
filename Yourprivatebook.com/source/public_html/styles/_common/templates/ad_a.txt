@@ -1,0 +1,29 @@
+
+<div class="item_listing" id="item_#%n%#" style="#%item_style%#">
+<div class="panel" style="margin-bottom:10px;">
+
+<div class="panel-footer" style="#%icons%#">
+<a href="#%item_details_url%#" style="#%title_style%#">#%title%#</a>
+</div>
+
+<div class="item_left">
+<a href="#%item_details_url%#"><img border="0" alt="#%title_no_tag%#" src="#%picture%#" style="float: left; margin: 0px 5px 0px 0px;"></a>
+#%description%#<br />
+</div>
+
+<div class="item_right hidden-xs hidden-sm">
+<p><img border="0" src="#%site_url%#/images/icon_details_show.png"> <a href="#%item_details_url%#">Details</a></p>
+<p><img border="0" src="#%site_url%#/images/icon_tag.gif"> #%date_created%#</p>
+#%hide_ad_type_begin%#<p><b>Type: #%ad_type%#</b></p>#%hide_ad_type_end%#
+#%hide_price_begin%#<p><img border="0" src="#%site_url%#/images/icon_money.png"> #%price%#</p>#%hide_price_end%#
+#%hide_for_no_user_begin%#
+<p><img border="0" src="#%site_url%#/images/icon_favorites.gif">#%add_delete_favorites%#</p>
+#%hide_for_no_user_end%#
+</div>
+
+<div style="clear: both;"></div>
+
+</div>
+</div>
+
+

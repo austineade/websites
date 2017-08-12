@@ -1,0 +1,7 @@
+<div style="padding:10px;">
+
+#%text%#<br />
+Comment by #%name%# &nbsp; &nbsp; 
+Date: #%date%#
+</div>
+

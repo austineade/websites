@@ -1,0 +1,95 @@
+
+
+
+
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <h1>User #%nick%#</h1>
+</div>
+
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+
+
+<h1 id="tabs" class="page-header">User #%nick%#</h1>
+
+<div class="well">
+<ul id="myTab" class="nav nav-tabs" role="tablist">
+
+<li class="active"><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_1');">User Info</a></li>
+<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_2');">Pictures</a></li>
+<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_3');">Classifieds</a></li>
+<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_4');">Contact</a></li>
+<li><a href="#" role="tab" data-toggle="tab" onClick="javascript:show_submenu('div_details_5');">Rating</a></li>
+</ul>
+<div id="myTabContent" class="tab-content">
+
+
+<div id="div_details_1" style="display:block;">
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr>
+<td nowrap align="left" valign="top" width="200">Member since </td>
+<td nowrap align="left" valign="top">#%joined%#</td>
+</tr>
+<tr>
+<td nowrap align="left" valign="top">Article </td>
+<td align="left" valign="top">#%detail%#</td>
+</tr>
+<tr>
+<td nowrap align="left" valign="top">Site </td>
+<td align="left" valign="top"><a href="#%url%#" target="_blank">#%site_title%#</a>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="left" valign="top">Rating </td>
+<td align="left" valign="top">Rating: #%rating%# #%rateicon%# (#%votes%# votes) <a href="javascript:show_submenu('div_details_5');">Rate this user</a>&nbsp;</td>
+</tr>
+</table>
+</div>
+
+
+<div id="div_details_2" style="display:none;">
+#%pictures_gallery%#
+</div>
+
+
+<div id="div_details_3" style="display:none;">
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr><td align="left">
+<table cellspacing="0" cellpadding="0" border=0 width="100%" class="table_items">#%classifieds%#</table>
+</td></tr>
+</table>
+</div>
+
+
+<div id="div_details_4" style="display:none;">
+<div id="contact_boxu#%n%#">
+#%contact_box%#
+</div>
+</div>
+</div>
+
+
+<div id="div_details_5" style="display:none;">
+<span name="rate_results" id="rate_results"></span>
+<span name="ratings_table" id="ratings_table"><script type="text/javascript" language="javascript" src="#%site_url%#/rate.php?what=u&amp;n=#%n%#"></script></span>
+</div>
+
+
+
+</div>
+
+
+
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

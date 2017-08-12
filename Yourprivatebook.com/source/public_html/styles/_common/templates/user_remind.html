@@ -1,0 +1,41 @@
+
+
+
+
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <a onMouseover="window.status='Previous page'; return true" onMouseout="window.status=' '; return true" href="javascript: history.go(-1)">Previous Page</a> &raquo; <h1>Reminder</h1>
+</div>
+
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+
+#%info%#
+
+<form action="#%site_url%#/user.php" method="post">
+<input type="hidden" name="action" value="user_reminded">
+
+<div class="well">
+<h1>Reminder </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr><td align="center">Please enter your email to the form below. Your password will be sent to this email.</td></tr>
+<tr><td align="center"><input class="form-control" maxlength="100"  name="email"></td></tr>
+<tr><td align="center" colspan=3><input type="submit" value="Submit" name="B1" class="btn btn-primary"></td></tr>
+</table>
+</div>
+
+
+</form>
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

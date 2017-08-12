@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="#%charset%#">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="content-type" content="text/html; charset=#%charset%#">
+<title>#%meta_title%#</title>
+<meta name="description" content="#%meta_description%#">
+<meta name="keywords" content="#%meta_keywords%#">
+<LINK href="#%site_url%#/styles/#%css_style%#/bootstrap.css" rel="StyleSheet">
+#%head_pagination%#
+<script type="text/javascript" src="#%site_url%#/files/javascripts.js"></script>
+<script type="text/javascript">
+var site_url = "#%site_url%#";
+image1 = new Image();
+image1.src = "#%site_url%#/images/waiting.gif";
+</script>
+<LINK href="#%site_url%#/files/shared.css" rel=StyleSheet>
+<script src="#%site_url%#/files/jquery.min.js"></script>
+<script src="#%site_url%#/files/bootstrap.min.js"></script>
+<script src="#%site_url%#/files/tab.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+/* affix the navbar after scroll below header */
+$('#nav').affix({
+      offset: {
+        top: $('header').height()-$('#nav').height()
+      }
+});	
+/* highlight the top nav as scrolling occurs */
+$('body').scrollspy({ target: '#nav' })
+/* smooth scrolling for scroll to top */
+$('.scroll-top').click(function(){
+  $('body,html').animate({scrollTop:0},1000);
+})
+/* smooth scrolling for nav sections */
+/*
+$('#nav .navbar-nav li>a').click(function(){
+  var link = $(this).attr('href');
+  var posi = $(link).offset().top+20;
+  $('body,html').animate({scrollTop:posi},700);
+})*/
+});
+</script>
+<link href="http://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<a name="page_top"></a>
+
+<div id="wrap">
+
+<div id="complete_header" style="display:#%show_complete_header%#">
+
+<header class="masthead">
+<div class="container">
+<div class="row">
+<div class="col-sm-12">
+<a class="navbar-brand" href="#%site_url%#/" style="padding:1px;line-height:100px;height:150px;font-family:'Poiret One';font-size:40px;"><img src="#%logo_url%#" border=0 style="float:left;padding-top:7px;padding-right:10px;"></a>
+<div style="float:right;padding:20px;">
+#%in3%#
+</div>
+</div>
+</div>
+</div>
+</header>
+  
+
+
+<div class="navbar navbar-default navbar-static-top" id="nav">
+<div class="container">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+</div>
+<div class="collapse navbar-collapse">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="#%site_url%#/images/menu/home.png" style="padding:5px;" border="0"><span class="hidden-md hidden-sm">Site Info </span><b class="caret"></b></a>
+<ul class="dropdown-menu">
+	<li><a href="#" style="cursor:text;">We have #%t_cats%# categories</a></li>
+	<li><a href="#" style="cursor:text;">We have #%t_areas%# areas</a></li>
+	<li><a href="#" style="cursor:text;">There are #%active_ads%# active ads</a></li>
+	<li><a href="#" style="cursor:text;">#%online%# users are online</a></li>
+</ul>
+</li>
+
+<li class="dropdown">
+<a href="#" data-toggle="modal" data-target="#searchModal"><img src="#%site_url%#/images/menu/search.png" style="padding:5px;" style="margin-bottom:3px;" border="0"><span class="hidden-md hidden-sm">Search</span></a>
+</li>
+
+<li class="dropdown hidden-sm">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="#%site_url%#/images/menu/categories.gif" style="padding:5px;" border="0">Categories <b class="caret"></b></a>
+<ul class="dropdown-menu">
+#%menu_categories%#
+</ul>
+</li>
+
+<li class="dropdown hidden-sm">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="#%site_url%#/images/menu/disk.gif" style="padding:5px;" border="0">Areas <b class="caret"></b></a>
+<ul class="dropdown-menu">
+#%menu_areas%#
+</ul>
+</li>
+
+<li><a href="#%site_url%#/user.php?action=ad_create" class="dropdown-toggle"><img src="#%site_url%#/images/menu/classifieds_submit.png" style="padding:5px;" border="0">Place a FREE ad</a></li>
+
+
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="#%site_url%#/images/menu/site_features.gif" style="padding:5px;" border="0"><span class="hidden-md hidden-sm">Site features </span><b class="caret"></b></a>
+<ul class="dropdown-menu">
+	<li><a href="#%site_url%#/tell_friend.php">Tell Friend</a></li>
+	<li><a href="#%site_url%#/board.php">Message board</a></li>
+	<li><a href="#%site_url%#/search.php">Advanced search</a></li>
+	<li><a href="#%site_url%#/contact.php">Contact us</a></li>
+</ul>
+</li>
+
+<li class="dropdown hidden-xs hidden-sm hidden-md" #%hide_div_user%##%hide_div_static%#>
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="#%site_url%#/images/menu/colors.png" style="padding:5px;" border="0">Colors <b class="caret"></b></a>
+<ul class="dropdown-menu">
+#%menu_styles%#
+</ul>
+</li>
+</ul>
+
+<ul class="nav navbar-nav navbar-right" #%hide_div_no_user%#>
+<li style="float:right">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="#%site_url%#/images/menu/users.gif" style="padding:5px;" border="0"><span class="hidden-md hidden-sm">Account </span><b class="caret"></b></a>
+<ul class="dropdown-menu">
+	<li><a href="#%site_url%#/user.php">Home</a></li>
+	<li><a href="#%site_url%#/user.php?action=user_edit">Update profile</a></li>
+	<li><a href="#%site_url%#/user.php?action=ad_create">New classified ad</a></li>
+	<li><a href="#%site_url%#/user.php?action=show_classifieds">Your classifieds</a></li>
+	<li><a href="#%site_url%#/user.php?action=orders">Your orders</a></li>
+	<li><a href="#%site_url%#/user.php?action=user_favorites">Your favorites</a></li>
+	<li><a href="#%site_url%#/user.php?action=user_log_off">Log off</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+<ul class="nav navbar-nav navbar-right" #%hide_div_user%#>
+<li style="float:right">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="float:right"><img src="#%site_url%#/images/menu/user_login.gif" style="padding:5px;" border="0"><span class="hidden-md hidden-sm">Account</span></a>
+<ul class="dropdown-menu">
+	<li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
+	<li><a href="#%site_url%#/user.php?action=user_join">Join</a></li>
+	<li><a href="#%site_url%#/login.php?action=password_remind">Password reminder</a></li>
+</ul>
+</li>
+</ul>
+
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="user_login_box">
+#%user_login_form%#
+</div>
+
+
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="100%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Search</h4>
+      </div>
+<div id="myTabContent1" class="tab-content" style="text-align:center;height:110px;">
+
+<form method="get" action="#%site_url%#/search.php">
+<input name="phrase" maxlength=120 class="form-control" value="#%original_phrase%#" align="center" style="margin-bottom:8px;margin-left:5%;width:90%;">
+<select name="area_boss" class="form-control" style="margin-bottom:8px;margin-left:5%;width:90%;">
+#%first_areas_select%#
+</select>
+<input type="submit" value="Site search" name="B1" class="btn btn-default" style="width:90%;">
+</form>
+      </div>
+      <div style="text-align:center;padding-top:25px;height:70px;"><a href="#%site_url%#/search.php" style="margin-right:0px;">Advanced</a></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+
+
+<div class="divider" id="section1"></div>
+  
+<div class="container" style="padding-bottom:150px;">
+
+

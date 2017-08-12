@@ -1,0 +1,133 @@
+BODY {
+	background-color: #FCFFF4; margin-top:20px; margin-left:2px; margin-right:1px;
+    FONT-FAMILY: "VERDANA", "ARIAL","HELVETICA"; COLOR: #000000; FONT-SIZE: 13px; FONT-WEIGHT: normal; text-decoration:none;
+    background-color: #F7F3DB;
+}
+table {
+    FONT-FAMILY: "VERDANA", "ARIAL","HELVETICA"; COLOR: #000000; FONT-SIZE: 13px; FONT-WEIGHT: normal;
+}
+form {
+	MARGIN:0px; PADDING:0px;
+}
+
+
+A:link {
+	FONT-WEIGHT: normal; COLOR: #0000E1; TEXT-DECORATION: none
+}
+A:visited {
+	FONT-WEIGHT: normal; COLOR: #0000E1; TEXT-DECORATION: none
+}
+A:hover {
+	FONT-WEIGHT: normal; COLOR: #0000E1; TEXT-DECORATION: underline
+}
+A:active {
+	FONT-WEIGHT: normal; COLOR: #0000E1; TEXT-DECORATION: underline
+}
+A.link10 {
+	FONT-WEIGHT: normal; FONT-SIZE: 11px; COLOR: #0000E1; TEXT-DECORATION: none
+}
+A.link10:visited {
+	FONT-WEIGHT: normal; FONT-SIZE: 11px; COLOR: #0000E1; TEXT-DECORATION: none
+}
+A.link10:hover {
+	FONT-WEIGHT: normal; FONT-SIZE: 11px; COLOR: #0000E1; TEXT-DECORATION: underline
+}
+A.link10:active {
+	FONT-WEIGHT: normal; FONT-SIZE: 11px; COLOR: #0000E1; TEXT-DECORATION: underline
+}
+
+
+.text13a_bold {
+	FONT-WEIGHT: bold; COLOR: #215794; TEXT-DECORATION: none
+}
+.text10 {
+	FONT-WEIGHT: normal; FONT-SIZE: 11px; COLOR: #000000; TEXT-DECORATION: none
+}
+.text10a_bold {
+	FONT-WEIGHT: bold; FONT-SIZE: 11px; COLOR: #215794; TEXT-DECORATION: none
+}
+.text_large {
+	FONT-WEIGHT: normal; FONT-SIZE: 15px;
+}
+
+
+
+.button10 { 
+	font-FAMILY: "VERDANA", "ARIAL","HELVETICA"; font-size: 14px; height: 27px;
+}
+
+
+
+.form-control { 
+	FONT-FAMILY: "VERDANA", "ARIAL","HELVETICA"; FONT-SIZE: 12px; height: 17px; padding: 3px;
+	BORDER: 1px solid #A8B0B8; BACKGROUND-COLOR: #FCFDFE;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+select.form-control{ 
+	FONT-FAMILY: "VERDANA", "ARIAL","HELVETICA"; FONT-SIZE: 12px; height: 25px; padding: 3px;
+	BORDER: 1px solid #A8B0B8; BACKGROUND-COLOR: #FCFDFE;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+select.form-control {
+  height: 25px;
+}
+
+.info_line {
+	BORDER: #0004B9 2px solid; width: 750px; color: #0004B9;
+	PADDING: 10px; background-color: #E6F0FB;
+}
+h1 {
+	FONT-SIZE: 17px; COLOR: #0004B9; FONT-FAMILY: "ARIAL","HELVETICA"; font-style:italic; FONT-WEIGHT: bold;
+	text-align:left; padding:0px 0px 0px 10px; margin:10px 0px 10px 5px; BORDER-BOTTOM: #0004B9 1px solid; width:780px;
+}
+
+
+.common_table {
+	BORDER: #676767 1px solid;
+	BACKGROUND-COLOR: #E6F0FB;
+}
+.inside_table {
+	BACKGROUND-COLOR: #E6F0FB; PADDING: 0px; MARGIN: 0px;
+}
+.inside_table td {
+	BACKGROUND-COLOR: #E6F0FB; PADDING: 2px; MARGIN: 0px;
+	BORDER-WIDTH:1px; BORDER-TOP-COLOR: #FFFFFF; BORDER-RIGHT-COLOR: #B4CCF1; BORDER-BOTTOM-COLOR: #B4CCF1; BORDER-LEFT-COLOR: #FFFFFF; BORDER-STYLE:solid;
+}
+.ininside_table {
+	PADDING: 0px;
+	BORDER-STYLE:none;
+}
+.inside_cell {
+	BACKGROUND-COLOR: #D5E6F9; PADDING: 3px;
+	BORDER-WIDTH:1px; BORDER-TOP-COLOR: #FFFFFF; BORDER-RIGHT-COLOR: #B4CCF1; BORDER-BOTTOM-COLOR: #B4CCF1; BORDER-LEFT-COLOR: #FFFFFF; BORDER-STYLE:solid;
+}
+
+.common_table_top_cell {
+	background-image:url('images/top_cell.png'); background-repeat:repeat; FONT-SIZE: 14px; BORDER-BOTTOM: #6894DD 1px solid;
+	PADDING: 0px; FONT-WEIGHT: bold; COLOR: #FFFFFF; HEIGHT: 35px; TEXT-ALIGN: center;
+}
+
+
+.cell_embosed1 {
+	BACKGROUND-COLOR: #B9D3FF; PADDING: 2px;
+	BORDER-WIDTH:1px; BORDER-TOP-COLOR: #E3ECFF; BORDER-RIGHT-COLOR: #91BAFF; BORDER-BOTTOM-COLOR: #91BAFF; BORDER-LEFT-COLOR: #E3ECFF; BORDER-STYLE:solid;
+}
+.cell_embosed2 {
+	BACKGROUND-COLOR: #E6F0FB; PADDING: 2px;
+	BORDER-WIDTH:1px; BORDER-TOP-COLOR: #FFFFFF; BORDER-RIGHT-COLOR: #B4CCF1; BORDER-BOTTOM-COLOR: #B4CCF1; BORDER-LEFT-COLOR: #FFFFFF; BORDER-STYLE:solid;
+}
+.cell_embosed4 {
+	BACKGROUND-COLOR: #E6F0FB; font-size:11px; PADDING: 2px;
+	BORDER-WIDTH:1px; BORDER-TOP-COLOR: #FFFFFF; BORDER-RIGHT-COLOR: #B4CCF1; BORDER-BOTTOM-COLOR: #B4CCF1; BORDER-LEFT-COLOR: #FFFFFF; BORDER-STYLE:solid;
+}
+
+
+table thead td {
+cursor:pointer;
+}
+.highlightedColumn{
+}	

@@ -1,0 +1,20 @@
+<br>
+<div class="well">
+<h1>Prices </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr>
+<td align="left" width="70" nowrap><span class="text10">&nbsp;</span></td>
+<td align="center" width="70" nowrap><span class="text10">Basic<br>ad</span></td>
+<td align="center" width="70" nowrap><span class="text10">Bold</span></td>
+<td align="center" width="70" nowrap><span class="text10">Featured</span></td>
+<td align="center" width="70" nowrap><span class="text10">Featured<br>homepage</span></td>
+<td align="center" width="70" nowrap><span class="text10">Featured<br>gallery</span></td>
+<td align="center" width="70" nowrap><span class="text10">Highligh.</span></td>
+<td align="center" width="70" nowrap><span class="text10">Paypal<br>BuyNow</span></td>
+<td align="center" width="70" nowrap><span class="text10">Extra 10<br>pictures</span></td>
+<td align="center" width="70" nowrap><span class="text10">Extra 10<br>files</span></td>
+</tr>
+#%lines%#
+</table>
+</div>
+

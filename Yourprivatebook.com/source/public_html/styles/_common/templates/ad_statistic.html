@@ -1,0 +1,75 @@
+
+
+
+
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <a href="#%site_url%#/user.php">User home page</a> &raquo; <h1>Statistic of Your Classified Ad</h1>
+</div>
+
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+#%info%#
+
+<table border="0" cellspacing="0" cellpadding="4" width="100%">
+<tr><td align="center">
+
+<div class="well">
+<h1>Overall Statistic </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr>
+<td nowrap align="left" width="23%"><span class="text10">&nbsp;</span></td>
+<td nowrap align="center" width="23%"><span class="text10"><b>Views</b></span></td>
+<td nowrap align="center" width="23%"><span class="text10"><b>Views of details page</b></span></td>
+<td nowrap align="center" width="23%"><span class="text10"><b>Ratio</b></span></td>
+<td nowrap align="center" width="23%"><span class="text10">&nbsp;</span></td>
+</tr>
+<tr>
+<td nowrap align="left"><span class="text10">Total</td>
+<td nowrap align="center" class="cell_embosed10">#%statistic_i%#</td>
+<td nowrap align="center" class="cell_embosed10">#%statistic_i_detail%#</td>
+<td nowrap align="center" class="cell_embosed10">#%statistic_r%#%</td>
+<td nowrap align="center" class="cell_embosed10">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="left"><span class="text10">Since #%last_reset%#</td>
+<td nowrap align="center" class="cell_embosed10">#%statistic_reset_i%#</td>
+<td nowrap align="center" class="cell_embosed10">#%statistic_reset_i_detail%#</td>
+<td nowrap align="center" class="cell_embosed10">#%statistic_reset_r%#%</td>
+<td nowrap align="center" class="cell_embosed10"><a href="user.php?action=ad_reset_statistic&n=#%n%#">Reset this statistic</a></td>
+</tr>
+</table>
+</div>
+
+<br>
+
+<div class="well">
+<h1>Statistic - #%month_name%# #%year%# </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr>
+<td nowrap align="left" width="30"><span class="text10"><b>Day</b></span></td>
+<td nowrap align="center" style="text-align:center"><span class="text10"><b>Views of details page</b></span></td>
+</tr>
+#%statistic_days%#
+<tr>
+<td nowrap align="left"><span class="text10"><b>Total&nbsp;</b></span></td>
+<td nowrap align="center"><span class="text10"><b>#%days_i_detail%#</b></span></td>
+</tr>
+<tr><td nowrap align="center" colspan="4" class="cell_embosed10"><a href="#%previous_month%#">[Previous month]</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#%next_month%#">[Next month]</a></td></tr>
+</table>
+
+</div>
+
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

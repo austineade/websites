@@ -1,0 +1,115 @@
+
+
+
+
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <h1>Advanced Search</h1>
+</div>
+
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+#%info%#
+
+<form method="GET" action="#%site_url%#/search.php">
+<input type="hidden" name="action" value="ads_advanced">
+
+<div class="well">
+<h1>Search for Classified Ads </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr>
+<td align="left" valign="top" rowspan="3">Phrases or Words</td>
+<td align="left"><input class="form-control" name="phrase[0]" maxlength="70" value="#%phrase0%#"></td>
+</tr>
+<tr><td align="left"><input class="form-control" name="phrase[1]" maxlength="70" value="#%phrase1%#"></td></tr>
+<tr><td align="left"><input class="form-control" name="phrase[2]" maxlength="70" value="#%phrase2%#"></td></tr>
+#%hide_radius_begin%#
+<tr>
+<td align="left" valign="top">Postal code or city name </td>
+<td align="left"><input class="form-control" name="zip_city" maxlength="70" value="#%zip_city%#"></td>
+</tr>
+<tr>
+<td align="left" nowrap>Radius around this postal code or city</td>
+<td align="left" nowrap>
+<select class="form-control" name="radius">
+<option value="1">1 #%km_miles%#</option>
+<option value="2">2 #%km_miles%#</option>
+<option value="5">5 #%km_miles%#</option>
+<option value="10">10 #%km_miles%#</option>
+<option value="20">20 #%km_miles%#</option>
+<option value="50">50 #%km_miles%#</option>
+<option value="100">100 #%km_miles%#</option>
+<option value="200" selected>200 #%km_miles%#</option>
+</select>
+</td>
+</tr>
+#%hide_radius_end%#
+
+<tr>
+<td align="left" nowrap>Type of search</td>
+<td align="left">AND <input type="radio" value="and" name="search_kind"#%search_kind_checked_and%#>&nbsp;&nbsp;OR <input type="radio" value="or" name="search_kind"#%search_kind_checked_or%#></td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Category </td>
+<td align="left" nowrap><select class="form-control" name="category">#%categories_select%#</select></td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Area </td>
+<td align="left" nowrap><select class="form-control" name="area">#%areas_select%#</select></td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Price </td>
+<td align="left" nowrap>
+<select class="form-control" name="price_mark" style="width:100px;display:inline;">
+<option value="more_equal"#%price_selected_more_equal%#>>=</option>
+<option value="equal"#%price_selected_equal%#>=</option>
+<option value="less_equal"#%price_selected_less_equal%#><=</option></select> <input name="price" size=7 maxlength=10 class="form-control" value="#%price%#" style="width:100px;display:inline;"></td></tr></td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Type&nbsp;&nbsp;</td>
+<td align="left" nowrap>#%offer_wanted_list%#</td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Sort by&nbsp;&nbsp;</td>
+<td align="left" nowrap>#%order_by_list%#&nbsp;#%direction_list%#</td>
+</tr>
+<tr>
+<td align="left" nowrap>Per page&nbsp;&nbsp;</td>
+<td align="left" nowrap>
+<input type="radio" value="5" name="perpage"#%perpage_checked_5%#> 5&nbsp;&nbsp;
+<input type="radio" value="10" name="perpage"#%perpage_checked_10%#> 10&nbsp;&nbsp;
+<input type="radio" value="20" name="perpage"#%perpage_checked_20%#> 20&nbsp;&nbsp;
+<input type="radio" value="30" name="perpage"#%perpage_checked_30%#> 30&nbsp;&nbsp;
+<input type="radio" value="50" name="perpage"#%perpage_checked_50%#> 50&nbsp;&nbsp;
+<input type="radio" value="100" name="perpage"#%perpage_checked_100%#> 100</td>
+</tr>
+<tr><td colspan=2 align="center"><input type="submit" value="Search" name="B1" class="btn btn-primary"></td></tr>
+</table>
+</div>
+
+</form>
+
+<br>
+
+<div class="well">
+<h1>Top Searches </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr><td align="center">
+#%ads_top%#
+</td></tr>
+</table>
+</div>
+
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

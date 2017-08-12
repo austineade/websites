@@ -1,0 +1,39 @@
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <a href="#%site_url%#/board.php">Message Board</a> &raquo; <h1>Add Your Message</h1>
+</div>
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+#%info%#
+
+<div class="well">
+<h1>Add Your Message</h1>
+#%hide_add_message_form_begin%#
+<form method="post" action="#%site_url%#/board.php">
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr>
+<td style="width:30%">Your Message<br><br>Click to a smilie to add it to the message<br>#%smilies%#</td>
+<td style="width:70%" align="left"><textarea class="form-control" name="board_comment" id="board_comment" style="height:200px;">#%board_comment%#</textarea></td>
+</tr>
+#%field_name%#
+#%field_email%#
+#%field_captcha_test%#
+<tr>
+<td align="center" colspan=2><input type="submit" value="Submit" name="B1" class="btn btn-primary"></td>
+</tr>
+</table>
+</div>
+</form>
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+#%in2%#
+
+</div>
+
+

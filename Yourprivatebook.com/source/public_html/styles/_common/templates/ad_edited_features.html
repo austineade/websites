@@ -1,0 +1,76 @@
+
+
+
+
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <a href="#%site_url%#/user.php">User home page</a> &raquo; <h1>Your Classified Ad - Extra Features - Summary of Your Order</h1>
+</div>
+
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+#%info%#
+
+<form action="#%site_url%#/user.php" method="post">
+<input type="hidden" name="action" value="ad_features_edited_confirmed">
+<input type="hidden" name="n" value="#%n%#">
+<input type="hidden" name="coupon" value="#%coupon%#">
+
+<div class="well">
+<h1>Summary of Your Order </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+#%hidden_fields%#
+<tr>
+<td align="left" valign="top" nowrap>Ad number </td>
+<td align="left" valign="top" nowrap>#%n%#</td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Title </td>
+<td align="left" valign="top" nowrap>#%title%#</td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Ordered features</td>
+<td align="left" valign="top" nowrap>#%ordered_features%#</td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Payment period</td>
+<td align="left" valign="top" nowrap>#%period%# days</td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Discount</td>
+<td align="left" valign="top" nowrap>#%currency%##%discount%#</td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Price</td>
+<td align="left" valign="top" nowrap>#%currency%##%base_price%#</td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Tax</td>
+<td align="left" valign="top" nowrap>#%currency%##%tax%#</td>
+</tr>
+<tr>
+<td align="left" valign="top" nowrap>Amount to pay</td>
+<td align="left" valign="top" nowrap>#%currency%##%price%#</td>
+</tr>
+<tr><td align="center" colspan=2><input type="submit" value="Continue" name="B1" class="btn btn-primary"></td></tr>
+</table>
+</div>
+
+
+</form>
+
+
+#%prices_table%#
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

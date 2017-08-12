@@ -1,0 +1,132 @@
+
+
+
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+var d = new Date(); var h = d.getHours();
+if (h<1) var greetings = "#%time_0%#";
+else if (h<2) var greetings = "#%time_1%#";
+else if (h<3) var greetings = "#%time_2%#";
+else if (h<4) var greetings = "#%time_3%#";
+else if (h<5) var greetings = "#%time_4%#";
+else if (h<6) var greetings = "#%time_5%#";
+else if (h<7) var greetings = "#%time_6%#";
+else if (h<8) var greetings = "#%time_7%#";
+else if (h<9) var greetings = "#%time_8%#";
+else if (h<10) var greetings = "#%time_9%#";
+else if (h<11) var greetings = "#%time_10%#";
+else if (h<12) var greetings = "#%time_11%#";
+else if (h<13) var greetings = "#%time_12%#";
+else if (h<14) var greetings = "#%time_13%#";
+else if (h<15) var greetings = "#%time_14%#";
+else if (h<16) var greetings = "#%time_15%#";
+else if (h<17) var greetings = "#%time_16%#";
+else if (h<18) var greetings = "#%time_17%#";
+else if (h<19) var greetings = "#%time_18%#";
+else if (h<20) var greetings = "#%time_19%#";
+else if (h<21) var greetings = "#%time_20%#";
+else if (h<22) var greetings = "#%time_21%#";
+else if (h<23) var greetings = "#%time_22%#";
+else var greetings = "#%time_23%#";
+-->
+</script>
+
+<div class="visible-lg">
+<div style="text-align:center;height:70px;">
+<div class="inner-center" style="margin:5px;"><SCRIPT LANGUAGE="JavaScript">
+<!--
+var current_time = new Date();
+hours = current_time.getHours();
+document.write('<img src="#%site_url%#/time_info.php?action=image&hour='+hours+'" style="height:50px;vertical-align:middle;">');
+-->
+</script></div>
+<div class="inner-center" style="margin:5px;vertical-align:middle;"><SCRIPT LANGUAGE="JavaScript">
+<!--
+document.write(greetings);
+-->
+</script>#%hide_country_begin%# to #%this_country%##%hide_country_end%#!
+</div> 
+#%hide_country_begin%#<div class="inner-center"><img border="0" src="#%this_flag%#" style="height:50px;vertical-align:middle;"></div>#%hide_country_end%#
+</div> 
+<div class="clear"></div> 
+</div>
+
+<div class="well">
+<h1>Categories </h1>
+#%index_categories%#
+<div class="clear"></div> 
+</div>
+
+<!-- this is by default invisible, it's a example of a group of categories -->
+<div class="well" style="display:none;">
+<h2>Categories</h2>
+#%categories_group_1%#
+</div>
+
+<div class="well hidden-xs hidden-md">
+<h1>Areas </h1>
+<iframe marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no" style="width:100%; height:570px; border:0px;" frameborder="0" src="#%site_url%#/map.php?action=home"></iframe>
+</div>
+
+<div class="well visible-lg visible-md">
+<h1>Featured Classifieds</h1>
+<div id="carousel1" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+  #%home_featured_ads%#
+  </div>
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel1" data-slide="prev" style="width:10px;background:none;">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+  </a>
+  <a class="right carousel-control" href="#carousel1" data-slide="next" style="width:10px;background:none;">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+</div>
+</div>
+
+<div class="well visible-lg visible-md">
+<h1>Newest Classifieds</h1>
+<div id="carousel2" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+  #%home_new_ads%#
+  </div>
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel2" data-slide="prev" style="width:10px;background:none;">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+  </a>
+  <a class="right carousel-control" href="#carousel2" data-slide="next" style="width:10px;background:none;">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+</div>
+</div>
+
+<div class="well visible-xs visible-sm" style="text-align:center;">
+<h1>SKIP TO</h1>
+<form method="get" action="#%site_url%#/index.php">
+<p style="text-align:center;"><select class="form-control" name="c" style="width:100%;">#%first_cats_select%#</select></p>
+<p style="text-align:center;"><select class="form-control" name="a" style="width:100%;">#%first_areas_select%#</select></p>
+<p style="text-align:center;"><input type="submit" value="Go" name="B1" class="btn btn-primary"></p>
+</form>
+</div>
+
+<div style="padding-top:10px;height:40px;"><div style="float:left;padding:5px;">Bookmark and share our site: </div> #%share_it%#</div>
+
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

@@ -1,0 +1,4 @@
+<div style="width:30%;float:left;padding:10px;text-align:left;line-height:20px;">
+<img src="#%folder_icon%#">&nbsp;<a href="#%url%#" style="font-size:18px;line-height:27px;">#%title%#</a><br>
+#%description%# 
+</div>

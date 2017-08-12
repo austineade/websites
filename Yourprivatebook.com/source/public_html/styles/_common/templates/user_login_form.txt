@@ -1,0 +1,42 @@
+<form method="post" action="#%site_url%#/login.php">
+<input type="hidden" name="action" value="user_login">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">User Login</h4>
+      </div>
+      <div class="modal-body">
+
+      
+      #%info%#
+
+<table cellspacing="0" cellpadding="2" border="0" width="100%" class="table table-responsive">
+<tbody>
+<tr>
+<td align="left" valign="bottom"><INPUT class="form-control" maxLength="255" style="width:250px;" name="email" id="email" value="#%email%#" placeholder="Email" required="1"></td>
+<td align="left" valign="bottom"><INPUT class="form-control" type="password" maxLength="255" style="width:250px;" name="password" id="password" value="#%password%#" placeholder="Password" required="1"></td>
+</tr>
+<tr style="display:#%display_captcha_tr%#;">
+<td align="left" valign="bottom" colspan=2 nowrap><input maxlength="10" name="image_control" class="form-control" placeholder="Enter the code" #%required%# style="width:250px;float:left;"> <img alt="" src="#%site_url%#/image_control.php?action=get_image&x=#%captcha_code%#"style="padding:5px;padding-left:20px;"></td>
+</tr>
+<tr>
+<td align="left" valign="bottom" nowrap><script src="#%site_url%#/facebook.php"></script></td>
+<td align="left" valign="bottom" nowrap>
+<input type="checkbox" name="remember_me" value="1"#%checked_remember_me%#> Keep me logged in
+</td>
+</tr>
+<tr>
+<td nowrap><a href="#%site_url%#/login.php?action=password_remind">Password reminder</a>
+<td align="left" valign="bottom" nowrap><button type="button" class="btn btn-default" data-dismiss="modal">Close</button> <input type="submit" class="btn btn-primary" value="Submit"></td>
+</tr>
+</tbody>
+</table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</form>

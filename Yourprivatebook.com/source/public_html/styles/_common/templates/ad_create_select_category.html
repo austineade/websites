@@ -1,0 +1,46 @@
+
+
+
+
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <a href="#%site_url%#/user.php">User home page</a> &raquo; <h1>Create A New Classified Ad</h1>
+</div>
+
+<link rel="stylesheet" href="#%site_url%#/files/context_menu.css" type="text/css">
+<script type="text/javascript">
+var imageFolder = '#%site_url%#/images/';
+</script>
+<script type="text/javascript" src="#%site_url%#/files/context-menu-folder-tree.js"></script>
+<script type="text/javascript" src="#%site_url%#/files/context-menu.js"></script>
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+#%info%#
+
+<form action="#%site_url%#/user.php" method="get">
+<input type="hidden" name="action" value="ad_create">
+
+<div class="well">
+<h1>Select A Category </h1>
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+<tr><td align="left">
+#%categories_select%#
+</td></tr>
+<tr><td align="center"><input type="submit" value="Continue" name="B1" class="btn btn-primary"></td></tr>
+</table>
+</div>
+
+</form>
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

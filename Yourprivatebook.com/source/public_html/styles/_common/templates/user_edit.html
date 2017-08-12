@@ -1,0 +1,61 @@
+
+
+
+
+<div class="div_navigation">
+<a href="#%site_url%#/index.php">Home</a> &raquo; <h1>Edit Your Details</h1>
+</div>
+
+
+<div class="hidden-xs col-lg-2 col-md-3 col-sm-3">
+
+#%in1%#
+</div>
+<div class="col-lg-8 col-md-9 col-sm-9">
+
+
+#%info%#
+
+
+<div class="well">
+<h1>Edit Your Profile </h1>
+<form ENCTYPE="multipart/form-data" action="#%site_url%#/user.php" method="post">
+<input type="hidden" name="action" value="user_edited">
+<table border="0" cellspacing="0" cellpadding="2" width="100%" class="table table-responsive table_noborder">
+#%field_email%#
+<tr>
+<td nowrap align="left">Password </td>
+<td nowrap align="left"><input class="form-control" maxlength="15" name="password" value=""> <span class="text10">Leave blank to keep current password.</span></td>
+</tr>
+#%field_name%#
+#%field_nick%#
+#%field_company%#
+#%field_address1%#
+#%field_address2%#
+#%field_address3%#
+#%field_country%#
+#%field_phone1%#
+#%field_phone2%#
+#%field_site_info%#
+#%field_detail%#
+#%field_pictures%#
+#%field_styles%#
+#%field_newsletters%#
+#%hide_email_category_begin%#
+<tr>
+<td nowrap align="left" colspan="2">Email me when an ad has been added to a category in my favorites <input type="checkbox" name="email_category" value="1"#%email_category%#></td>
+</tr>
+#%hide_email_category_end%#
+<tr><td align="center" colspan=3><input type="submit" value="Submit" name="B1" class="btn btn-primary"></td></tr>
+</table>
+</form>
+</div>
+
+
+</div>
+<div class="hidden-xs hidden-md hidden-sm col-lg-2">
+
+
+#%in2%#
+
+</div>

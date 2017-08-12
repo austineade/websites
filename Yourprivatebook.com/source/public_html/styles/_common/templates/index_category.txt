@@ -1,0 +1,4 @@
+<div class="col-lg-4 col-md-6 col-sm-12" style="padding:10px;line-height:20px;">
+<img src="#%folder_icon%#">&nbsp;<a href="#%url%#" style="font-size:18px;line-height:27px;">#%title%# #%items%#</a><br>
+#%subcats%# 
+</div>
