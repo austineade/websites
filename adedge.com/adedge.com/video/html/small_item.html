@@ -1,0 +1,15 @@
+		<div class="<#if trigger=="1"/>color1<#else/>color2<#endif/>">
+			<div class="left" style="margin-right:10px">
+				<a href="<#videourl/>"><img src="<#thumb/>" width="120" height="90" alt="<#title/> <#T_VIDEO/>" border="0"/></a>
+			</div>
+			<div class="left">
+				<a href="<#videourl/>" title="<#title/>"><h3><#short_title/></h3></a><span class="small"><b><#duration/></b></span><br />
+				<#if playing=="true"/><small><b>&laquo; <#T_NOWPLAYING/></b></small><br /><#endif/>
+				<img alt="<#title/> <#T_RATINGS/>" src="images/stars-<#rate/>.gif" /><br />
+				<span class="small"><#T_ADDED/>: <#time/></span><br />
+				<span class="small"><#T_VIEWS/>: <#hits/></span><br />
+				<span class="small"><#T_FROM/>: <a id="author_<#id/>" href="index.php?m=channel&amp;channel=<#url_username/>" onclick="this.href='javascript:void(0)'; popup('index.php?m=channelpreview&amp;channel=<#url_username/>')"><#username/></a></span><br />
+				<script type="text/javascript"></script>
+			</div>
+			<div class="brclear"></div>
+		</div>

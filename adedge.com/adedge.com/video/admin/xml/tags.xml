@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<section name="Tags" type="table" target="MTags" search="true" edit="true" add="false" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Tag" target="tag" type="textfield" visible="true" edit="true" add="false"/>
+	<field name="" target="videos_id" type="element" visible="false" edit="false" add="false" />
+</section>

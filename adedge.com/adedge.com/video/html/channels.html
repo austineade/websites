@@ -1,0 +1,17 @@
+<div class="left">
+	<div class="heading"><h2><#title/></h2></div>
+	<div class="box">
+		<div class="stabh" style="width:550px">
+			<#T_SORTBY/>:
+			<span class="small"><a <#if sort=="hits"/>style="font-weight: bold" <#endif/>href="<#curl/>&amp;sort=hits"><#T_VIEWS/></a></span>
+			<span class="small"><a <#if sort=="tt"/>style="font-weight: bold" <#endif/>href="<#curl/>&amp;sort=tt"><#T_NEWVIDEOS/></a></span>
+			<span class="small"><a <#if sort=="subscriptions"/>style="font-weight: bold" <#endif/>href="<#curl/>&amp;sort=subscriptions"><#T_SUBSCRIPTIONS/></a></span>
+		</div><br />
+		<#list/>
+	</div>
+	<div class="bottom"><#pagination/></div>
+</div>
+<div class="left" style="margin-left:30px;">
+	<#ad1/>
+</div>
+<div class="brclear"></div>

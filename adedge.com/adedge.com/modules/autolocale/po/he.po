@@ -1,0 +1,128 @@
+# translation of he.po to Hebrew
+# $Id: he.po,v 1.1.2.1 2007/07/27 07:03:24 yhager Exp $
+# LANGUAGE translation of Drupal (autolocale.module)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from file: autolocale.module,v 1.3 2006/12/27 22:07:43 goba
+#
+# Yuval Hager <yuval@avramzon.net>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: he\n"
+"POT-Creation-Date: 2007-01-16 13:28+0100\n"
+"PO-Revision-Date: 2007-07-27 10:02+0300\n"
+"Last-Translator: Yuval Hager <yuval@avramzon.net>\n"
+"Language-Team: Hebrew <he@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: autolocale.install:10
+msgid "Now you can <a href=\"@url\">import interface translations</a> automatically"
+msgstr "כעת ניתן <a href=\"@url\">לייבא תרגומי ממשק</a> באופן אוטומטי"
+
+#: autolocale.info:0
+msgid "Autolocale"
+msgstr "autolocale"
+
+#: autolocale.info:0
+msgid "Automatically imports interface translations."
+msgstr "מייבא תרגומי ממשק באופן אוטומטי."
+
+#: localized.profile:49
+msgid "Body"
+msgstr "תוכן"
+
+#: localized.profile:51
+msgid "Title"
+msgstr "כותרת"
+
+#: localized.profile:57
+msgid "Page"
+msgstr "עמוד"
+
+#: localized.profile:58
+msgid ""
+"If you want to add a static page, like a contact page or an about page, use "
+"a page."
+msgstr "להוספת עמוד סטטי, כמו עמוד יצירת קשר או אודות, ניתן להשתמש ב\"עמוד\"."
+
+#: localized.profile:65
+msgid "Story"
+msgstr "כתבה"
+
+#: localized.profile:66
+msgid ""
+"Stories are articles in their simplest form: they have a title, a teaser and "
+"a body, but can be extended by other modules. The teaser is part of the body "
+"too. Stories may be used as a personal blog or for news articles."
+msgstr "כתבות הן מאמרים בצורה הפשוטה ביותר: יש להם כותרת, תקציר ותוכן. ניתן להרחיב אותם בעזרת רכיבים נוספים. התקציר גם הוא חלק מהתוכן. כתבות משמשות לבלוג אישי, או לכתיבת חדשות."
+
+#: autolocale.module:12
+msgid ""
+"Automatic import scans all enabled modules and themes for interface "
+"translation files under their directories and imports all files found for "
+"the selected language. This operation could be resource intensive, and is "
+"irreversible."
+msgstr ""
+"ייבוא אוטומטי סורק את כל הרכיבים והעיצובים הקיימים עבור קבצי תרגום בתיקיות "
+"המתאימות, ומייבא את כל התרגומים שנמצאו לשפה הנבחרת. הפעולה יכולה לקחת משאבי "
+"מערכת רבים, ואינה הפיכה."
+
+#: autolocale.module:31
+msgid "Automatic import"
+msgstr "ייבוא אוטומטי"
+
+#: autolocale.module:54
+msgid ""
+"No foreign language enabled on your site. You need to <a href=\"@urladd"
+"\">add</a> and <a href=\"@urlenable\">enable</a> at least one foreign "
+"language to import strings for."
+msgstr ""
+"אין שפה זרה שמופעלת באתר שלך. עליך <a href=\"@urladd\">להוסיף</a> ו<a href="
+"\"@urlenable\">להפעיל</a> לפחות שפה זרה אחת אליה לייבא מחרוזות."
+
+#: autolocale.module:62
+msgid "Language"
+msgstr "שפה"
+
+#: autolocale.module:65
+msgid "Select the language to autoimport translation files into."
+msgstr "בחר את השפה אליה יש לייבא את קבצי התרגום באופן אוטומטי."
+
+#: autolocale.module:70
+msgid "Remove existing translations first"
+msgstr "מחק תרגומים קיימים תחילה"
+
+#: autolocale.module:72
+msgid ""
+"It is advised to remove the existing translations in the given language for "
+"performance reasons, if you have no custom strings added, which are not "
+"available in the PO files to import. This removes strings left from upgrades "
+"or previously tried and removed modules."
+msgstr ""
+"מומלץ למחוק תרגומים קיימים לשפה הנתונה, לצרכי ביצועים, אם לא הוספת מחרוזות "
+"מותאמות בנוסף על מה שקיים בקבצי התרגום. מחרוזות שנשארו משדרוגים ישנים, או "
+"מרכיבים שהופעלו והוסרו, יימחקו גם כן."
+
+#: autolocale.module:77
+msgid "Perform automatic import"
+msgstr "בצע ייבוא אוטומטי"
+
+#: autolocale.module:89
+msgid "Invalid language code (@langcode) choosen for automatic import."
+msgstr "קוד השפה שנבחר (@langcode) אינו תקף."
+
+#: autolocale.module:102
+msgid "Existing translations removed from @language."
+msgstr "תרגומים קיימים נמחקו מ@language."
+
+#: autolocale.module:109
+msgid "New @language strings imported."
+msgstr "תרגומים חדשים ל@language יובאו."
+
+#: autolocale.module:0
+msgid "autolocale"
+msgstr "autolocale"
+

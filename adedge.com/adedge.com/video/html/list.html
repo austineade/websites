@@ -1,0 +1,28 @@
+<#if featured==""/>
+<#else/>
+<div class="heading" style="width:785px"><h2><#T_FEATURED/></h2></div>
+		<div class="box" style="width:765px; height:110px">
+			<#featured/>
+			<div class="brclear"></div>
+		</div><br />
+<#endif/>
+<div class="left">
+	<div class="heading"><h2><#title/></h2></div>
+	<div class="box">
+		<div class="stabh" style="width:550px">
+			<#T_SORTBY/>:
+			<span class="small"><a <#if sort=="hits"/>style="font-weight: bold" <#endif/>href="<#curl/>&amp;sort=hits"><#T_VIEWS/></a></span>
+			<span class="small"><a <#if sort=="tt"/>style="font-weight: bold" <#endif/>href="<#curl/>&amp;sort=tt"><#T_DATEADDED/></a></span>
+			<span class="small"><a <#if sort=="rate"/>style="font-weight: bold" <#endif/>href="<#curl/>&amp;sort=rate"><#T_RATINGS/></a></span>
+			<span class="small"><a <#if sort=="duration"/>style="font-weight: bold" <#endif/>href="<#curl/>&amp;sort=duration"><#T_DURATION/></a></span>
+		</div><br />
+		<#list/>
+	</div>
+	<div class="bottom"><#pagination/></div>
+</div>
+<div class="left" style="margin-left:20px">
+	<#if showad=="true"/>
+	<#ad1/>
+	<#endif/>
+</div>
+<div class="brclear"></div>

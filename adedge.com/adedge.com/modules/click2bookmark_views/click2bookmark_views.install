@@ -1,0 +1,33 @@
+<?php
+// $Id: click2bookmark_views.install,v 1.1 2007/04/05 04:33:12 ericdes Exp $ 
+
+/**
+ * Implementation of hook_install().
+ */
+
+function click2bookmark_views_install() {
+  
+  switch ($GLOBALS['db_type']) {
+    
+    case 'mysql':
+    case 'mysqli':
+      db_query("ALTER TABLE {view_view} ADD click2bookmark_enabled INT(1) NULL ;"); 
+      break;
+   
+    case 'pgsql':
+      db_query("ALTER TABLE {view_view} ADD click2bookmark_enabled INT(1) NULL ;"); 
+      break;
+    
+  } // End case
+
+}
+
+
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function click2bookmark_views_uninstall() {
+  db_query('ALTER TABLE {view_view} DROP click2bookmark_enabled;');
+}

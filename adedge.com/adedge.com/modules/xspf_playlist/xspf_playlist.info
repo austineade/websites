@@ -1,0 +1,11 @@
+; $Id: xspf_playlist.info,v 1.4 2007/07/26 14:03:33 douggreen Exp $
+name = xspf Playlist
+description = Generates an xspf playlist for nodes
+package = "Media"
+dependencies = content
+
+; Information added by drupal.org packaging script on 2007-08-16
+version = "5.x-0.5"
+project = "xspf_playlist"
+datestamp = "1187299513"
+

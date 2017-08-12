@@ -1,0 +1,51 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Theme Settings API 5.x\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2007-07-18 00:41+0100\n"
+"Last-Translator: Alexander Hass\n"
+"Language-Team: Alexander Hass\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: themesettingsapi.module:99
+msgid "Theme-engine-specific settings"
+msgstr "Themeengine spezifische Einstellungen"
+
+#: themesettingsapi.module:99
+msgid "These settings only exist for all the templates and styles based on the %engine theme engine."
+msgstr "Diese Einstellungen beeinflussen alle Vorlagen und Styles, die auf der %engine-Themeengine basieren."
+
+#: themesettingsapi.module:112
+msgid "Theme-specific settings"
+msgstr "Theme spezifische Einstellungen"
+
+#: themesettingsapi.module:112
+msgid "These settings only exist for the %theme theme and all the styles based on it."
+msgstr "Diese Einstellungen beeinflussen nur das %theme-Theme und alle darauf basierenden Styles."
+
+#: themesettingsapi.module:123
+msgid "Use administration theme when configuring theme settings"
+msgstr "Das Verwaltungs-Theme bei der Konfiguration der Themeeinstellungen verwenden"
+
+#: themesettingsapi.module:124
+msgid "If this setting is disabled or if using the \"System default\" theme, the theme settings pages will be switched to the theme being configured."
+msgstr "Die Einstellungenseiten der Themes werden auf das zu konfigurierende Theme umgeschaltet, wenn diese Einstellung deaktiviert oder das Theme „Systemstandard“ verwendet wird."
+
+#: themesettingsapi.module:0
+msgid "themesettingsapi"
+msgstr "themesettingsapi"
+
+#: themesettingsapi.info:0
+msgid "Theme Settings API"
+msgstr "Theme Einstellungen API"
+
+#: themesettingsapi.info:0
+msgid "Allows themes to add options to the themes settings page"
+msgstr "Erlaubt Themes weitere Optionen zur Einstellungen Seite des Themes hinzuzufügen"
+

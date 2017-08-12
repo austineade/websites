@@ -1,0 +1,32 @@
+<div class="heading"><h2><#T_SIGNUP/></h2></div>
+		<div class="box">
+			<form action="index.php?m=completesignup.signup" method="post">
+				<fieldset>
+					<p class="error"><#error/></p>
+					
+					<label for="username"><#T_USERNAME/></label>
+					<p><#M_USERNAME/></p>
+					<p><input id="username" type="text" name="username" style="width:100px" /></p>
+
+					<label for="password"><#T_PASSWORD/></label>
+					<p><#M_PASSWORD/></p>
+					<p><input id="password" type="password" name="password" style="width:100px" /></p>
+					
+					<label for="password"><#T_RPASSWORD/></label>
+					<p><input id="password2" type="password" name="password2" style="width:100px" /></p>
+					
+					<label for="email"><#T_EMAIL/></label>
+					<p><#M_EMAIL/></p>
+					<p><input id="email" type="text" name="email" style="width:100px" /></p>
+					
+					<label for="code"><#T_SECURITY_CODE/></label>
+					<p><#M_SECURITY_CODE/></p>
+					<p><img src="<#captcha/>" /></p>
+					<p><input type="text" name="code" /></p>
+					
+					<p>
+					<input type="submit" value="<#T_SIGNUP/>" />
+					</p>
+				</fieldset>
+			</form>
+		</div>

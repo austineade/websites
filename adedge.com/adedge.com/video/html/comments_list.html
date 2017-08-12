@@ -1,0 +1,16 @@
+<div class="heading" style="width:465px"><h2><#T_COMMENTS/></h2></div>
+		<div class="box" style="width:445px">
+			<#list/>
+		</div>
+		<div class="bottom" style="width:465px"><#pagination/></div>
+<#if username==""/>
+<#else/>
+<br />
+<div class="heading" style="width:465px"><h2><#T_POSTCOMMENT/></h2></div>
+		<div class="box" style="width:445px">
+			<form name="frmComments" action="<#curl/>&amp;comment=post" method="post">
+				<textarea name="text" style="width:445px; height:100px"></textarea><br/>
+				<input type="submit" id="post" onclick="post_comment('<#curl/>&amp;comment=post&amp;asynch',frmComments); return false" value="<#T_POST/>"/>
+			</form>
+		</div>
+<#endif/>

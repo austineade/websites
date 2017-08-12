@@ -1,0 +1,634 @@
+@charset "utf-8";
+/* CSS Document */
+
+BODY {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+a {
+	text-decoration: none;
+	color: #980000;
+	border: 0px;
+}
+
+a img {
+	border: 0px;
+}
+
+H1 {
+	color: #323864;
+	font-size: 16px;
+	font-weight: 600;
+}
+a:hover {
+	text-decoration: underline;
+	color: #323864;
+}
+a:visited {
+	color: #980000;
+}
+
+#mainBody {
+	margin-left: auto;
+	margin-right: auto;
+	width: 1001px;
+	align: center;
+}
+
+/* Begin Header CSS */
+#header {
+	width: 1000px;
+	height: 100px;
+	background-image: url(/files/images/Main_nav_global.gif);
+	background-repeat: no-repeat;
+	margin: 0px 0px 15px 0px;
+}
+
+.HeaderNav {
+	padding: 20px 0px 0px 0px;
+}
+
+/*
+.HeaderNav UL {
+	margin: 0px 0px 0px 0px;
+}
+
+.HeaderNav UL LI {
+	list-style: none;
+	float: right;
+	margin: 0px 0px 0px 10px;
+	text-align: center;
+	color: #CCCCCC;
+	background-image: url(/files/images/Active_btn_BG.gif);
+	background-repeat: no-repeat;
+	background-position: right;
+	height: 27px;
+}
+	
+.HeaderNav UL LI SPAN {
+	background-image: url(/files/images/Active_btn_LT.gif);
+	background-repeat: no-repeat;
+	background-position: left;
+	padding: 5px 6px 0px 6px;
+	height: 27px;
+	margin: 0px 0px 0px 10px;
+
+}
+*/
+.contactPhoneBox {
+	background-image: url(/files/images/Contact_rect_BG.gif);
+	background-repeat: no-repeat;
+	width: 200px;
+	height: 125px;
+	padding: 5px 5px 5px 5px;
+	float: right;
+	
+}
+.contactPhoneBox H1 {
+	font-size: 19px;
+	color: #008B0A;
+	text-align: center;
+}
+
+.contactPhoneBox SPAN {
+	font-size: 19px;
+	color: #008B0A;
+	text-align: center;
+}
+
+.contactPhone {
+	text-align: center;
+}
+
+#mainBody #header .contactPhoneBox p {
+	text-align: center;
+}	
+
+.basictab{
+padding: 3px 0;
+margin-left: 0;
+margin-right: 0;
+margin-top: 28px;
+font: bold 12px Verdana;
+border-bottom: none;
+list-style-type: none;
+text-align: right; /*set to left, center, or right to align the menu as desired*/
+}
+
+.basictab li{
+display: inline;
+margin: 0;
+}
+
+.basictab li a{
+-moz-border-radius-topleft: 5px; /* this works only in camino/firefox */
+-moz-border-radius-topright: 5px; /* this works only in camino/firefox */
+-webkit-border-radius-topright: 5px; /* this is just for Safari */
+-webkit-border-radius-topleft: 5px; /* this is just for Safari */
+top: 1px;
+text-decoration: none;
+padding: 3px 7px;
+margin-right: 3px;
+border: 1px solid gray;
+border-bottom: none;
+background-color: #ffffff;
+color: #2d2b2b;
+}
+
+.basictab li a:visited{
+color: #2d2b2b;
+}
+
+.basictab li a:hover{
+background-color: #516352;
+color: #CCCCCC;
+}
+
+.basictab li a:active{
+color: black;
+}
+
+.basictab li.selected a{ /*selected tab effect*/
+position: relative;
+top: 1px;
+padding-top: 4px;
+background-color: #516352;
+color: #CCCCCC;
+}
+
+/* End Header CSS */
+#mainContentContainer {
+	width: 1000px;
+}
+#column1 {
+	width: 260px;
+	float: left;
+	padding: 5px 0px 0px 0px;
+}
+#column2 {
+	width: 740px;
+	padding: 5px 0px 5px 0px;
+	float: right;
+}
+#column1ContentPage {
+	width: 720px;
+	padding: 5px 0px 5px 0px;
+	float: left;
+}
+#column2ContentPage {
+	width: 260px;
+	float: right;
+	padding: 5px 0px 0px 0px;
+}
+
+/*Content page Styles*/
+.ContentPageHeader H2 {
+	color: #f6e1de;
+	font-size: 24px;
+}
+
+
+/* Begin category listing page styles */
+
+.ListStyleBox {
+	clear:left;
+	padding: 5px 5px 5px 5px;
+	margin: 5px 0 5px 0;
+	border-top-width: thin;
+	border-right-width: thin;
+	border-bottom-width: 1px;
+	border-left-width: thin;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: dashed;
+	border-left-style: none;
+	border-bottom-color: #666633;
+	overflow: auto;
+}
+
+.ListStyleBox .vidresultLinkBox {
+	border-left: 1px dashed #CCCCCC;
+	float: right;
+	margin-left: 0px;
+	padding: 5px 10px 0px 5px;
+}
+.ListStyleBox .vidresultLinkBox UL {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	list-style: none;
+}
+.ListStyleBox .vidresultLinkBox UL LI {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 5px 0px;
+}
+
+.vidresultThumb {
+	float: left;
+	margin: 0 10px 0 0;
+}
+.vidresultThumb img {
+	border: 1px solid #666666;
+	padding: 1px 1px 1px 1px;
+}
+
+.ListStyleBox .vidresultTitle {
+	font-size: 14px;
+	margin: 0 0 5px 0;
+}
+
+.ListStyleBox .vidDetailsListing {
+	float: left;
+	width: 400px;
+}
+
+.categoryListingHeader .categoryListingResultsCount {
+}
+
+.categoryListingHeader .categoryListingResultsCount H1 {
+}
+
+
+/* END category listing page styles */
+
+#mainNavCategories UL {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	list-style: none;
+}
+#mainNavCategories LI {
+	margin: 0px 0px 0px 0px;
+}
+.mainNavBrowseLabel {
+	font-size: 14px;
+	font-weight: bold;
+	border: 1px solid #CCC;
+	padding: 5px 0px 5px 5px;
+	width: 200px;
+}
+
+#mainNavCategories .box1Contents H1 {
+	font-size: 14px;
+	margin: 10px 0px 10px 0px;
+}
+.subNavList LI{
+	margin: 0px 0px 5px 10px;
+	padding: 0px 0px 0px 15px;
+}
+
+/* Begin box styles */
+
+/* SMALL box styles */
+.box1 {
+	background-image: url(/files/images/BoxDesign1_02.gif);
+	background-repeat: repeat-y;
+	width: 240px;
+	overflow: auto;
+	margin-bottom: 10px;
+}
+.box1Contents {
+	padding: 5px 10px 5px 15px;
+}
+.box1Contents H1 {
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 10px 0px;
+}
+.box1Bottom {
+	background-image:url(/files/images/BoxDesign1_04.gif);
+	background-repeat:no-repeat;
+	background-position: bottom;
+}
+
+.box1TopWhite {
+	background-image: url(/files/images/BoxDesign1_white_01.gif);
+	background-repeat:no-repeat;
+	padding: 5px 10px 5px 15px;
+	margin: 0px 0px 0px 0px;
+}
+.box1TopWhite H1{
+	padding: 10px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box1TopWhite P{
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box1TopGreen {
+	background-image: url(/files/images/BoxDesign1_green_01.gif);
+	background-repeat:no-repeat;
+	padding: 5px 10px 5px 15px;
+	margin: 0px 0px 0px 0px;
+	border-bottom: 1px dashed #666666;
+}
+.box1TopGreen H1{
+	padding: 10px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box1TopGreen P{
+	padding: 5px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box1TopRed {
+	background-image: url(/files/images/BoxDesign1_Red_01.gif);
+	background-repeat:no-repeat;
+	padding: 5px 10px 5px 15px;
+	margin: 0px 0px 0px 0px;
+	border-bottom: 1px dashed #666666;
+}
+.box1TopRed H1{
+	padding: 10px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box1TopRed P{
+	padding: 5px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+
+.box1TopBlue {
+	background-image: url(/files/images/BoxDesign1_Blue_01.gif);
+	background-repeat:no-repeat;
+	padding: 5px 10px 5px 15px;
+	margin: 0px 0px 0px 0px;
+	border-bottom: 1px dashed #666666;
+}
+.box1TopBlue H1{
+	padding: 10px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box1TopBlue P{
+	padding: 5px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+/* END SMALL Box styles
+
+BEGIN Large Box styles*/
+
+.box2 {
+	background-image: url(/files/images/BoxDesign1_Large_White_02.gif);
+	background-repeat: repeat-y;
+	width: 730px;
+	overflow: auto;
+}
+.box2Contents {
+	padding: 5px 10px 5px 15px;
+}
+.box2Contents H1 {
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 10px 0px;
+}
+.box2Bottom {
+	background-image:url(/files/images/BoxDesign1_Large_White_03.gif);
+	background-repeat:no-repeat;
+	background-position: bottom;
+}
+.box2TopWhite {
+	background-image: url(/files/images/BoxDesign1_Large_White_01.gif);
+	background-repeat:no-repeat;
+	padding: 5px 10px 5px 15px;
+	margin: 0px 0px 0px 0px;
+}
+.box2TopWhite H1{
+	padding: 10px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box2TopWhite P{
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box2TopGreen {
+	background-image: url(/files/images/BoxDesign1_Large_Green_01.gif);
+	background-repeat:no-repeat;
+	padding: 5px 10px 5px 15px;
+	margin: 0px 0px 0px 0px;
+	border-bottom: 1px dashed #666666;
+}
+.box2TopGreen H1{
+	padding: 10px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box2TopGreen P{
+	padding: 5px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box2TopRed {
+	background-image: url(/files/images/BoxDesign1_Large_Red_01.gif);
+	background-repeat:no-repeat;
+	padding: 5px 10px 5px 15px;
+	margin: 0px 0px 0px 0px;
+	border-bottom: 1px dashed #666666;
+}
+.box2TopRed H1{
+	padding: 10px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box2TopRed P{
+	padding: 5px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+
+.box2TopBlue {
+	background-image: url(/files/images/BoxDesign1_Large_Blue_01.gif);
+	background-repeat:no-repeat;
+	padding: 5px 10px 5px 15px;
+	margin: 0px 0px 0px 0px;
+	border-bottom: 1px dashed #666666;
+}
+.box2TopBlue H1{
+	padding: 10px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+.box2TopBlue P{
+	padding: 5px 0px 0px 0px;
+	margin: 0px 0px 5px 0px;
+}
+/* END LARGE box styles */
+.LeftBorderlessBox {
+	padding: 10px 10px 10px 10px;
+	margin: 10px 0px 10px 0px;
+}
+.LeftBorderlessBox H1 {
+	font-size: 14px;
+}
+
+
+/* END box styles */
+
+/* Begin Video detail page styles */
+/* #detailListing is the main DIV ID for this page type */
+
+#detailListing .detailStyleBox .vidresultLinkBox {
+	clear: both;
+	margin: 10px 0px 0px 0px;
+	padding: 10px 0px 10px 0px;
+	border-top: 1px dashed #CCC;
+}
+.vidresultLinkBox IMG {
+	position: relative;
+	top: 10px;
+	margin-right: 5px;
+}
+
+#detailListing .vidresultVideo {
+	float: left;
+	margin: 0px 10px 10px 0px;
+	border-right: 1px dashed #CCCCCC;
+	padding: 0px 10px 10px 0px;
+}
+
+#detailListing .vidresultLength {
+	margin: 0px 0px 10px 0px;
+}
+
+#detailListing .vidresultTitle {
+	font-size: 14px;
+	margin: 0 0 5px 0;
+}
+
+.addtoReel IMG {
+	position: relative;
+	top: 10px;
+	margin-right: 5px;
+}
+.getQuoteText IMG {
+	position: relative;
+	top: 10px;
+	margin-right: 5px;
+}	
+.getQuoteText {
+	margin-bottom: 10px;
+	padding: 0px 0px 10px 0px;
+	
+}	
+
+/* END Category listing page styles */
+
+/* Begin Category listing page styles */
+/* #categoryListing is the main DIV ID for this page type */
+
+#categoryListing {
+}
+
+/* END Category listing page styles */
+
+/* Begin Footer styles */
+/* #footerContainer is the main DIV ID for this content area */
+
+#footerContainer {
+	clear: both;
+	width: 1000px;
+	margin: 10px 0px 0px 0px;
+	padding: 5px 0px 0px 0px;
+}
+
+.footerLinks {
+	margin: 10px 0px 0px 0px;
+}
+
+.footerLinks A {
+	color: #666666;
+}
+.footerLinks A:visited {
+	color: #666666;
+}
+.footerLinks UL {
+	list-style: none;
+	color: #333333;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+.footerLinks UL LI {
+	padding: 0px 5px 0px 0px;
+	margin-right: 10px;
+	float: left;
+	color: #333333;
+	border-right: 1px solid #CCCCCC;
+}
+
+/* END Footer styles */
+
+
+/* Begin My Reel container styles */
+/* #MyReelContainer is the main DIV ID for this content area */
+
+#MyReelContainer {
+	background-image: url(/files/images/MyReel_ContainerBG.gif);
+	background-repeat: no-repeat;
+	height: 120px;
+	padding: 7px 5px 5px 10px;
+}
+
+.MyReelHeader {
+	background-image: url(/files/images/MyReel_Header_BG.gif);
+	background-repeat: no-repeat;
+	padding: 5px 0px 5px 10px;
+}
+
+.MyReelHeaderHelpTxt {
+	padding: 0px 0px 0px 6px;
+	font-size: 11px;
+	color: #FFFF00;
+}
+
+.MyReelHeaderTitle {
+	font-size: 16px;
+	font-weight: bold;
+	color: #323864;
+}
+
+.MyReelHeaderViewMore {
+	font-size: 11px;
+}
+
+
+.MyReelItem {
+	float: left;
+	padding: 0px 5px 5px 0px;
+	margin: 5px 10px 5px 0px;
+}
+
+.emptyReelMessage {
+	padding: 15px 0px 0px 0px;
+}
+
+/* Begin Tool tip styles*/
+
+a.tip {
+	position: relative;
+	padding: 0px 0px 0px 6px;
+	font-size: 11px;
+	color: #FF0000;
+
+}
+
+a.tip span {
+	display: none;
+	position: absolute;
+	top: 20px;
+	left: -10px;
+	width: 300px;
+	padding: 5px;
+	z-index: 100;
+	background: #000;
+	color: #fff;
+	-moz-border-radius: 5px; /* this works only in camino/firefox */
+	-webkit-border-radius: 5px; /* this is just for Safari */
+}
+
+a:hover.tip {
+	font-size: 99%; /* this is just for IE */
+}
+
+a:hover.tip span {
+	display: block;
+	text-decoration: none; 
+}
+/* END Tool tip styles*/
+
+/*Form Styles*/
+
+LEGEND {	
+	font-size: 14px;
+}
+FIELDSET {
+	margin: 0px 0px 10px 0px;
+}

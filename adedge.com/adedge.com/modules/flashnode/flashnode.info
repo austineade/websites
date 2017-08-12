@@ -1,0 +1,11 @@
+; $Id: flashnode.info,v 1.1 2007/05/01 23:01:35 stuartgreenfield Exp $
+name = Flash node
+description = Allows easy uploading and display of Flash content.
+package = SWF Tools
+dependencies = swftools
+
+; Information added by drupal.org packaging script on 2007-08-16
+version = "5.x-3.0"
+project = "flashnode"
+datestamp = "1187248504"
+

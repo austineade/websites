@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<component name="T_MOST_VIEWED">
+	<model name="MVideos">
+		<order dir="DESC">hits</order>
+		<limit>10</limit>
+	</model>
+	<view name="VCategory">
+		<tplfile>small_list.html</tplfile>
+		<tplitemfile>thumb_item.html</tplitemfile>
+		<url>index.php?m=videos&amp;sort=hits</url>
+	</view>
+</component>

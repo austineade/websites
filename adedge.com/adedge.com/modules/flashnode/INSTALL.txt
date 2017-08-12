@@ -1,0 +1,23 @@
+flashnode installation instructions
+
+1.) Download and installed SWFTools first - Flash node needs SWFTools to handle
+    the presentation of flash content.
+
+2.) Copy the flashnode directory to your modules/ directory
+
+3.) Enable the module at: Administer -> Site building -> Modules -> Flash node
+
+4.) Enable user access as required at: Administer -> User management ->
+    Access control
+
+5.) Enable the flash filter if required at: Administer -> Site configuration ->
+    Input formats
+
+6.) Alter the default settings at: Administer -> Site configuration ->
+    Flash node settings
+
+To create Flash content simply go to: Create content -> Flash
+
+To change flash insertion methods use SWFTools options pages.
+
+; $Id: INSTALL.txt,v 1.4 2007/05/08 22:28:10 stuartgreenfield Exp $

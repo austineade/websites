@@ -1,0 +1,11 @@
+; $Id
+name = Workhabit FormCorral
+description = Development module and user interface for defining a list of form fields to capture with validation support.
+package = "WorkHabit"
+project = "formcorral"
+
+; Information added by drupal.org packaging script on 2007-06-26
+version = "5.x-1.x-dev"
+project = "formcorral"
+datestamp = "1182829923"
+

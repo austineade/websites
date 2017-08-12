@@ -1,0 +1,11 @@
+; $Id: viewsphpfilter.info,v 1.1.2.2 2007/06/18 23:07:14 dww Exp $
+name = Views PHP Filter
+description = "Adds a filter to Views that takes PHP code, and uses the return value of the code as an array of Node IDs to filter on."
+dependencies = views
+package = "Views"
+
+; Information added by drupal.org packaging script on 2007-06-19
+version = "5.x-1.x-dev"
+project = "viewsphpfilter"
+datestamp = "1182212783"
+

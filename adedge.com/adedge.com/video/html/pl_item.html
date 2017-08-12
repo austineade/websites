@@ -1,0 +1,17 @@
+<#if selected=="true"/>
+	<form action="index.php?m=users.remove_playlist" method="post" onsubmit="return false;">
+		<a name="stab" id="tab_<#plid/>" class="stabh" href="index.php?m=users.playlists&p=<#plid/>" onclick="show_playlist(<#plid/>,<#public/>,this); highlight(this,'stab','#999999','#CCCCCC')" title="<#description/>">
+			<#title/> (<#videos/>)<input type="hidden" name="p" value="<#plid/>"/>
+			<input type="image" src="images/cross.gif" title="<#T_REMOVE/>" onclick="if(confirm('<#M_REMOVE_PL/>'))this.parentNode.parentNode.submit()" />
+		</a>
+		<script type="text/javascript">document.getElementById('tab_<#plid/>').href="javascript:void(0)";</script>
+	</form>
+<#else/>
+	<form action="index.php?m=users.remove_playlist" method="post" onsubmit="return false;">
+		<a name="stab" id="tab_<#plid/>" class="stab" href="index.php?m=users.playlists&p=<#plid/>" onclick="show_playlist(<#plid/>,<#public/>,this); highlight(this,'stab','#999999','#CCCCCC')" title="<#description/>">
+			<#title/> (<#videos/>)<input type="hidden" name="p" value="<#plid/>"/>
+			<input type="image" src="images/cross.gif" title="<#T_REMOVE/>" onclick="if(confirm('<#T_REMOVE_PL/>'))this.parentNode.parentNode.submit()" />
+		</a>
+		<script type="text/javascript">document.getElementById('tab_<#plid/>').href="javascript:void(0)";</script>
+	</form>
+<#endif/>

@@ -1,0 +1,15 @@
+<?php
+	function formcorral_install() {
+		watchdog("info", "creating tables for formcorral");
+		$queries = array("CREATE TABLE {formcorral} (lid int(11) NOT NULL auto_increment, name varchar(255) default NULL, function_callback varchar(255) default NULL, PRIMARY KEY (lid))",
+                                 "CREATE TABLE {formcorral_recipients} (rid int(11) NOT NULL auto_increment, lid int(11) NOT NULL default '0', sendToEmail varchar(255) default NULL, PRIMARY KEY (rid))",
+                                 "CREATE TABLE {formcorral_fields} (fid int(11) NOT NULL auto_increment, lid int(11) NOT NULL default '0', fieldName varchar(255) default NULL, friendlyName varchar(255) default NULL, vid int(11) default '0', PRIMARY KEY (fid))",
+                                 "CREATE TABLE {formcorral_submission} (sid int(11) NOT NULL auto_increment, lid int(11) NOT NULL default '0', timestamp int(11) default NULL, PRIMARY KEY (sid))",
+                                 "CREATE TABLE {formcorral_submission_values} (vid int(11) NOT NULL auto_increment, sid int(11) NOT NULL default '0', fid int(11) NOT NULL default '0', value varchar(255) default NULL, PRIMARY KEY (vid))",
+                                 "CREATE TABLE {formcorral_validators} (vid int(11) NOT NULL default '0', name varchar(255) default NULL, type varchar(255) default NULL, rule varchar(255) default NULL, error_message varchar(255) default NULL, PRIMARY KEY (vid))"
+                                 );
+		foreach ($queries as $query) {
+			db_query($query);
+		}	
+	}
+?>

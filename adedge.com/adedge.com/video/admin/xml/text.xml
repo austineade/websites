@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<section name="Language text" type="table" target="MText" search="true" edit="true" add="true" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Language" target="lang_id" type="select" table="lang" field="code" visible="true" edit="true" add="true"/>
+    <field name="Code" target="code" type="textfield" visible="true" edit="true" add="true"/>   
+	<field name="Text" target="string" type="textarea" visible="true" edit="true" add="true"/> 
+</section>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<component name="T_MYFAVORITES">
+	<model name="MFavorites">
+		<order dir="DESC">tt</order>
+		<limit>10</limit>
+		<username>$username</username>
+	</model>
+	<view name="VCategory">
+		<tplfile>small_list.html</tplfile>
+		<tplitemfile>small_item.html</tplitemfile>
+		<url>index.php?m=users.favorites</url>
+	</view>
+</component>

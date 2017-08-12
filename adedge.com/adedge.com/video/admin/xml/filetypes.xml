@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<section name="File Types" type="table" target="MFiletypes" search="false" edit="false" add="true" delete="true">
+    <field name="ID" target="type" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Type" target="type" type="textfield" visible="true" edit="false" add="true"/>
+	<field name="Player" target="players_id" type="select" table="players" field="type" visible="true" edit="true" add="true"/>
+</section>

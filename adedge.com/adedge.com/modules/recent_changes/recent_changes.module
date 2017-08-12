@@ -1,0 +1,443 @@
+<?php
+// $Id: recent_changes.module,v 1.1.2.3 2007/03/07 03:20:50 roetzi Exp $
+
+/**
+ * @file
+ * List of recent changes over all node revisions and comments
+ */
+
+/**
+ * Implementation of hook_help().
+ */
+function recent_changes_help($section) {
+  switch ($section) {
+    case 'admin/help#recent_changes':
+      $output = '<p>'.t('The recent changes module offers a page which shows all recent changes on nodes. The page can be viewed by anyone with the <em>view revisions</em> permission. If you have the <em>diff</em> module installed, a link to the diff-view will be offered in the table.').'</p>';
+      return $output;
+      break;
+   }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function recent_changes_menu($may_cache) {
+  $items = array();
+  if ($may_cache) {
+    $items[] = array(
+      'title' => t('Recent changes'),
+      'path' => 'recent_changes',
+      'callback' => 'recent_changes_view',
+      'access' => user_access('view revisions'),
+      'type' => MENU_NORMAL_ITEM
+    );
+  }
+  return $items;
+}
+
+/**
+ * Menu callback which displays a list of recent changes.
+ */
+function recent_changes_view() {
+  // Print feed if requested or display normal page otherwise
+  if (arg(1) == 'feed') {
+    return recent_changes_feed();
+  }
+  else {
+    return recent_changes_page();
+  }
+}
+
+/**
+ * Page display of recent changes.
+ */
+function recent_changes_page() {
+  $output = '';
+
+  // Add rss feed and stylesheet to page.
+  drupal_add_feed(url('recent_changes/feed', null, null, true), t('recent changes of !site', array('!site' => variable_get('site_name', 'drupal'))));
+  drupal_add_css(drupal_get_path('module', 'recent_changes').'/recent_changes.css');
+
+  // Show filter if enabled
+  if (recent_changes_show_filter()) {
+    $output .= drupal_get_form('recent_changes_filter_form');
+  }
+
+  if ($_REQUEST['op'] == t('Filter')) {
+    // Use submitted values if filter form was used.
+    $show_comments = check_plain($_REQUEST['recent_changes_show_comments']);
+    $node_type = check_plain($_REQUEST['recent_changes_show_node_type']);
+  }
+  else {
+    // Default values
+    $show_comments = recent_changes_show_comments();
+    $node_type = '';
+  }
+
+  // Header for recent changes table.
+  $header = array(
+    '', // operations
+    '', // time
+    t('Type'),
+    t('Title'),
+    t('User'),
+    t('Log'),
+  );
+  $rows = array();
+
+  // Build SQL query depending on node type filter and comments filter.
+
+  // Node type filter
+  $node_type_query = ($node_type ? " WHERE n.type = '$node_type'" : '');
+
+  // Query to get all revisions of the selected node types
+  $revisions_query = "SELECT n.type, r.nid, r.vid, 0 AS cid, r.title, r.timestamp, r.log, r.uid, u.name FROM {node_revisions} r LEFT JOIN {node} n ON r.nid = n.nid LEFT JOIN {users} u ON r.uid = u.uid$node_type_query";
+
+  if (module_exists('comment') && $show_comments) {
+    // Query to get all comments of the selected node types
+    $comments_query = "SELECT n.type, c.nid, 0 AS vid, c.cid, n.title, c.timestamp, c.subject AS log, c.uid, c.name FROM {comments} c LEFT JOIN {node} n ON c.nid = n.nid$node_type_query";
+    // Final query as a combination of node revisions and comments
+    $sql = "($revisions_query) UNION ALL ($comments_query) ORDER BY timestamp DESC";
+    if ($node_type) {
+      // Number of total nodes and comments if a specific node type is selected
+      $count_sql = "SELECT (SELECT COUNT(*) FROM {node_revisions} r JOIN {node} n ON r.nid = n.nid $node_type_query) + (SELECT COUNT(*) FROM {comments} c LEFT JOIN {node} n ON c.nid = n.nid $node_type_query)";
+    }
+    else {
+      // Number of total nodes and comments if all node types are shown
+      $count_sql = "SELECT (SELECT COUNT(*) FROM {node_revisions}) + (SELECT COUNT(*) FROM {comments})";
+    }
+  }
+  else {
+    // Query to select all node revisions
+    $sql = "$revisions_query ORDER BY timestamp DESC";
+    if ($node_type) {
+      // Number of total nodes if a specific node type is selected
+      $count_sql = "SELECT COUNT(*) FROM {node_revisions} r JOIN {node} n ON r.nid = n.nid $node_type_query";
+    }
+    else {
+      // Number of total nodes if all node types are shown
+      $count_sql = "SELECT COUNT(*) FROM {node_revisions}";
+    }
+  }
+  // SQL result provided by pager implementation
+  $result = pager_query($sql, recent_changes_count_per_page(), 0, $count_sql);
+
+  $day = -1;
+  $has_revisions = array();
+  // List all results
+  while ($change = db_fetch_object($result)) {
+    // Check if day of week changed and if yes output the new day.
+    $current_day = format_date($change->timestamp, 'custom', 'z');
+    if ($day != $current_day) {
+      $day = $current_day;
+      $rows[] = array(
+        array(
+          'data' => format_date($change->timestamp, 'custom', 'D, j F Y'),
+          'colspan' => '6',
+          'class' => 'date'
+        )
+      );
+    }
+    // Comments have a non-zero 'cid', node revisions a non-zero 'vid'. Both have a 'nid'
+    $is_comment = ($change->cid != 0);
+    if ($is_comment) {
+      // Format the row if the change is a comment
+      $rows[] = array(
+        // Link to comment
+        l('(comment)', "node/$change->nid", null, null, "comment-$change->cid"),
+        // Time of submit
+        format_date($change->timestamp, 'custom', 'H:i'),
+        // Node type of comment's node
+        $change->type,
+        // Title of comment's node
+        l($change->title, "node/$change->nid"),
+        // User which submitted comment
+        theme('username', $change),
+        // Title of comment
+        filter_xss($change->log),
+      );
+    } else {
+      // Format the row if the change is a node revision
+
+      // Check if that node has any revisions at all and cache the result.
+      if (!isset($has_revisions[$change->nid])) {
+        $has_revisions[$change->nid] = db_result(db_query('SELECT COUNT(*) FROM {node_revisions} WHERE nid=%d', $change->nid)) > 1;
+      }
+
+      // Get the version and title of the previous revision
+      $old_node = db_fetch_object(db_query('SELECT vid, title FROM {node_revisions} WHERE nid=%d AND vid<%d ORDER BY vid DESC LIMIT 1', $change->nid, $change->vid));
+
+      $operations = '';
+      // Add a link to the diff between the current version and the one before that.
+      if (module_exists('diff')) {
+        if ($old_node->vid) {
+          $operations .= l('(diff)', "node/$change->nid/revisions/view/$old_node->vid/$change->vid").'&nbsp;';
+        }
+        else {
+          $operations = '(diff)&nbsp;';
+        }
+      }
+      // Add a link to the revisions history of the node.
+      if ($has_revisions[$change->nid]) {
+        $operations .= l('(hist)', "node/$change->nid/revisions");
+      }
+      else {
+        $operations .= '(hist)';
+      }
+
+      $special = '';
+      if ($old_node->vid == 0) {
+        // The node is new.
+        $special = '<span class="change-flag">new</span> ';
+      }
+      elseif ($old_node->title != $change->title) {
+        // The node title changed.
+        $special = '<span class="change-flag">moved</span> ';
+      }
+      $rows[] = array(
+        // Link to diff and history
+        $operations,
+        // Submit time
+        format_date($change->timestamp, 'custom', 'H:i'),
+        // Node type
+        $change->type,
+        // Title of node
+        $special . l($change->title, "node/$change->nid"),
+        // User which submitted node
+        theme('username', $change),
+        // Log message of revision
+        filter_xss($change->log),
+      );
+    }
+  }
+
+  // Print table and pager
+  $output .= theme('table', $header, $rows, array('class' => 'recent-changes')); 
+  $output .= theme('pager', NULL, recent_changes_count_per_page, 0);
+
+  return $output;
+}
+
+/**
+ * Form for input filter.
+ */
+function recent_changes_filter_form() {
+  $form = array();
+  $form['#attributes'] = array('class' => 'inline');
+  // Enable/Disable comments in recent changes view
+  if (module_exists('comment')) {
+    $form['recent_changes_show_comments'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show comments'),
+      '#default_value' => isset($_REQUEST['form_id']) ? isset($_REQUEST['recent_changes_show_comments']) : recent_changes_show_comments(),
+    );
+  }
+  // Filter node type of recent changes view
+  $node_types = array('' => 'all node types');
+  $node_types = array_merge($node_types, node_get_types('names'));
+  $form['recent_changes_show_node_type'] = array(
+    '#type' => 'select',
+    '#default_value' => isset($_REQUEST['recent_changes_show_node_type']) ? $_REQUEST['recent_changes_show_node_type'] : '',
+    '#options' => $node_types,
+  );
+  $form['submit'] = array(
+    '#type' => 'button',
+    '#value' => t('Filter')
+  );
+  return $form;
+}
+
+/**
+ * RSS feed of recent changes.
+ */
+function recent_changes_feed() {
+  global $base_url;
+
+  // Select all node revisions (no filter)
+  $revisions_query = "SELECT r.nid, r.vid, 0 AS cid, r.title, r.timestamp, r.log, r.uid, u.name FROM {node_revisions} r LEFT JOIN {users} u ON r.uid = u.uid";
+  if (module_exists('comment')) {
+    // Select all comments
+    $comments_query = "SELECT c.nid, 0 AS vid, c.cid, n.title, c.timestamp, '' AS log, c.uid, c.name FROM {comments} c LEFT JOIN {node} n ON c.nid = n.nid";
+    // Final query
+    $sql = "($revisions_query) UNION ALL ($comments_query) ORDER BY timestamp DESC LIMIT %d";
+  }
+  else {
+    // Final query
+    $sql = "$revisions_query ORDER BY timestamp DESC LIMIT %d";
+  }
+  $result = db_query($sql, variable_get('feed_default_items', 10));
+  // Type of RSS feed: 'title', 'teaser', 'full'
+  $item_length = variable_get('feed_item_length', 'teaser');
+  // Is node teaser displayed (only used if $item_length not 'title')
+  $teaser = ($item_length == 'teaser') ? true : false;
+  // RSS namespace used
+  $namespaces = array('xmlns:dc="http://purl.org/dc/elements/1.1/"');
+  // RSS text
+  $items = '';
+  while ($item = db_fetch_object($result)) {
+    // Comments have a non-zero 'cid', node revisions a non-zero 'vid'. Both have a 'nid'
+    $is_comment = ($item->cid != 0);
+    if ($is_comment) {
+      // Format comment for RSS: Comment title as item title, comment body as text
+      $comment = db_fetch_object(db_query('SELECT * FROM {comments} WHERE cid = %d', $item->cid));
+
+      // RSS Title: title of comment with comment mark
+      $title = t('Comment') . ': ' . $comment->subject;
+      // RSS Link: Direct link to comment
+      $link = url("node/$comment->nid", null, "comment-$comment->cid", 1);
+      // Node title comment belongs to (used in feed body)
+      $node_title = l($item->title,"node/$item->nid", null, null, null, 1);
+      // User which submitted comment (used in feed body)
+      $username = ($comment->uid ? l($comment->name, "user/$comment->uid", null, null, null, 1) : $comment->name);
+      // RSS body: has meta info about comment
+      $item_text = '<p><em>' . t('Comment on !node_title from !user', array('!node_title' => $node_title, '!user' => $username)) . '</em></p><hr/>';
+      if ($item_length != 'title') {
+        // If not just titles are in RSS feeds, put the comment in RSS body
+        $item_text .= check_markup($comment->comment, $comment->format);
+      }
+      // No extras here (like attachments or taxonomy)
+      $extra = array();
+    }
+    else {
+      // Format comment for RSS
+      $node = node_load($item->nid, $item->vid);
+      // Select the older revision if available. Set flag accordingly
+      $old_entry = db_fetch_object(db_query('SELECT vid, timestamp FROM {node_revisions} WHERE nid = %d AND vid < %d ORDER BY vid DESC LIMIT 1', $item->nid, $item->vid));
+      if ($old_entry->vid) {
+        $old_node = node_load($node->nid, $old_entry->vid);
+        if ($old_node->title != $node->title) {
+          $flag = t('Moved');
+        }
+        else {
+          $flag = t('Edited');
+        }
+      }
+      else {
+          $flag = t('New');
+      }
+
+      // RSS title
+      $title = $flag . ' ' . $node->type . ': ' . $node->title;
+      // RSS link: link to node
+      $link = url("node/$node->nid", null, null, 1);
+
+      // RSS body
+      $item_text = '';
+      if ($old_entry->vid && module_exists('diff')) {
+        // If diff module exists, put a diff in the RSS feed
+        $item_text  = '<table style="width:100%">';
+        $item_text .= '<thead><tr><th></th><th>Revision of '. format_date($old_entry->timestamp) .'</th><th></th><th>Revision of '. format_date($item->timestamp) .'</th></tr></thead>';
+        $item_text .= _diff_table_body($old_node, $node);
+        $item_text .= '</table>';
+        // Replace css classes from diff with actual style elements since we cannot reference
+        // a css file from the rss feed.
+        $patterns = array(
+          '/class=["\']diff-section-title["\']/',
+          '/class=["\']diff-deletedline["\']/',
+          '/class=["\']diff-addedline["\']/',
+          '/class=["\']diff-context["\']/',
+          '/class=["\']diffchange["\']/',
+        );
+        $replacements = array(
+          'style="background-color: #f0f0ff;"',
+          'style="background-color: #ffa;width: 50%"',
+          'style="background-color: #afa;width: 50%"',
+          'style="background-color: #fafafa"',
+          'style="color: #f00;font-weight:bold"',
+        );
+        $item_text = preg_replace($patterns, $replacements, $item_text);
+        $item_text .= "<hr/>\n";
+      }
+
+      if ($item_length != 'title') {
+        // Load node to display in feed
+        if (node_hook($node, 'view')) {
+          $node = node_invoke($node, 'view', $teaser, false);
+        }
+        else {
+          $node = node_prepare($node, $teaser);
+        }
+        // If only teaser is shown, add 'read more' link to feed
+        if ($teaser) {
+          $item_text .= $node->teaser;
+          if ($node->readmore) { 
+            $item_text .= '<p>'. l(t('read more'), 'node/'. $node->nid, null, null, null, true) .'</p>'; 
+          }
+        }
+        else {
+          $item_text .= $node->body;
+        }
+      }
+
+      // RSS extras: load extras from node modules
+      $extra = node_invoke_nodeapi($node, 'rss item');
+    }
+    // Put in normal extra information
+    $extra = array_merge($extra,
+      array(
+        array('key' => 'pubDate', 'value' =>  date('r', $item->timestamp)), 
+        array('key' => 'dc:creator', 'value' => $item->name), 
+        array('key' => 'guid', 'value' => $item->nid .' at '. $base_url . ($is_comment ? ' comment '.$item->cid : ' revision '.$item->vid), 'attributes' => array('isPermaLink' => 'false'))
+      )
+    );
+    foreach ($extra as $element) {
+      if ($element['namespace']) {
+        $namespaces = array_merge($namespaces, $element['namespace']);
+      }
+    }
+    // Add rss feed item to output
+    $items .= format_rss_item($title, $link, $item_text, $extra);
+  }
+  // RSS channel information
+  $channel = array(
+    'version'     => '2.0',
+    'title'       => variable_get('site_name', 'drupal') .' - ' . t('Recent changes'),
+    'link'        => $base_url,
+    'description' => t('Recent changes of nodes and comments on %site', array('%site' => variable_get('site_name', 'drupal'))),
+    'language'    => $GLOBALS['locale'],
+  );
+  // Construct actual RSS feed text
+  $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+  $output .= "<rss version=\"". $channel["version"] . "\" xml:base=\"". $base_url ."\" ". implode(' ', $namespaces) .">\n";
+  $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language']);
+  $output .= "</rss>\n";
+
+  // Set MIME type in HTML header
+  drupal_set_header('Content-Type: application/rss+xml; charset=utf-8'); 
+  // Print feed text
+  print $output;
+}
+
+/*
+ * Settings
+ */
+
+/**
+ * Number of entries per page.
+ */
+function recent_changes_count_per_page($value = NULL) {
+  if (is_null($value)) {
+    return variable_get('recent_changes_entries_per_page', 50);
+  }
+  variable_set('recent_changes_entries_per_page', $value);
+}
+
+/**
+ * Is the filter form shown on the recent changes page?
+ */
+function recent_changes_show_filter($value = NULL) {
+  if (is_null($value)) {
+    return variable_get('recent_changes_show_filter', true);
+  }
+  variable_set('recent_changes_show_filter', $value);
+}
+
+/**
+ * Are comments shown by default?
+ */
+function recent_changes_show_comments($value = NULL) {
+  if (is_null($value)) {
+    return variable_get('recent_changes_show_comments', true);
+  }
+  variable_set('recent_changes_show_comments', $value);
+}

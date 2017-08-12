@@ -1,0 +1,503 @@
+<?php
+// $Id: views_argument_api.module,v 1.1.2.6 2007/07/12 06:01:55 morrissinger Exp $
+
+/*********************************************************************
+ * Drupal Hooks
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function views_argument_api_menu($may_cache) {
+	//Include functionality on behalf of core modules.
+	_views_argument_api_include_core_modules();
+	
+	if(!$may_cache && $_POST['form_id'] == 'views_edit_view') {
+		$form_values = $_POST['views_argument_api_configure_form'];
+		$form_values['name'] = $_POST['name'];
+		$form_values = _views_argument_api_check_plain($form_values);
+		views_argument_api_form_submit($_POST['form_id'], $form_values);
+	}
+}
+
+/**
+ * Implementation of hook_xmlrpc().
+ */
+function views_argument_api_xmlrpc() {
+	
+	//Include functionality on behalf of core modules.
+	_views_argument_api_include_core_modules();
+}
+
+/**
+ * Implementation of hook_cron().
+ */
+function views_argument_api_cron() {
+	//Include functionality on behalf of core modules.
+	_views_argument_api_include_core_modules();
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function views_argument_api_form_alter($form_id, &$form) {
+	switch($form_id) {
+		case 'views_edit_view':
+			$name = $form['basic-info']['name']['#default_value'];
+
+			//Get all available elements
+			$elements = views_argument_api_get_elements();
+
+			foreach($elements as $argid => $element_set) {
+				foreach($element_set as $key => $element) {
+					$options[$argid][$key] = $element['label'];
+				}
+			}
+			
+			if(!empty($name)) {
+				//Get default values
+				$default_elements = views_argument_api_get_element_names_by_view($name);
+			}
+
+			$f = 'views_argument_api_configure_form';
+			$form[$f] = array(
+				'#description' => t('Select the argument form elements you wish to use with this form when passing arguments to block or embedded views.'),
+				'#type' => 'fieldset',
+				'#title' => t('Argument API'),
+				'#collapsible' => TRUE,
+				'#collapsed' => TRUE,
+				'#weight' => -1,
+				'#tree' => TRUE,
+				'#theme' => 'views_argument_api_configure_form',
+			);
+			foreach($form['argument'] as $key => $element) {
+				if(is_numeric($key)) {
+					$argid = $element['id']['#value'];
+					$title = $form['argument']['add']['id']['#options'][$argid];
+					if(isset($options[$argid])) {
+						$form[$f][$argid] = array(
+							'#type' => 'select',
+							'#title' => $title,
+							'#options' => $options[$argid],
+							'#default_value' => $default_elements[$argid],
+						);
+					}
+				}
+			}
+	}
+}
+
+/*********************************************************************
+ * Helper Functions
+ */
+
+/**
+ * Handles submission of additional information on the views_edit_view form.
+ *
+ * @param $form_id
+ *	The form ID of the form being submitted.
+ */
+function views_argument_api_form_submit($form_id, $form_values) {
+	//Get the view name;
+	$name = $form_values['name'];
+	unset($form_values['name']);
+	//Delete old query results
+	db_query("DELETE FROM {views_argument_api} WHERE view = '%s'", $name);
+	
+	foreach($form_values as $argid => $element) {
+		db_query("INSERT INTO {views_argument_api} (view, argid, element) VALUES ('%s', '%s', '%s')", $name, $argid, $element);
+	}
+}
+
+/**
+ * Recursively runs check_plain() on arrays
+ *
+ * @param $form_values
+ *	A single value, an array of values, or a multi-dimensional array of values.
+ * @return
+ *	The array, having each value been run through check_plain().
+ */
+function _views_argument_api_check_plain($form_values) {
+	if(is_array($form_values)) {
+		foreach($form_values as $key => $value) {
+			$form_values[$key] = _views_argument_api_check_plain($value);
+		}
+		return $form_values;
+	} else {
+		return check_plain($form_values);
+	}
+}
+
+/**
+ * Includes views argument api functionality for core modules.
+ */
+function _views_argument_api_include_core_modules() {
+	$path = drupal_get_path('module', 'views_argument_api');
+	$dirpath = "$path/modules";
+	$dh = opendir($dirpath);
+	while (false !== ($file = readdir($dh))) {
+	  if (!is_dir("$dirpath/$file")) {
+	    if(substr($file, -4, 4) == ".inc") {
+	      require_once("$dirpath/$file");
+	    }
+	  }
+	}
+	closedir($dh);
+}
+
+/*********************************************************************
+ * Theme Functions
+ */
+function theme_views_argument_api_configure_form(&$form) {
+	foreach (element_children($form) as $key) {
+		$row = array();
+		$row['title'] = $form[$key]['#title'];
+		$form[$key]['#title'] = NULL;
+		
+		$row['element'] = drupal_render($form[$key]);
+		
+		$rows[] = $row;
+		$row = array();
+	}
+	
+	if(!empty($rows)) {
+		return theme('table', array(t('Argument'), t('Form element to use')), $rows);
+	} else {
+		return drupal_render($form);
+	}
+	
+}
+
+/*********************************************************************
+ *********************************************************************
+ * API ***************************************************************
+ *********************************************************************
+ *********************************************************************/
+
+
+/*********************************************************************
+ * Functions for finding out about provided elements.
+ *
+ *	Provides the API for the views_argument_api module. This file is
+ * supposed to be a collection of useful public access functions for
+ * other modules that want to lean on this module.
+ */
+
+/**
+ * Resets the cache.
+ */
+function views_argument_api_rebuild_elements() {
+	cache_clear_all('views_argument_api_elements_all', 'cache');
+}
+
+/**
+ * Returns an array of form element names for a particular view.
+ *
+ * @param $name
+ *	A view name
+ * @return
+ *	An array of form element names.
+ */
+function views_argument_api_get_element_names_by_view($name) {
+	$qs = db_query("SELECT * FROM {views_argument_api} v WHERE v.view = '%s'", $name);
+	while($obj = db_fetch_object($qs)) {
+		$elements[$obj->argid] = $obj->element;
+	}
+	
+	return $elements;
+}
+
+/**
+ * Get all elements currently assigned to a specific view.
+ *
+ * @param $name
+ *	A view name.
+ * @return
+ *	An array of elements, keyed by argid.
+ */
+function views_argument_api_get_elements_by_view($name) {
+	$elements = views_argument_api_get_elements();
+	$view_elements_chosen = views_argument_api_get_element_names_by_view($name);
+
+	foreach((array)$view_elements_chosen as $key => $chosen_element) {
+		$return[$key] = $elements[$key][$chosen_element];
+	}
+	
+	return $return;
+}
+
+/**
+ * Returns a set of form values related to the views argument API, which
+ * are a subset of a larger set of form values.
+ *
+ * Use this function if you are processing a form that includes form elements
+ * generated by this API. This function accepts a set of form values and
+ * returns just the form values related to the API, keyed by argument ID.
+ *
+ * @param $view_name
+ *	A unique view name.
+ * @param $form_values
+ *	An array of form values, as would be passed to a form validation or
+ * form submission function.
+ * @return
+ *	An array of form values that come from form elements generated by this
+ * API.
+ */
+function views_argument_api_get_api_form_values($view_name, $form_values) {
+	$elements = views_argument_api_get_elements_by_view($view_name);
+  $return = array();
+	foreach($elements as $argid => $element) {
+		$return[$argid] = $form_values[$argid];
+	}
+	
+	return $return;
+}
+/**
+ * Call all modules to get their exposed form element information.
+ *
+ * @return
+ *	An array of elements.
+ */
+function views_argument_api_get_elements() {
+	//See if the elements are cached, and return the cached version if they are.
+	if($cached = cache_get('views_argument_api_elements_all', 'cache')) {
+		return unserialize($cached->data);
+	}
+
+  $elements = array();
+	foreach(module_implements('views_argument_api_argument_elements') as $module) {
+		$module_elements = array();
+		$func = $module . '_views_argument_api_argument_elements';
+		$module_elements = $func();
+		foreach($module_elements as $argid => $set) {
+			foreach($set as $element) {
+				$elements[$argid][$module . '_' . $element['name']] = array(
+					'name' => $module . '_' . $element['name'],
+					'label' => $element['label'],
+					'handler' => $element['handler'],
+					'callback arguments' => $element['callback arguments'],
+					'element' => $element['element'],
+				);
+			}
+		}
+
+	}
+
+	//Cache the element data
+	cache_set('views_argument_api_elements_all', 'cache', serialize($elements), CACHE_PERMANENT);
+
+	return $elements;
+}
+
+/*********************************************************************
+ * Functions for building and processing forms.
+ */
+
+/**
+ * Builds a form for handling views arguments for a specific view.
+ *
+ * @param $name
+ *	A view name.
+ * @return
+ *	An array of form elements.
+ */
+function views_argument_api_build_argument_form($name) {
+	$elements = views_argument_api_get_elements_by_view($name);
+ 
+  $form = array();
+	foreach((array)$elements as $argid => $element) {
+		$form[$argid] = $element['element'];
+	}
+	
+	return $form;
+}
+
+/**
+ * Handles processing of a argument form element generated by this API.
+ *
+ * @param $view_name
+ *	A unique view name.
+ * @param $arg_id
+ *	An argument id (e.g. 'taxid').
+ * @value
+ *	The value of a views_argument_api form element.
+ * @return
+ *	A processed value for a view argument, given by a specific element's handler.
+ */
+function views_argument_api_process_argument_element($view_name, $arg_id, $value) {
+	$elements = views_argument_api_get_elements_by_view($view_name);
+	$func = $elements[$arg_id]['handler'];
+	return call_user_func_array($func, array_merge(array($value), $elements[$arg_id]['callback arguments']));
+}
+
+/**
+ * Handles processing of all argument form elements for a particular view.
+ *
+ * Rather than looping through views_argument_api_process_elements_by_view,
+ * if you want to process an entire form, you should use this function.
+ * This will save on performance by performing some queries once, as opposed
+ * to one time for each element.
+ *
+ * @param $view_name
+ *	A unique view name.
+ * @param $form_values
+ *	A set of form values for processing, keyed by argument ID.
+ * @return
+ *	An array of processed values for view arguments, keyed by argid.
+ */
+function views_argument_api_process_argument_elements_by_view($view_name, $form_values) {
+	$elements = views_argument_api_get_elements_by_view($view_name);
+  $processed = array();
+	foreach($elements as $argid => $element) {
+		$func = $elements[$argid]['handler'];
+		$processed[$argid] = call_user_func_array($func, array_merge(array($form_values[$argid]), (array)$elements[$argid]['callback arguments']));
+	}
+	
+	return $processed;
+}
+
+/**
+ * Saves an entire set of argument form element values to a specific
+ * API set ID. If a view name is provided, the function will first
+ * cross-check the form values against the argument IDs in the view,
+ * to ensure that it is working only with views_argument_api form
+ * values.
+ *
+ * @param $api_id
+ *	An API set ID (of your choosing) to save the form values against.
+ * Think of this as the ID you would provide in a call to
+ * variable_set() as the first argument.
+ * @param $edit
+ *	A set of form values, which may or may not be exclusively the values
+ * provided by a form generated by this API.
+ * @param $view_name
+ *	A view name against which to cross-check the keys of $edit. (optional).
+ * @return
+ *	TRUE if successful. FALSE if there was a problem.
+ */
+function views_argument_api_save_arguments($api_id, $edit, $view_name = NULL) {
+	if(!empty($view_name)) {
+		$api_values = views_argument_api_get_api_form_values($view_name, $edit);
+	} else {
+		$api_values = $edit;
+	}
+
+	db_query("DELETE FROM {views_argument_api_args} WHERE api_id = '%s'", $api_id);
+	$r = db_query("INSERT INTO {views_argument_api_args} (api_id, api_values) VALUES ('%s', '%s')", $api_id, serialize($api_values));
+	return $r;
+}
+
+/**
+ * Returns an entire set of argument form element values matching
+ * a specific API set ID, or $default if none is found.
+ *
+ * @param $api_id
+ *	An API set ID for a set of form values.
+ * @param $default
+ *	A value to return if no values have been set for the API set ID
+ * provided.
+ * @return
+ *	An entire set of argument form element values matching a 
+ * specific API set ID, or $default if none is found.
+ */
+function views_argument_api_get($api_id, $default) {
+	$values = db_result(db_query("SELECT v.api_values FROM {views_argument_api_args} v WHERE v.api_id = '%s'", $api_id));
+	return (!empty($values) ? unserialize($values) : $default);
+}
+
+/**
+ * Returns an entire set of argument values, processed by the handlers
+ * specified with the particular view. This function constructs an entire
+ * set of arguments to pass to a view from an API set ID and a view name.
+ *
+ * @param $api_id
+ *	An API set ID for a set of form values.
+ * @param $default
+ *	A value to return if no values have been set for the API set ID
+ * provided.
+ * @param $view_name
+ *	A unique view name.
+ * @param $for_view
+ *	If this paramater is set, the function will return a numerically-keyed
+ * view, as opposed to an associative array. This is suitable to pass
+ * to views_build_view.
+ * @return
+ *	An entire set of arguments that may be passed to a view, if
+ * the specific API set ID returns a match. $default, otherwise.
+ */
+function views_argument_api_get_processed($api_id, $default, $view_name, $for_view = FALSE) {
+	$values = views_argument_api_get($api_id, $default);
+
+	if(empty($values)) {
+		return $default;
+	} else {
+		$processed_values = views_argument_api_process_argument_elements_by_view($view_name, $values);
+
+		if($for_view) {
+			foreach($processed_values as $value) {
+				$arg_set[] = $value;
+			}
+		} else {
+			$arg_set = $processed_values;
+		}
+		return $arg_set;
+	}
+}
+
+/*********************************************************************
+ * Some default processing handlers that your API elements can use.
+ */
+ 
+/**
+ * Returns the value of the form element.
+ *
+ * This is the most simple of all handlers. While your API elements
+ * may wish to take a form value and run it through additional
+ * functions to come up with an argument value, it is likely that
+ * many modules will want to simply return the form value.
+ *
+ * This would certainly be the case for many textfield form elements,
+ * and perhaps for some select elements as well.
+ */
+function views_argument_api_handler_default_form_value($value) {
+	return check_plain($value);
+}
+
+/*********************************************************************
+ * Some default themes for the argument form that you can use.
+ */
+
+/**
+ * Tabular theme for argument form.
+ */
+function theme_views_argument_api_form_tabular(&$form) {
+	foreach (element_children($form) as $key) {
+		$row1 = array();
+		$row2 = array();
+		
+		$row1['title'] = $form[$key]['#title'];
+		$form[$key]['#title'] = NULL;
+		if(isset($form[$key]['#description'])) {
+			$row2[] = array(
+				'data' => $form[$key]['#description'],
+				'colspan' => 2,
+			);
+		}
+		
+		$form[$key]['#description'] = NULL;
+		
+		$row1['element'] = drupal_render($form[$key]);
+		
+		$rows[] = $row1;
+		if(!empty($row2)) {
+			$rows[] = $row2;
+		}
+	}
+	
+	if(!empty($rows)) {
+		return theme('table', array(t('Argument'), t('Value')), $rows);
+	} else {
+		return drupal_render($form);
+	}
+
+}

@@ -1,0 +1,156 @@
+body,input,textarea,select{
+  font-family: Tahoma;
+  font-size: 8pt;
+  color: black;
+}
+
+#side{
+  margin-bottom: 10px;
+  padding: 5px;
+  background: #333333;
+  border: 1px groove grey;
+}
+
+#area{
+  float: left;
+  width: 960px;
+  background: #EFEFEF;
+  padding: 0 10px 0 10px;
+}
+
+#logo{
+  background: url('images/logo.gif') no-repeat;
+  width: 156px;
+  height: 50px;
+  float: left;
+  margin-left: 10px;
+  padding-top: 45px;
+}
+
+a.tab{
+  display: block;
+  float: left;
+  font-family: "MS Trebuchet";
+  font-size: 12px;
+  color: white;
+  text-decoration: none;
+  background-image: url('images/tab.gif');
+  width: 146px;
+  height: 22px;
+  padding-top: 5px;
+  padding-left: 10px;
+}
+
+a.tab:hover{
+  background-image: url('images/tabh.gif');
+}
+
+h2,h3{
+  margin: 0 0 10px 0;
+  background: #DEDEDE; 
+  padding: 5px;
+  border-bottom: 2px solid white;
+}
+
+h2,h3{
+  border-top: 2px solid white;
+}
+
+.bottom{
+  margin: 10px 0;
+  background: #DEDEDE; 
+  padding: 5px 5px 0 5px;
+  border-top: 2px solid white;
+}
+
+.line{
+  margin: 10px 0;
+  background: #DEDEDE; 
+  padding: 5px 5px 0 5px;
+  border-top: 2px solid white;
+  border-bottom: 2px solid white;
+}
+
+#content{
+  
+}
+
+.theader{
+  background: url('images/grad.gif');
+  color: white;
+}
+
+.trow{
+  background: #DEDEDE;
+}
+
+.trow:hover{
+  background: #D0D0D0;
+}
+
+img{
+  border:0;
+}
+
+.white{
+  color: white;
+}
+
+div.brclear{
+	clear:both;
+	height:1px;
+	line-height:0px;
+	font-size:1px;
+	padding:0px;
+	margin:0px;
+}
+
+form.search{
+  margin: 0 0 10px 0;
+  background: #DEDEDE; 
+  padding: 5px;
+  border-bottom: 2px solid white;
+  border-top: 2px solid white;
+
+}
+
+form.login{
+  margin: auto auto;
+  width: 200px;
+  height: 150px;
+  padding: 5px;
+  background: #DEDEDE;
+}
+
+#popup{
+  position: absolute;
+  display: none;
+  top: 0;
+  left: 0;
+  /*width: 480px;*/
+  background: #dedede;
+  border: 1px solid #999999;
+  padding:10px;
+  filter:alpha(opacity=95); 
+  -moz-opacity: 0.95; 
+  opacity: 0.95; 
+}
+
+.popup_title{
+  font-weight: bold;
+  font-size: 13px;
+}
+
+a.settings_tab{
+  display: block;
+  float:left;
+  padding: 2px;
+  margin-right: 2px;
+  border: 1px solid #CCCCCC;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+a.settings_tab:hover{
+  background: #cccccc;
+}

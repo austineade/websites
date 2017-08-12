@@ -1,0 +1,20 @@
+<#if remove_videos=="true"/>
+<div class="heading"><h2><#T_MYVIDEOS/></h2></div>
+<form action="index.php?m=users.myvideos&remove" method="post" name="frmpending">
+	<div class="box">
+		<div class="hsub"><input type="submit" onclick="if(confirm('<#M_REMOVE_VIDEOS/>'))document.frmpending.submit();return false" value="<#T_REMOVE_SELECTED/>" /></div>
+<#endif/>
+		<#videos/>
+<#if remove_videos=="true"/>
+		</div>
+		<div class="bottom"><#pagination/></div>
+</form>
+<#endif/>
+<br />
+<div class="heading"><h2><#T_PENDING/></h2></div>
+<form action="index.php?m=users.myvideos&remove" method="post" name="frmpending">
+	<div class="box">
+		<div class="hsub"><input type="submit" onclick="if(confirm('<#M_REMOVE_VIDEOS/>'))document.frmpending.submit();return false" value="<#T_REMOVE_SELECTED/>" /></div>
+			<#pending/>
+		</div>
+</form>

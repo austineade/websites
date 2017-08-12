@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<section name="Comments" type="table" target="MComments" search="false" edit="true" add="false" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Username" target="username" type="textfield" visible="true" edit="false" add="false"/>
+    <field name="Date/Time" target="tt" type="tt" visible="true" edit="false" add="false"/>
+    <field name="Text" target="text" type="textarea" visible="true" edit="true" add="false"/>
+    <field name="Reported" target="reported" type="checkbox" visible="true" edit="true" add="false"/>
+    <field name="Approved" target="approved" type="checkbox" visible="true" edit="true" add="false"/>
+	<field name="" target="videos_id" type="element" visible="false" edit="false" add="false" />
+	<field name="" target="channel" type="element" visible="false" edit="false" add="false" />
+</section>

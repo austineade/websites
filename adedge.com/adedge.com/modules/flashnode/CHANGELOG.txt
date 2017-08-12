@@ -1,0 +1,179 @@
+16 August 2007
+--------------
+Finally got round to some more updates on Flashnode! Added ability to accept
+flv and mp3 files as upload. These are passed to SWFTools for rendering using
+the selected player settings.
+
+Fixed a bug in flashnode_delete that meant flash files weren't deleted when
+the parent node was deleted.
+
+4 June 2007
+-----------
+SWFTools is now available as an official release. Final tweaks to get
+flashnode ready for next release. As final test it is now uploaded and
+running on stuartandnicola.com!
+
+27 May 2007
+-----------
+Added a maximum displayed height / maximum displayed width setting so that
+the admin can limit the displayed height / width of flash content to
+prevent page layouts being broken. Movies that are smaller than the limits
+are displayed as normal - movies that are larger are scaled down as needed.
+The limits are applied during the display routine, so will be applied to
+content inserted via the macro format too. The feature can be switched off
+by setting a limit value of zero. This feature added in response to a user
+request.
+
+18 May 2007
+-----------
+Added base as a parameter to allow migration of content. base defaults to
+the correct path to access the default files directory, but can be
+over-ridden on a node by node basis if required.
+
+16 May 2007
+-----------
+Various bug fixes addressed.
+Comments improved to make code easier to understand (hopefully!)
+flashnode_content updated so that if called without a filter format it will
+assume FILTER_FORMAT_DEFAULT (to make calling from PHP easier)
+
+8 May 2007
+----------
+As flash node now has the option to use user provided substitution text the
+macro filter must process the markup through the filters for the node. When
+displaying flash in its own node this happens as part of flash_view, but the
+macro returns markup via a different method. We must force the markup check
+as we don't know if the flash macro is being called first or last. The call
+to hook_filter provides the appropriate format as a parameter, so we use this
+to run check_markup(). This means that the substitution content is filtered
+using the input format that applies to the node where the flash is being
+rendered, not the parent node where the original file is stored!
+
+6 May 2007
+----------
+Installer written that (hopefully) handles migration from flash to flashnode.
+Installation steps are to disable the old flash module in Drupal. Probably next
+is best to delete the folder. Then upload flashnode and activate it. Upon
+installation it should run an update routine that migrates flash to flashnode.
+The installer proved a little tricky to write since Drupal treats the set up as
+a first time install of the module, and so the update routines don't run, so
+we have to force it. Only tested on MySQL as that is my system, but should work
+on both...
+
+5 May 2007
+----------
+Major overhaul of basic code - there were a number of bugs in the way the
+upload and preview code was working that meant resetting to defaults after
+previewing was not working correctly. A major headache to fix, but think it
+is ok now.
+
+1 May 2007
+----------
+Migration towards SWFTools integration underway!
+
+21 April 2007
+-------------
+Slight change to _flash_check_settings() as module is being prepared for
+addition to Drupal repository and ufo.js cannot be included. check_settings
+will now check for presence of ufo.js, warn if it is not found, and offer a
+link the zip file.
+
+Where module name is displayed to end user it has been changed to Flash node
+to bring it in line with the Drupal project name. Internally it is still
+just flash, but starts migration toward correct project name. Next release
+will be flashnode both externally and internally.
+
+UPDATE.txt instructions added for users coming from the original direct
+download version of the module. Updating is easiest if the old module is
+removed first. No content is lost doing it this way!
+
+20 April 2007
+-------------
+Bug fix: updating a flash node did not reset the filter cache, so nodes that use
+flash macros did not update to reflect new content. Thanks to Andreas Hennig for
+reporting this one!
+
+06 April 2007
+-------------
+Forgot to amend flash.install so it didn't create fid in the first place! Fixed.
+
+04 April 2007
+-------------
+Discovered that the update routine didn't add the fid column, but then realised
+fid isn't actually needed, so the update is to drop it if it exists!
+
+16 March 2007
+-------------
+Some minor changes to the string formatting, to make better use of t('')
+
+24 February 2007
+----------------
+First version for Drupal 5.x!
+Main change is to the code to use the new administration callback.
+Otherwise module is much as it was before!
+I guess this makes it version 5.x-1.0
+
+12 December 2006
+----------------
+Flash field was not required so it was possible to submit a node without having
+a flash file linked to it. A file must now be given before you can submit node.
+Flash field renamed to Flash file to make it clearer what is needed.
+Flash field had a a weight of -3 which meant it rose to the top when editing -
+weighting removed so it appears in main flash area now.
+
+06 December 2006
+----------------
+Some minor changes and extra comments.
+Nothing significant.
+Version number changed to 4.7.x.1.1 to bring in line with Drupal module scheme.
+
+28 November 2006
+----------------
+First version for Drupal 4.7!
+All functionality of original module retained.
+.install written to automate creation of {flash} table in the database.
+Ready for release for testing (I think!)
+
+
+26 April 2006
+-------------
+Version 1.4
+Filter added to allow Flash to be re-used in other nodes.
+Filter allows various scaling methods to re-size flash content.
+
+
+18 April 2006
+-------------
+Code tidied up further, and validation routine made neater.
+Some minor changes to _load.
+Probably ready for this to be released and tested fully!
+
+
+18 April 2006
+-------------
+Some serious debugging as a few glitches became apparent!
+Also made it so if version or build are left blank they will reset to the defaults automatically.
+Error handling made neater so if invalid file loaded other errors should be skipped.
+
+
+17 April 2006
+-------------
+Now uses image_get_info to try and determine the flash movie size.
+If height and width are left blank on the submission form then if the settings can be obtained from the Flash file then they will be used.
+Changed the configuration page to allow this too, by allowing empty height and width settings.
+Tries to check the file type was valid. If invalid deletes the uploaded file and sets an error. Cannot submit until a valid upload is given. Done to try and avoid hangs by accidentally loading the wrong type of file!
+Changed text area title to Body.
+
+
+17 April 2006
+-------------
+Tidied up a lot, and removed redundant image.module elements.
+All flash data combined in $node->flash for ease of understanding.
+Remove fid from {flash} table - no longer needed.
+
+
+16 April 2006
+-------------
+First version for Drupal 4.6
+
+; $Id: CHANGELOG.txt,v 1.9 2007/08/16 07:02:38 stuartgreenfield Exp $

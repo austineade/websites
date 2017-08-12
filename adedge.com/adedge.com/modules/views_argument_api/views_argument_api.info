@@ -1,0 +1,11 @@
+; $Id: views_argument_api.info,v 1.1.2.4 2007/07/11 22:53:31 morrissinger Exp $
+name = "Views Argument API"
+description = "Allows modules to implement and use form elements to specify arguments in block and embedded views."
+package = "Views"
+dependencies = "views"
+
+; Information added by drupal.org packaging script on 2007-07-12
+version = "5.x-1.6"
+project = "views_argument_api"
+datestamp = "1184220306"
+

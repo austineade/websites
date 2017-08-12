@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<section name="Videos" type="table" target="MVideos" search="true" edit="true" add="true" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Title" target="title" type="textfield" visible="true" edit="true" add="true"/>
+    <field name="Description" target="description" type="textarea" visible="true" edit="true" add="true"/>
+    <field name="Category" target="categories_id" type="select" table="categories" field="title" visible="true" edit="true" add="true"/>
+    <field name="Username" target="username" type="textfield" visible="true" edit="true" add="true"/>
+    <field name="Date/Time" target="tt" type="tt" visible="true" edit="true" add="true"/>
+    <field name="File" target="filename" type="textfield" link="player.php?v={id}" visible="true" edit="true" add="true"/>
+	<field name="Type" target="type" type="textfield" visible="true" edit="true" add="true"/>
+	<field name="Duration" target="duration" type="textfield" visible="true" edit="true" add="true"/>
+	<field name="Reported" target="reported" type="checkbox" visible="true" edit="true" add="true"/>
+	<field name="Approved" target="approved" type="checkbox" visible="true" edit="true" add="true"/>
+    <field name="Thumbnails" target="" type="element" default="Thumbnails" link="index.php?p=thumbnails&amp;videos_id={id}" visible="true" edit="false" add="false"/>
+    <field name="Tags" target="" type="element" default="Tags" link="index.php?p=tags&amp;videos_id={id}" visible="true" edit="false" add="false"/>
+	<field name="Comments" target="" type="element" default="Comments" link="index.php?p=comments&amp;videos_id={id}" visible="true" edit="false" add="false"/>
+    <field name="Feature" target="" type="element" default="Feature" link="index.php?p=featured&amp;a=add&amp;save=save&amp;videos_id[]={id}" visible="true" edit="false" add="false"/>
+</section>

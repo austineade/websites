@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<section name="Users" type="table" target="MUser" search="true" edit="true" add="true" delete="true">
+    <field name="ID" target="username" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Username" target="username" type="textfield" visible="true" edit="false" add="true"/>
+    <field name="Password" target="password" type="password" visible="false" edit="false" add="true"/>
+    <field name="Email" target="email" type="textfield" link="index.php?p=email&amp;user_id={id}" visible="true" edit="true" add="true"/>
+    <field name="Join Date/Time" target="joined" type="tt" visible="true" edit="false" add="true"/>
+	<field name="IP" target="ip" type="textfield" visible="true" edit="false" add="true"/>
+	<field name="Permissions" target="perms" type="textfield" visible="true" edit="true" add="true"/>
+	<field name="Videos" target="" type="element" default="Videos" link="index.php?p=videos&amp;username={id}" visible="true" edit="false" add="false"/>
+</section>

@@ -1,0 +1,42 @@
+<div class="left">
+		<div class="heading"><h2><#T_MYCHANNEL/></h2></div>
+		<div class="box">
+			<form action="index.php?m=users.edit_channel&amp;step=finish" method="post" enctype="multipart/form-data">
+				<fieldset>
+					<p class="error"><#error/></p>
+					<p><#T_CHANNEL_LINK/>: 
+						<a href="<#channelurl/>"><b><#username/></b></a>
+					</p>
+
+					<label for="short_desc"><#T_SHORTDESC/></label>
+					<p><#M_CHANNEL_SHORTDESC/></p>
+					<p><textarea id="short_desc" cols="10" rows="5" style="width:320px;height:120px" name="short_desc"><#short_desc/></textarea></p>
+
+					<label for="description"><#T_ABOUT/></label>
+					<p><#M_CHANNEL_DESC/></p>
+					<p><textarea id="description" cols="10" rows="5" style="width:320px;height:240px" name="description"><#description/></textarea></p>
+
+					<label for="file"><#T_UPLOAD_IMAGE/>:</label>
+					<p><#M_CHANNEL_IMAGE/></p>
+					<p><input id="file" type="file" name="file"/></p>
+
+					<label for="thumbnail"><#T_SELTHUMB/></label> 
+					<p><#M_CHANNEL_THUMB/></p>
+					<div id="thumb" style="width:120px;height:90px">
+							<script type="text/javascript">
+								get_url_contents('index.php?m=video_thumb&amp;t=<#thumbs_id/>','thumb');
+							</script>
+					</div><br />
+					<#thumbs/>
+
+					<p>
+						<input type="submit" value="<#T_SAVECHANNEL/>" />
+					</p>
+				</fieldset>
+			</form>
+		</div>
+</div>
+<div class="left" style="margin-left:30px;">
+	<#ad1/>
+</div>
+<div class="brclear"></div>

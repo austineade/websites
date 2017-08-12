@@ -1,0 +1,760 @@
+<?php
+// $Id: webform.install,v 1.14.2.16.2.17 2008/04/27 20:23:05 quicksketch Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function webform_install() {
+  $success = TRUE;
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      $success = $success && db_query("CREATE TABLE if not exists {webform} (
+        nid int(10) unsigned NOT NULL default '0',
+        confirmation text,
+        teaser tinyint not null default '0',
+        submit_text varchar(255) default NULL,
+        submit_limit tinyint  not null default '-1',
+        submit_interval int not null default '-1',
+        email varchar(255) default NULL,
+        email_from_name varchar(255) default NULL,
+        email_from_address varchar(255) default NULL,
+        email_subject varchar(255) default NULL,
+        additional_validate text default NULL,
+        additional_submit text default NULL,
+        PRIMARY KEY  (nid)
+        ) TYPE=MyISAM /*!40100 DEFAULT CHARACTER SET utf8 */"
+      );
+
+      $success = $success && db_query("CREATE TABLE if not exists {webform_component} (
+        nid int(10) unsigned NOT NULL default '0',
+        cid smallint unsigned NOT NULL default '0',
+        pid smallint unsigned NOT NULL default '0',
+        form_key varchar(128) default NULL,
+        name varchar(255) default NULL,
+        type varchar(16) default NULL,
+        value text default NULL,
+        extra text,
+        mandatory tinyint NOT NULL default '0',
+        weight smallint NOT NULL default '0',
+        PRIMARY KEY  (nid, cid)
+        ) TYPE=MyISAM /*!40100 DEFAULT CHARACTER SET utf8 */"
+      );
+
+      $success = $success && db_query("CREATE TABLE if not exists {webform_submissions} (
+        sid int(10) unsigned NOT NULL default '0',
+        nid int(10) unsigned NOT NULL default '0',
+        uid int(10) unsigned NOT NULL default '0',
+        submitted int(11) NOT NULL default '0',
+        remote_addr varchar(128),
+        PRIMARY KEY (sid),
+        UNIQUE KEY sid_nid (sid, nid)
+        ) TYPE=MyISAM /*!40100 DEFAULT CHARACTER SET utf8 */"
+      );
+
+      $success = $success && db_query("CREATE TABLE if not exists {webform_submitted_data} (
+        nid int(10) unsigned NOT NULL default '0',
+        sid int(10) unsigned NOT NULL default '0',
+        cid smallint unsigned NOT NULL default '0',
+        no tinyint unsigned NOT NULL default '0',
+        data longtext,
+        PRIMARY KEY  (sid, cid, no),
+        INDEX nid (nid),
+        INDEX sid_nid (sid, nid)
+        ) TYPE=MyISAM /*!40100 DEFAULT CHARACTER SET utf8 */"
+      );
+      break;
+
+  case 'pgsql':
+      $success = $success && db_query("CREATE TABLE {webform} (
+        nid integer NOT NULL default '0',
+        confirmation text NOT NULL default '',
+        teaser smallint NOT NULL default '0',
+        submit_text varchar(255) default NULL,
+        submit_limit smallint NOT NULL default '-1',
+        submit_interval integer NOT NULL default '-1',
+        email varchar(255) NOT NULL default '',
+        email_from_name varchar(255) NOT NULL default '',
+        email_from_address varchar(255) NOT NULL default '',
+        email_subject varchar(255) NOT NULL default '',
+        additional_validate text default NULL,
+        additional_submit text default NULL,
+        PRIMARY KEY (nid)
+        )"
+      );
+
+      $success = $success && db_query("CREATE TABLE {webform_component} (
+        nid integer NOT NULL default '0',
+        cid smallint NOT NULL default '0',
+        pid smallint NOT NULL default '0',
+        form_key varchar(128) default NULL,
+        name varchar(255) NOT NULL default '',
+        type varchar(16) NOT NULL default '',
+        value text NOT NULL default '',
+        extra text NOT NULL default '',
+        mandatory smallint NOT NULL default '0',
+        weight smallint NOT NULL default '0',
+        PRIMARY KEY (nid, cid)
+        )"
+      );
+
+      $success = $success && db_query("CREATE TABLE {webform_submissions} (
+        sid serial UNIQUE,
+        nid integer NOT NULL default '0',
+        uid integer NOT NULL default '0',
+        submitted integer NOT NULL default '0',
+        remote_addr varchar(128) NOT NULL default '',
+        PRIMARY KEY (sid)
+        )"
+      );
+      $success = $success && db_query("CREATE UNIQUE INDEX {webform_submissions}_sid_nid_key ON {webform_submissions} (sid, nid)");
+
+      $success = $success && db_query("CREATE TABLE {webform_submitted_data} (
+        nid integer NOT NULL default '0',
+        sid integer NOT NULL default '0',
+        cid smallint NOT NULL default '0',
+        no smallint NOT NULL default '0',
+        data text NOT NULL default '',
+        PRIMARY KEY  (sid, cid, no)
+        )"
+      );
+      $success = $success && db_query("CREATE INDEX {webform_submitted_data}_nid_idx ON {webform_submitted_data} (sid)");
+      $success = $success && db_query("CREATE INDEX {webform_submitted_data}_sid_nid_idx ON {webform_submitted_data} (sid, nid)");
+      break;
+  }
+
+  $success = $success && db_query("UPDATE {system} SET weight = -1 WHERE name='webform' AND type='module'");
+
+  if ($success) {
+    drupal_set_message(t('Webform module installed module tables successfully.'));
+  }
+  else {
+    drupal_set_message(t('The installation of webform module was unsuccessful.'), 'error');
+  }
+}
+
+
+/**
+ * Implmentation of hook_uninstall().
+ */
+function webform_uninstall() {
+  // Unset webform variables.
+  variable_del('webform_use_cookies');
+  variable_del('webform_debug');
+  variable_del('webform_enable_fieldset');
+  variable_del('webform_default_from_address');
+  variable_del('webform_default_from_name');
+  variable_del('webform_default_subject');
+
+  $component_list = array();
+  $path = drupal_get_path('module', 'webform') ."/components";
+  $files = file_scan_directory($path, '^.*\.inc$');
+  foreach ($files as $filename => $file) {
+    variable_del('webform_enable_'. $file->name, 1);
+  }
+
+  // Delete uploaded files.
+  $filepath = file_create_path('webform');
+  _webform_recursive_delete($filepath);
+
+  // Drop tables.
+  db_query("DROP TABLE IF EXISTS {webform}");
+  db_query("DROP TABLE IF EXISTS {webform_component}");
+  db_query("DROP TABLE IF EXISTS {webform_submissions}");
+  db_query("DROP TABLE IF EXISTS {webform_submitted_data}");
+}
+
+/**
+ * Schema changes include component id's (cid) keys in the webform_component
+ * and webform_submitted_data tables.
+ */
+function webform_update_1() {
+
+  $ret = array();
+
+  // Start the normal update.
+  $ret[] = update_sql("CREATE TABLE {webform_tmp} ( ".
+                      "  nid int(10) unsigned NOT NULL default '0', ".
+                      "  sid int(10) unsigned NOT NULL default '0', ".
+                      "  cid int(10) unsigned NOT NULL default '0', ".
+                      "  no int(10) unsigned NOT NULL default '0', ".
+                      "  data longtext, ".
+                      " PRIMARY KEY  (nid,sid,cid,no) ".
+                      " ) ");
+  $result = db_query("SELECT ws.nid, ws.sid, wc.cid, ws.name, ws.data ".
+                     " FROM {webform_submitted_data} ws, {webform_component} wc ".
+                     " WHERE ws.nid = wc.nid ".
+                     " AND ws.name = wc.name ");
+
+  while ($row = db_fetch_object($result)) {
+    $data = unserialize($row->data);
+    if ( is_array($data) ) {
+      foreach ($data as $k => $v) {
+        db_query("INSERT INTO {webform_tmp} (nid, sid, cid, no, data) VALUES (%d, %d, %d, %d, '%s')", $row->nid, $row->sid, $row->cid, $k, $v);
+      }
+    }
+    else {
+      db_query("INSERT INTO {webform_tmp} (nid, sid, cid, no, data) VALUES (%d, %d, %d, %d, '%s')", $row->nid, $row->sid, $row->cid, 0, $row->data);
+    }
+  }
+
+  $ret[] = update_sql("DROP TABLE {webform_submitted_data}");
+  $ret[] = update_sql("ALTER TABLE {webform_tmp} RENAME TO {webform_submitted_data}");
+
+  $ret[] = update_sql("CREATE TABLE {webform_submissions} ( ".
+                      " nid int(10) unsigned NOT NULL default '0', ".
+                      " sid int(10) unsigned NOT NULL default '0', ".
+                      " submitted int(11)  NOT NULL default '0', ".
+                      " PRIMARY KEY  (nid, sid) ".
+                      ")" );
+
+  return $ret;
+}
+
+/**
+ * Schema changes 2: Added redirect_post column in webform table.
+ */
+function webform_update_2() {
+
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {webform} ADD redirect_post int(1) UNSIGNED NOT NULL DEFAULT '0'");
+      break;
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {webform} ADD redirect_post int(1) UNSIGNED NOT NULL DEFAULT '0' AFTER confirmation");
+      break;
+  }
+
+  return $ret;
+}
+
+
+/**
+ * Schema change 3: Update to UTF8
+ */
+function webform_update_3() {
+  return _system_update_utf8(array('webform', 'webform_component', 'webform_role_node', 'webform_submissions', 'webform_submitted_data'));
+}
+
+/**
+ * Schema change 4: Remove the webform_role_node table, node access can be handled by other modules made for this purpose.
+ * Add additional columns to webform_submissions for recording of repeated submissions (IP Address, Browser, etc).
+ * Add additional columns to webform for setting submission limitations
+ * Change 'maintain webforms' permission into two seperate perms: 'edit webforms', 'access webform results'
+ */
+function webform_update_4() {
+  $ret[] = update_sql("DROP TABLE if exists {webform_role_node}");
+  $ret[] = update_sql("ALTER TABLE {webform_submissions} ADD user varchar(128) AFTER submitted");
+  $ret[] = update_sql("ALTER TABLE {webform_submissions} ADD remote_addr varchar(128) AFTER user");
+  $ret[] = update_sql("ALTER TABLE {webform} ADD submit_limit int(2) NOT NULL DEFAULT '-1' AFTER redirect_post");
+  $ret[] = update_sql("ALTER TABLE {webform} ADD submit_interval int(10) NOT NULL DEFAULT '157784630' AFTER submit_limit"); // 5 years in seconds.
+
+  // Split 'maintain webforms' permissions into both 'edit webforms' and 'access webform results'.
+  $result = db_query("SELECT rid,perm FROM {permission}");
+  while ($row = db_fetch_object($result)) {
+    if (strpos($row->perm, "maintain webforms") !== false) {
+      $updated_perm = str_replace("maintain webforms", "edit webforms, access webform results", $row->perm);
+      db_query("UPDATE {permission} SET perm = '%s' WHERE rid = %d", $updated_perm, $row->rid);
+    }
+  }
+  return $ret;
+}
+
+/**
+ * Update MySQL sequence name to be cross-database compatible.
+ */
+function webform_update_5() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      db_query('LOCK TABLES {sequences} WRITE');
+      $ret[] = update_sql(sprintf("UPDATE {sequences} SET name = '%s' WHERE name = '%s'", db_prefix_tables('{webform_submissions}_sid'), db_prefix_tables('{webform_submissions}_id')));
+      db_query('UNLOCK TABLES');
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Add a parent ID to all components, allowing nested fieldsets.
+ */
+function webform_update_6() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {webform_component} ADD pid integer NOT NULL DEFAULT '0'");
+      break;
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {webform_component} ADD pid int(10) NOT NULL DEFAULT 0 AFTER cid");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Allow much larger default values for components.
+ */
+function webform_update_7() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_change_column($ret, 'webform_component', 'value', 'value', 'TEXT', array('not null' => FALSE, 'default' => "NULL"));
+      break;
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {webform_component} CHANGE value value TEXT NULL DEFAULT NULL");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Add additional validate and submit processing columns.
+ */
+function webform_update_8() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {webform} ADD additional_validate text DEFAULT NULL");
+      $ret[] = update_sql("ALTER TABLE {webform} ADD additional_submit text DEFAULT NULL");
+      break;
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {webform} ADD additional_validate text DEFAULT NULL AFTER email_subject");
+      $ret[] = update_sql("ALTER TABLE {webform} ADD additional_submit text DEFAULT NULL AFTER additional_validate");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Remove webform version variable, now obsolete with schema and version numbers.
+ * Split columns for email_from into email_from_address and email_from_name
+ */
+function webform_update_9() {
+  variable_del('webform_version');
+
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_change_column($ret, 'webform', 'email_from', 'email_from_address', 'varchar(255)', array('not null' => FALSE, 'default' => "NULL"));
+      $ret[] = update_sql("ALTER TABLE {webform} ADD email_from_name varchar(255) NULL DEFAULT NULL");
+      break;
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {webform} CHANGE email_from email_from_address varchar(255) NULL DEFAULT NULL");
+      $ret[] = update_sql("ALTER TABLE {webform} ADD email_from_name varchar(255) NULL DEFAULT NULL AFTER email");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Add the form_key column to the webform_component table.
+ */
+function webform_update_10() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {webform_component} ADD form_key varchar(128) NULL DEFAULT NULL");
+      break;
+
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {webform_component} ADD form_key varchar(128) NULL DEFAULT NULL AFTER pid");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Add unique indexes on Submission IDs for faster joins.
+ */
+function webform_update_11() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {webform_submissions} ADD INDEX sid (sid)");
+      $ret[] = update_sql("ALTER TABLE {webform_submitted_data} ADD INDEX sid (sid)");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("CREATE INDEX {webform_submissions}_sid_idx ON {webform_submissions}(sid)");
+      $ret[] = update_sql("CREATE INDEX {webform_submitted_data}_sid_idx ON {webform_submitted_data}(sid)");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Change 'user' column to 'uid' in webform_submissions table.
+ */
+function webform_update_12() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {webform_submissions} ADD uid int(10) NOT NULL DEFAULT 0 AFTER sid");
+      $ret[] = update_sql("UPDATE {webform_submissions} ws set uid = (SELECT uid FROM {users} u WHERE u.name = ws.user)");
+      $ret[] = update_sql("ALTER TABLE {webform_submissions} DROP user");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {webform_submissions} ADD uid integer NOT NULL DEFAULT 0");
+      $ret[] = update_sql("UPDATE {webform_submissions} ws set uid = (SELECT uid FROM {users} u WHERE u.name = ws.user)");
+      $ret[] = update_sql("ALTER TABLE {webform_submissions} DROP user");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Update to the 2.x version of webform.
+ */
+function webform_update_13() {
+  $ret = array();
+
+  // Set the webform weight to -1. This is needed to have webform's hook_menu()
+  // take precedence over node_menu().
+  $ret[] = update_sql("UPDATE {system} SET weight = -1 WHERE type = 'module' and name = 'webform'");
+
+  // Ensure crufty submission data that was not removed when webform nodes
+  // were deleted is cleared out before doing key changes.
+  $ret[] = update_sql("DELETE FROM {webform} WHERE nid NOT IN (SELECT nid FROM {node} WHERE type = 'webform')");
+  $ret[] = update_sql("DELETE FROM {webform_component} WHERE nid NOT IN (SELECT nid FROM {node} WHERE type = 'webform')");
+  $ret[] = update_sql("DELETE FROM {webform_submissions} WHERE nid NOT IN (SELECT nid FROM {node} WHERE type = 'webform')");
+  $ret[] = update_sql("DELETE FROM {webform_submitted_data} WHERE nid NOT IN (SELECT nid FROM {node} WHERE type = 'webform')");
+
+  // Convert timestamp-based cids to small integers starting at 1 for each node.
+  $result = db_query("SELECT nid, cid FROM {webform_component} ORDER BY nid ASC, cid ASC");
+  $nid = 0;
+  while ($component = db_fetch_array($result)) {
+    if ($component['nid'] != $nid) {
+      $nid = $component['nid'];
+      $cid = 1;
+    }
+    $ret[] = update_sql("UPDATE {webform_component} SET cid = ". $cid ." WHERE nid = ". $nid ." AND cid = ". $component['cid']);
+    $ret[] = update_sql("UPDATE {webform_component} SET pid = ". $cid ." WHERE nid = ". $nid ." AND pid = ". $component['cid']);
+    $ret[] = update_sql("UPDATE {webform_submitted_data} SET cid = ". $cid ." WHERE nid = ". $nid ." AND cid = ". $component['cid']);
+    $cid++;
+  }
+
+  // Convert the cid and pid columns to smallints for efficiency.
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {webform_component} CHANGE cid cid smallint unsigned NOT NULL default '0'");
+      $ret[] = update_sql("ALTER TABLE {webform_component} CHANGE pid pid smallint unsigned NOT NULL default '0'");
+      $ret[] = update_sql("ALTER TABLE {webform_submitted_data} CHANGE cid cid smallint unsigned NOT NULL default '0'");
+      break;
+    case 'pgsql':
+      db_change_column($ret, 'webform_component', 'cid', 'cid', 'smallint', array('not null' => TRUE, 'default' => '0'));
+      db_change_column($ret, 'webform_component', 'pid', 'pid', 'smallint', array('not null' => TRUE, 'default' => '0'));
+      db_change_column($ret, 'webform_submitted_data', 'cid', 'cid', 'smallint', array('not null' => TRUE, 'default' => '0'));
+      break;
+  }
+  return $ret;
+}
+
+/**
+ * Variable name changes.
+ */
+function webform_update_14() {
+  $ret = array();
+  variable_set('webform_default_from_address', variable_get('webform_default_from_email', variable_get('site_mail', ini_get('sendmail_from'))));
+  variable_del('webform_default_from_email');
+
+  if ('Form submission from: ' == variable_get('webform_default_subject', 'Form submission from: ')) {
+    variable_set('webform_default_subject', 'Form submission from: %title');
+  }
+  return $ret;
+}
+
+/**
+ * Convert 'CC' option in extra column to simply 'email'.
+ * Set email value to '%useremail' instead of 'user email'.
+ * Change the 'disabled' option from an attributes option to an individual option.
+ */
+function webform_update_15() {
+  $ret = array();
+  $result = db_query("SELECT nid, cid, extra, value FROM {webform_component} WHERE type = 'email'");
+  while ($row = db_fetch_array($result)) {
+    $extra = unserialize($row['extra']);
+    if ($extra['carboncopy']) {
+      $extra['email'] = 1;
+      unset($extra['carboncopy']);
+    }
+    $value = $row['value'] == 'user email' ? '%useremail' : '';
+    db_query("UPDATE {webform_component} SET extra = '%s', value = '%s' WHERE nid = %d and cid = %d", serialize($extra), $value, $row['nid'], $row['cid']);
+  }
+
+  $result = db_query("SELECT nid, cid, extra FROM {webform_component} WHERE type IN ('email', 'textfield', 'textarea')");
+  while ($row = db_fetch_array($result)) {
+    $extra = unserialize($row['extra']);
+    if ($extra['attributes']['disabled']) {
+      $extra['disabled'] = 1;
+      unset($extra['attributes']['disabled']);
+      db_query("UPDATE {webform_component} SET extra = '%s' WHERE nid = %d and cid = %d", serialize($extra), $row['nid'], $row['cid']);
+    }
+  }
+  return $ret;
+}
+
+/**
+ * Add the submit button text and teaser columns. Remove redirect_post.
+ */
+function webform_update_16() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {webform} DROP redirect_post");
+      $ret[] = update_sql("ALTER TABLE {webform} ADD teaser tinyint NOT NULL DEFAULT 0 AFTER confirmation");
+      $ret[] = update_sql("ALTER TABLE {webform} ADD submit_text varchar(255) NULL DEFAULT NULL AFTER teaser");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {webform} DROP redirect_post");
+      $ret[] = update_sql("ALTER TABLE {webform} ADD teaser smallint NOT NULL DEFAULT 0");
+      $ret[] = update_sql("ALTER TABLE {webform} ADD submit_text varchar(255) NULL DEFAULT NULL");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Set the submit interval to a real "unlimited" value instead of 5 years.
+ */
+function webform_update_17() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {webform} SET submit_interval = -1 WHERE submit_interval = 157784630");
+  return $ret;
+}
+
+/**
+ * Convert E-mail from name, address, and subject to integer values.
+ */
+function webform_update_18() {
+  $ret = array();
+  $result = db_query("SELECT * FROM {webform}");
+  while ($webform = db_fetch_object($result)) {
+    foreach (array('email_from_name', 'email_from_address', 'email_subject') as $key) {
+      if ($webform->{$key} == 'Automatic' || $webform->{$key} == 'uorm_updail_ft['nid'] != $nid) {
+      $nid = $componlt '0',T->{$k $ret[] =f hook_install().
+ */
+function webform_install() {
+  $success = TRUE;
+
+  switch ($GLOBALS['db_tg/when wmn be cross   db_qu, datail_f!is_num
+}
+cft['nid'] != $nid)hook_install(returnail, 'ema(ect($result)) {
+ 
+  while ($component = db_fet_prefix_tables('{id ann * Update M['nid'] != $nid,_tg/when wmn bee cross      $cid] = update_stall().
+ */
+function webform_install() {
+  $success = TRUE;
+  $cid++;
+ch ($GLOBALS['db_tg/when wmn be cross     db_qu, }aser columns. Remove redirectdate_13() grs fosql(();
+rr modules capromawitch ($GL_query("SELECT * FROM {webform}9 variable_get('webform_default_froes.
+  $filepath = ficaproma' for each ue {or recosubmit();
+
+  // Scapromawhat wa. module [] = update_sql("A$k $rt_postes']['discaproma_form_surnail, 'ema(ect($result)) {
+  ($GL
+  rethile ( their subm_l_from.;
+     db_fetch  }
+  _from_ $rtublid =form ($GL
+  retLIKE 'caproma_poi':
+'"m module was unsuccesscaproma_form_surnail, 'ema(ect($resultHOWE {sequeLIKE 'caproma_poi':
+'"m module modulehat wa_form_s('immplacaproma' es']['discaproma_ hook_u $rimmplacaproma';]['discaproma_ra = unsImmpl'module was unsuccesscaproma_ hook_u $rcaproma';]['discaproma_ra = unsMath'ponent} WHERE type IN ('email', 'textfield',fetch_array($result)) {
+    $extra = unscaproma'y('email_from_nid) {
+      $nid = $rray($data) ) {
+      fo(SELECT nid FROM {node} WHERE type = 'webform')");
+  $ret[d pid columns to smwebfoe cid ann pid columns to smwen be cross  $cidaproma_form_sisabled']);"
+projrnail, 'ema(ect($result)) {
+ 
+    c,fetch_acaproma_poi':
+
+  $ret[
+    c,f=RUE, 'defauli/com'defacolumns to smwen b+;
+cname varchail_f!;"
+prohook_install().
+ */
+function webfd, %d, '%s')"caproma_poi':
+
+ (
+    c,,what wa,tra = $row->datUE, 'defauli/com'defacolumns to smwen b+;
+c,;
+  $ciaproma_ hook_u;
+c,;
+  $ciaproma_ra = ;
+cP user");
+ }aser columns. Remove redirect_post.
+s.
+ bmitprimmry */
+fur recosu);
+
+  switch ($GLOBALS['db_type']) {
+    case '20 variable_get('webform_de     $ret[] = update_sql("ALTER TABLE {webform} DROP redirect_post");
+    vari {
+  $r = array(););
+
+  switch ($GLo emaile_sqrimmry */
+y();
+  $ret[chema ch.er");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Update to the 2.x te_sql("C user");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Update to the 2.x t;
+}
+
+/**
+  user");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Update to the rets} (sid, nid)ET utf8 */"
+       user");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Update to the ret_query("CREATE UNmitted_datavari {
+  $ret = array();
+
+  // Start t
+rr moy();
+f8 fer's favqrimmry */
+.GE cid cid smallint unsigned NOT NULL default '0'");
+      break; 2.x t;
+}
+
+/**
+  user");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Updat     break; 2.x te_sql("C user");
+ varWl_frowe'tom
+ 
+ */
+ire*/
+fuing key, des variable s withowever'noupdate_1.GE cid cid smallint unsigned NOT NULL default '0'");
+      break;
+    cano     PRIMARY} ADD submit_text varchar(255) NULL DEFAULT NULL");
+      break;
+  }
+:
+      $ret[] = upda_query("CREATE U"CREATE INDD INDEX sid (sid)");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql40100 DEFDD INDEX sid (sid)");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("Cutf8 */"
+       user");
+ orm_submissions} ADD uid integer NOT NULL DEFAULT 0");
+      $ret[] = update_sql("UPDA 2.x CONSTRA'%s $ret[] = update_sql("Cp*/
+DD INDEX sid (sid)");
+      bre 2.x te_sql$ret[] = update_sql("CREATE I user");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Update to the ret_query("CREATE UNmittr");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Update to the retCONSTRA'%s $ret[] = update_sql("C$success && s} (sidebform_submitted_data}d (sid)");
+      bre 2.x te_sql$ret[] = updat }
+
+  return $ret;"', 'smallint', array('not null' => TRUE, 'default' => '0'))nou'))nou'))
+  }
+  return $ret;
+}
+
+/**
+ * Variable name changes.
+ */
+functi5) NULL DEFAULT NULL");
+      break;
+  }
+:
+      $ret[] = upda_query("CREATE U"CREATE INDD INDEX sid (sid)");
+      breata} (sid)");
+      $success = $success && db_query("CREATE INDEX {webform_na}_sid_idx ON {webform_submitted_data}(sid)");
+      break;
+  }
+
+  return $r $success = $success && db_query("UPDATE {system} key varchar(128) NULL DEFAULT NULL AFTER pid");
+      break;
+  } && db_query("CREATE T"*/
+function webform_update_14() {
+  $ret = arIns variable s withowevermitted_datacook_5() {
+ BALS['db_type']) {
+    case 'my200 variable_get('webform_de     $ret[] = update_sql("ALTER TABLE {webform} DROP redirect_post");
+    mallint unsigned NOT NULL default '0'");
+      $ret[] = upda  ret  return $ret;
+}
+
+   $ret[] = update_sql("ALTER TABLE {we', 'smallint', array('not null' => TRUE, 'default' => '0'))ebform->ebform->  $ret[] = update_sql("ALTER TABLE ariable name changet[] = update_sql("ALTER T}te with schema and version nIF EXISlyql("DELte_6(ile->nande id a uunction specifisive_deriableionnsionl("DELt
+  <?ph
+   y(); id a BALSsionwith all
+  wi) {
+lyql("DELs vis$GLO(ile->n emaiwriorm_updte_sqlALSsion@paramlts"y();ariabsion  Ave_deriab wi* Imvption
+  //e) {
+    _riabsio['db_type']DROP TABLE IF EXISTS {webfo);
+  TER T  $ci);
+  TER T  mponey();=s = fil."/*";ubject') as $kglob(mponey())name, 1);'uorm_updail_fis_ 1);(, 1);'u=== truehook_install@ {
+ nk(, 1);' cross   db_qu, datail_fis_e) (, 1);'u=== truehook_installDRO

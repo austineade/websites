@@ -1,0 +1,827 @@
+<?php
+/* $Id */
+
+/* WorkHabit FormCorral Module 
+ * created by : Aaron Stewart (aaron@firebright.com) 
+ * For more information on this and other open source initiatives, 
+ * please visit http://www.workhabit.org/ 
+ */
+
+function formcorral_menu($may_cache) {
+  $items = array();
+  //  if ($may_cache) {
+    $items[] = array("path" => "admin/settings/formcorral",
+                     "title" => t("FormCorral Lists"),
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "formcorral_admin_page",
+                     "type" => MENU_NORMAL_ITEM);
+    $items[] = array("path" => "admin/settings/formcorral/view",
+                     "title" => t("view lists"),
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "formcorral_admin_page",
+                     "type" => MENU_DEFAULT_LOCAL_TASK);
+    $items[] = array("path" => "admin/settings/formcorral/add",
+                     "title" => t("add list"),
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "drupal_get_form",
+                     "callback arguments" => "formcorral_edit_list_form",
+                     "type" => MENU_LOCAL_TASK);
+
+    /** menu items related to validation **/
+    $items[] = array("path" => "admin/settings/formcorral/validation",
+                     "title" => t("validation rules"),
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "formcorral_validation_page",
+                     "type" => MENU_LOCAL_TASK);
+    $items[] = array("path" => "admin/settings/formcorral/validation/add",
+                     "title" => t("validation"),
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "drupal_get_form",
+                     "callback arguments" => "formcorral_validator_edit_form",
+                     "type" => MENU_CALLBACK);
+    $items[] = array("path" => "admin/settings/formcorral/validation/edit",
+                     "title" => t("validation"),
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "drupal_get_form",
+                     "callback arguments" => "formcorral_validator_edit_form",
+                     "type" => MENU_CALLBACK);
+
+    $items[] = array("path" => "admin/settings/formcorral/edit",
+                     "title" => t("edit list"),
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "drupal_get_form",
+                     "callback arguments" => "formcorral_edit_list_form",
+                     "type" => MENU_CALLBACK);
+    $items[] = array("path" => "admin/settings/formcorral/recipients",
+                     "title" => t("edit recipients"),
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "drupal_get_form", 
+                     "callback arguments" => "formcorral_edit_recipients_form",
+                     "type" => MENU_CALLBACK);
+    /** menu items related to fields **/
+    $items[] = array("path" => "admin/settings/formcorral/fields",
+                     "title" => t("edit fields"),
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "drupal_get_form", 
+                     "callback arguments" => "formcorral_edit_fields_form",
+                     "type" => MENU_CALLBACK);
+    $items[] = array("path" => "admin/settings/formcorral/fields/delete",
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "formcorral_delete_field",
+                     "type" => MENU_CALLBACK);
+    $items[] = array("path" => "admin/settings/formcorral/fields/edit",
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "drupal_get_form",
+                     "callback arguments" => "formcorral_edit_field_form",
+                     "type" => MENU_CALLBACK);
+
+    /** menu items related to submissions */
+    $items[] = array("path" => "admin/settings/formcorral/submissions",
+                     "title" => "View Submissions",
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "formcorral_admin_submissions_page",
+                     "type" => MENU_CALLBACK);
+    $items[] = array("path" => "admin/settings/formcorral/submissions/view",
+                     "title" => "View Submission", 
+                     "access" => user_access("administer formcorral"),
+                     "callback" => "formcorral_admin_submissions_view_page",
+                     "type" => MENU_CALLBACK);
+    //}
+  return $items;
+}
+
+function formcorral_admin_submissions_view_page($lid, $sid) {
+  $submission = formcorral_get_submission($sid);
+  $list = formcorral_get_list($lid);
+  $fields_map = array();
+  foreach($list['fields'] as $field) {
+    $fields_map[$field['fieldName']] = $field['friendlyName'];
+  }
+  $rows = array();
+
+  $header = array("Field Name", "Value");
+  $date_format = "d-M-Y H:i:s";
+  $rows[] = array("Submission Date", date($date_format, $submission['timestamp']));
+  foreach($submission as $field => $value) {
+    if ($field != "timestamp") {
+      $rows[] = array($fields_map[$field], $value);
+    }
+  }
+  print(theme("page", theme_table($header, $rows)));
+}
+
+function formcorral_admin_submissions_page($lid) {
+  $list = formcorral_get_list($lid);
+  $fields = $list['fields'];
+  $display_fields = array();
+  $header = array();
+  $header[] = array("data" => "Date Submitted",
+                    "field" => "timestamp",
+                    "sort" => "asc");
+  for ($i = 0; $i < 2; $i++) {
+    $field = array_shift($fields);
+    $display_fields[] = $field;
+    $header[] = array("data" => $field['friendlyName'],
+                      "field" => $field['fieldName'],
+                      "sort" => "asc");
+  }
+  if ($_REQUEST['order']) {
+    $order = array('order' => $ordering['sql'], 'sort' => $_REQUEST['sort']);
+  } else {
+    $order = array('order' => 'timestamp', 'sort' => 'desc');
+  }
+  $submissions = formcorral_get_submissions($lid, $order);
+  uasort($submissions, "_formcorral_sort_submission");
+
+  $rows = array();
+  foreach($submissions as $sid => $submission) {
+    $row = array();
+    $row[] = array("data" => date("Y-M-d h:i:s", $submission['timestamp']));
+    foreach($display_fields as $field) {
+      $row[] = $submission[$field['fieldName']];
+    }
+    $actions = l("view", "admin/settings/formcorral/submissions/view/$lid/$sid");
+    $row[] = $actions;
+    $rows[] = $row;
+  }
+  $ordering = tablesort_get_order($header);
+  print(theme("page", theme_table($header, $rows)));
+}
+
+function formcorral_delete_field($lid, $fid) {
+  $query = "DELETE FROM {formcorral_fields} where lid=%d and fid=%d";
+  db_query($query, $lid, $fid);
+  drupal_set_message("Deleted field.");
+  drupal_goto("admin/settings/formcorral/fields/{$lid}");
+}
+
+function formcorral_save_field($lid, $field) {
+  if ($field['fid']) {
+    $query = "UPDATE {formcorral_fields} set fieldName='%s', friendlyName='%s', vid=%d where lid=%d and fid=%d";
+    db_query($query,
+             db_escape_string($field['fieldName']), 
+             db_escape_string($field['friendlyName']), 
+             db_escape_string($field['vid']),
+             db_escape_string($lid), 
+             db_escape_string($field['fid'])); 
+  } else {
+    $query = "INSERT INTO {formcorral_fields} (lid, fieldName, friendlyName, vid) values(%d, '%s', '%s', %d)";
+    db_query($query, 
+             db_escape_string($lid), 
+             db_escape_string($field['fieldName']), 
+             db_escape_string($field['friendlyName']), 
+             db_escape_string($field['vid']));
+  }
+}
+
+function formcorral_perm() {
+  return array("administer formcorral");
+}
+
+function formcorral_edit_field_form($lid, $fid) {
+  $list = formcorral_get_list($lid);
+  if (!$list) {
+    drupal_set_error("The requested list doesn't exist!");
+    drupal_goto("admin/settings/formcorral");
+  }
+
+  $field = formcorral_get_field($lid, $fid);
+
+  $form['edit_field'] = array("#type" => "fieldset",
+                             "#title" => t("Edit Field"));
+
+  $form['edit_field']['lid'] = array("#type" => "hidden",
+                                     "#value" => $lid);
+  $form['edit_field']['fid'] = array("#type" => "hidden", 
+                                     "#value" => $fid);
+
+  $form['edit_field']['fieldName'] = array("#type" => "textfield",
+                                           "#title" => t("Field Name"),
+                                           "#required" => TRUE,
+                                           "#default_value" => $field['fieldName'],
+                                           "#description" => t("Enter the machine readable name of this form field.")
+                                           );
+  
+  $form['edit_field']['friendlyName'] = array("#type" => "textfield",
+                                              "#title" => t("Friendly Name"),
+                                              "#default_value" => $field['friendlyName'],
+                                              "#required" => FALSE,
+                                              "#description" => t($description)
+                                              );
+  
+  $validators = formcorral_get_validators();
+  $validator_options = array();
+  $validator_options[0] = "none";
+  foreach($validators as $vid => $validator) {
+    $validator_options[$vid] = $validator['name'];
+  }
+
+  $form['edit_field']['vid'] = array("#type" => "select",
+                                    "#title" => "Validator",
+                                    "#options" => $validator_options,
+                                    "#default_value" => $field['vid']);
+
+  $description = "The friendly name of this field.  This will be used in titles and " .
+                 "error messages visible by the user.  If omitted, the Field Name will be used instead.";
+
+  $form['edit-field-submit'] = array("#type" => "submit",
+                          "#value" => "Save Field"
+                          );
+  return $form;
+ 
+}
+
+function formcorral_edit_field_form_submit($form_id, $form_values) {
+  $lid = $form_values['lid'];
+  formcorral_save_field($lid, $form_values);
+  drupal_set_message("Form field saved.");
+  return "admin/settings/formcorral/fields/{$lid}";
+}
+
+function formcorral_edit_fields_form($lid = "") {
+  $list = formcorral_get_list($lid);
+  if (!$list) {
+    drupal_set_error("The requested list doesn't exist!");
+    drupal_goto("admin/settings/formcorral");
+  }
+  $rows = array();
+  if (count($list['fields']) == 0) {
+    $rows[] = array("no fields defined..", "", "");
+  } else {
+    $validators = formcorral_get_validators();
+    foreach($list['fields'] as $fid => $field) {
+      $actions = array(l('edit', "admin/settings/formcorral/fields/edit/{$lid}/{$fid}", array("style" => "padding-right:15px;")),
+                       l("delete", "admin/settings/formcorral/fields/delete/{$lid}/{$fid}"));
+      $actions = implode("", $actions);
+      $rows[] = array($field['fieldName'], $field['friendlyName'], $field['vid'] ? $validators[$field['vid']]['name'] : 'none', $actions);
+    }
+  }
+  $table = theme_table(array("Field Name", "Friendly Name", "Validator", "Actions"), $rows);
+  
+  $form = array();
+  $form['all_fields'] = array("#type" => "fieldset",
+                              "#title" => t("All fields for list {$list['name']}"));
+
+  $form['all_fields']['table'] = array("#type" => "markup",
+                                      "#value" => $table);
+
+  $form['add_field'] = array("#type" => "fieldset",
+                             "#title" => t("Add New Field"));
+
+  $form['add_field']['lid'] = array("#type" => "hidden",
+                       "#value" => $lid);
+
+  $form['add_field']['fieldName'] = array("#type" => "textfield",
+                        "#title" => t("Field Name"),
+                        "#required" => TRUE,
+                        "#description" => t("Enter the machine readable name of this form field.")
+                        );
+  
+  $form['add_field']['friendlyName'] = array("#type" => "textfield",
+                                "#title" => t("Friendly Name"),
+                                "#required" => FALSE,
+                                "#description" => t($description)
+                                );
+  
+  $validators = formcorral_get_validators();
+  $validator_options = array();
+  $validator_options[0] = "none";
+  foreach($validators as $vid => $validator) {
+    $validator_options[$vid] = $validator['name'];
+  }
+  $form['add_field']['validator'] = array("#type" => "select",
+                                          "#title" => "Validator",
+                                          "#options" => $validator_options);
+
+  $description = "The friendly name of this field.  This will be used in titles and " .
+                 "error messages visible by the user.  If omitted, the Field Name will be used instead.";
+
+  $form['add-field-submit'] = array("#type" => "submit",
+                          "#value" => "Add Field"
+                          );
+  return $form;
+}
+
+function formcorral_edit_fields_form_submit($form_id, $form_values) {
+  $lid = $form_values['lid'];
+  formcorral_save_field($lid, $form_values);
+
+}
+
+function formcorral_edit_recipients_form($lid = "") {
+  $list = formcorral_get_list($lid);
+  if (!$list) { 
+    drupal_set_error("The requested list doesn't exist!");
+    drupal_goto("admin/settings/formcorral");
+  }
+
+  $form = array();
+  $form['lid'] = array("#type" => "hidden",
+                       "#value" => $lid);
+  $recipients = $list['recipients'];
+  $all_recipients = array();
+
+  foreach ($recipients as $recipient_list) {
+    if (count($recipient_list) > 0) {
+      $all_recipients = array_merge($all_recipients, $recipient_list);
+    }
+  }
+  $form['recipients'] = array("#type" => "textarea",
+                              "#rows" => 4,
+                              "#cols" => 30,
+                              "#title" => t("Email Recipients"),
+                              "#default_value" => implode(", ", $all_recipients), 
+                              "#description" => "Enter a list of email addresses (separated by commas) that should get notified when a new submission to this list is posted.");
+  $form['submit'] = array("#type" => "submit",
+                          "#value" => "Save Recipients");
+  return $form;
+}
+
+function formcorral_edit_recipients_form_validate($form_id, $form_values) {
+  $new_recipients = explode(",", $form_values['recipients']);
+  $lid = $form_values['lid'];
+  $list = formcorral_get_list($lid);
+  if (!isset($list['recipients'])) {
+    $list['recipients']= array();
+  }
+  foreach($new_recipients as $new_recipient) {
+    $new_recipient = trim($new_recipient);
+    if (!valid_email_address($new_recipient)) {
+      form_set_message("recipients", "The email address '$new_recipient' is invalid.");
+    }
+  }
+}
+
+function formcorral_edit_recipients_form_submit($form_id, $form_values) {
+  $new_recipients = explode(",", $form_values['recipients']);
+  $lid = $form_values['lid'];
+  $list = formcorral_get_list($lid);
+  // flush the existing addresses
+  //
+  $list['recipients'] = array();
+  $new_recipients = explode(",", $form_values['recipients']);
+  foreach ($new_recipients as $recipient) {
+    $list['recipients'][] = trim($recipient);
+  }
+  formcorral_save_list($list);
+}
+
+function formcorral_edit_list_form($lid = "") {
+  $form = array();
+  $list = formcorral_get_list($lid);
+  $form['#base'] = "formcorral_edit_list_form";
+  $form['list_info'] = array("#type" => "fieldset",
+                             "#title" => t("List Information"));
+  $form['list_info']['name'] = array("#type" => "textfield",
+                                     "#size" => 50,
+                                     "#required" => TRUE,
+                                     "#default_value" => $list['name'],
+                                     "#title" => t("List Name"));
+  $form['submit'] = array("#type" => "submit",
+                          "#value" => "Save");
+
+  return $form;
+}
+
+function formcorral_edit_list_form_validate($form_id, $form_values) {
+  // nop
+}
+
+function formcorral_edit_list_form_submit($form_id, $form_values) {
+  $list = array("name" => $form_values['name']);
+  formcorral_save_list($list);
+  drupal_set_message("List '{$form_values['name']}' saved.");
+  drupal_goto("admin/settings/formcorral");
+}
+
+function formcorral_validation_page() {
+  $validators = formcorral_get_validators();
+  $rows = array();
+  if (count($validators) > 0) {
+    foreach ($validators as $vid => $validator) {
+      $actions = array(l("edit", "admin/settings/formcorral/validation/edit/{$vid}"));
+      $actions = implode("", $actions);
+      $rows[] = array($validator['name'], $actions);
+    }
+  } else {
+    $rows[] = array("no validators defined.  " . l("Add one here", "admin/settings/formcorral/validation/add") . ".", "");
+  }
+  $output .= theme_table(array("Validator Name", "Actions"), $rows);
+  $output .= l("Add new validation rule..", "admin/settings/formcorral/validation/add");
+
+  print(theme("page", $output));
+}
+
+function formcorral_admin_page() {
+  $output = "";
+  $lists = formcorral_get_lists();
+  $rows = array();
+  if (count($lists) == 0) {
+    $rows[] = array("No lists defined..");
+  } else {
+    foreach ($lists as $lid => $list) {
+      $actions = array(l("edit", "admin/settings/formcorral/edit/$lid", array("style" => "padding-right: 15px;")),
+                       l("recipients", "admin/settings/formcorral/recipients/$lid", array("style" => "padding-right: 15px;")),
+                       l("fields", "admin/settings/formcorral/fields/$lid", array("style" => "padding-right: 15px;")),
+                       l("submissions", "admin/settings/formcorral/submissions/$lid")
+                       );
+
+      $rows[] = array($list['name'], 
+                      implode("", $actions)
+                      );
+    }
+  }
+  $output = theme_table(array("List Name", "Actions"), $rows);
+
+  return $output;
+}
+
+function formcorral_help($section) {
+  if ($section == "admin/modules#description") {
+    return "Helper module for managing Laszlo Mailing List data";
+  }
+}
+function formcorral_save_submission($form) {
+  $queries = array();
+  // get the submitted listID from the form
+  //
+  $lid = $form['lid'];
+  if (!$lid) {
+    watchdog("error", "unspecified LIST ID");
+    return FALSE;
+  }
+  // walk through all form values and construct a query for each
+  //
+  $fields = formcorral_get_fields($lid);
+  $sid = db_next_id("formcorral_submission_sid");
+  $timestamp = mktime();
+  $submission_query = "INSERT INTO {formcorral_submission} (sid, lid, timestamp) values({$sid}, {$lid}, {$timestamp})";
+
+  $query = "INSERT INTO {formcorral_submission_values} (sid, fid, value) values";
+  $bStart = TRUE;
+  foreach ($fields as $fid => $field) {
+    if ($bStart) {
+      $bStart = false;
+    } else {
+      $query.=",";
+    }
+    $value = $form[$field];
+    $formatted_value = $value;
+    if (is_array($value)) {
+    	$formatted_value = implode(", ", $value);
+    }
+    $query.="('$sid', '{$fid}', '" . db_escape_string($formatted_value) . "')";
+  }
+  db_query($submission_query);
+  db_query($query);
+  formcorral_send_email($sid, $form);
+
+}
+
+function formcorral_send_email($sid, $form) {
+  $query = "SELECT l.lid, name, sendToEmail from {formcorral} l, {formcorral_submission} ls, {formcorral_recipients} lr where ls.lid=lr.lid and l.lid=ls.lid and ls.sid=%s";
+  $result = db_query(sprintf($query, $sid));
+  $emails = array();
+  while ($row = db_fetch_array($result)) {
+    $emails[] = $row['sendToEmail'];
+    $listName = $row['name'];
+    $lid = $row['lid'];
+  }
+  $mail = implode(", ", $emails);
+  $header = "From: info@workhabit.com";
+
+  $message = formcorral_format_message($lid, $sid, $form);
+
+  $subjecttemplate = dirname(__FILE__) . "/mailtemplate/mailtemplate-subject-" . db_escape_string($lid) . ".inc";
+  if (file_exists($subjecttemplate)) {
+    ob_start();
+    require_once($subjecttemplate);
+    $subject = ob_get_contents();
+    ob_end_clean();
+  } else {
+    $subject = "Submission to form: " . $listName;
+  }
+  drupal_mail("formcorral-submission-$sid", $mail, $subject, $message, $header);
+}
+
+function formcorral_format_message($lid, $sid, $form) {
+  $mailtemplate = dirname(__FILE__) . "/mailtemplate/mailtemplate-" . db_escape_string($lid) . ".inc";
+  if (file_exists($mailtemplate)) {
+    ob_start();
+    require_once($mailtemplate);
+    $message = ob_get_contents();
+    ob_end_clean();
+    return $message;
+  }
+  $message = "New form submission!\r\n";
+  foreach ($form as $key => $value) {
+    $formatted_value = $value;
+    if (is_array($value)) {
+      $formatted_value = implode(", ", $value);
+    }
+    $message.="{$key}\t{$formatted_value}\r\n";
+  }
+  return $message;
+}
+
+function formcorral_get_submissions($lid = 0, $order = array()) {
+  if ($lid == 0) {
+    watchdog("error", "Invalid or no listID specified");
+  }
+  $query = "SELECT s.sid as sid, timestamp, fieldName, sv.value as datavalue FROM {formcorral_fields} f, {formcorral_submission} s, {formcorral_submission_values} sv WHERE s.sid=sv.sid AND f.lid=s.lid AND sv.fid=f.fid AND s.lid=%s order by timestamp";
+  $request = db_query(sprintf($query, db_escape_string($lid)));
+  $submissions = array();
+  $bFirst = TRUE;
+  while ($submission = db_fetch_array($request)) {
+    $sid = $submission['sid'];
+    if (!isset($submissions[$sid])) {
+      $submissions[$sid] = array();
+      $submissions[$sid]['timestamp'] = $submission['timestamp'];
+      $submissions[$sid]['order'] = $order['order'];
+      $submissions[$sid]['sort'] = $order['sort'];
+    }
+    $value = $submission['datavalue'];
+    if ($value != null) {
+      $submissions["{$sid}"][$submission['fieldName']] = $value;
+    }
+  }
+  return $submissions;
+}
+
+function formcorral_get_submission($sid) {
+  $query = "SELECT timestamp, fieldName, value FROM {formcorral_fields} f, {formcorral_submission} s, {formcorral_submission_values} sv WHERE s.sid=sv.sid AND f.lid=s.lid and f.fid=sv.fid AND s.sid=%s order by sv.fid";
+  $request = db_query(sprintf($query, db_escape_string($sid)));
+  $bFirst = TRUE;
+  $submission = array();
+  while ($row = db_fetch_array($request)) {
+    if ($bFirst) {
+      $bFirst = false;
+      $submission['timestamp'] = $row['timestamp'];
+    } 
+    $submission[$row['fieldName']] = $row['value'];
+  }
+  return $submission;
+}
+
+
+function formcorral_get_fields($lid = 0) {
+  static $lists;
+  // return the cached list if it exists
+  //
+  if ($lists[$lid]) {
+    return $lists[$lid];
+  }
+  // fetch the field list from the DB
+  $query = "SELECT * from {formcorral_fields} where lid=%s";
+  $query = sprintf($query, mysql_escape_string($lid));
+  $result = db_query($query);
+  $fields = array();
+  while ($row = db_fetch_array($result)) {
+    $fields["{$row['fid']}"] = $row['fieldName'];
+  }
+  $lists[$lid] = $fields;
+  return $fields;
+}
+
+function formcorral_get_field($lid, $fid) {
+  $query = "SELECT * from {formcorral_fields} where lid=%d and fid=%d";
+  $resultset = db_query($query, 
+                        db_escape_string($lid), 
+                        db_escape_string($fid));
+  $field = db_fetch_array($resultset);
+  return $field;
+}
+
+/** saves a new list and returns the list id for it
+ */
+function formcorral_save_list($list) {
+  $lid = NULL;
+  // create a new list if none already exists
+  //
+  $is_new_list = FALSE;
+  if ($list['lid']) {
+    $lid = $list['lid'];
+  } else {
+    $is_new_list = TRUE;
+    $lid = db_next_id("formcorral_lid");
+  }
+  if (!isset($list['function_callback'])) {
+    $list['function_callback'] = "";
+  }
+
+  // save the primary list record along with its callback (if specified) and name
+  //
+  if ($is_new_list) {
+    $query_list = "INSERT INTO {formcorral} (lid, name, function_callback) values(%s, '%s', '%s')";
+    db_query($query_list, $lid, $list['name'], $list['function_callback']);
+  } else {
+    $query_list = "UPDATE {formcorral} set name='%s', function_callback='%s' where lid=%d";
+    db_query($query_list, $list['name'], $list['function_callback'], $lid);
+  }
+
+  // save recipients
+  //
+  if (isset($list['recipients']) && count($list['recipients']) > 0) {
+    $query_recipients = "INSERT INTO {formcorral_recipients} (lid, sendToEmail) values('%s', '%s')";
+    $recipients = implode(",", $list['recipients']);
+    db_query($query_recipients, db_escape_string($list['lid']), db_escape_string($recipients));
+  }
+
+  if (isset($list['new_fields']) && count($list['new_fields']) > 0) {
+    // save field names
+    $query_fields = "INSERT INTO {formcorral_fields} (lid, fieldName, friendlyName) values";
+    $bFirst = TRUE;
+    foreach ($list['new_fields'] as $fid => $field) {
+      if ($bFirst) {
+          $bFirst = FALSE;
+        } else {
+          $query_fields .= ",";
+        }
+      $query_fields .= "({$lid}, '{$field['fieldName']}', '{$field['friendlyName']}')";
+    }
+    db_query($query_fields);
+  }
+
+  return $lid;
+}
+
+function formcorral_get_list($vMixed) {
+  if (!is_array($vMixed)) {
+    $lid = $vMixed;
+    $query = "SELECT lid, name, function_callback from {formcorral} l WHERE l.lid=%d";
+    $resultset = db_query($query, $lid);
+  } else if (isset($vMixed['name'])) {
+    $name = $vMixed['name'];
+    $query = "SELECT lid, name, function_callback from {formcorral} l where l.name='%s'";
+    $resultset = db_query($query, $name);
+  }
+
+
+  $list = db_fetch_array($resultset);
+  $lid = $list['lid'];
+
+  if ($list) {
+    // fetch recipients
+    //
+    $query = "SELECT rid, sendToEmail FROM formcorral_recipients r where r.lid=%d";
+    $resultset = db_query($query, $lid);
+    $list['recipients'] = array();
+    while ($row = db_fetch_array($resultset)) {
+      $list['recipients'][$row['rid']] = array();
+      $list['recipients'][$row['rid']]['sendToEmail'] = $row['sendToEmail'];
+    }
+
+    // fetch fields
+    //
+    $query = "SELECT fid, fieldName, friendlyName, vid FROM formcorral_fields f where f.lid=%d";
+    $resultset = db_query($query, $lid);
+    $list['fields'] = array();
+    while ($row = db_fetch_array($resultset)) {
+      $list['fields'][$row['fid']] = $row;
+    }
+  }
+  return $list;
+}
+
+function formcorral_get_lists() {
+  $query = "SELECT lid, name, function_callback from {formcorral}";
+  $resultset = db_query($query);
+  $lists = array();
+  while ($row = db_fetch_array($resultset)) {
+    $lists[$row['lid']] = array();
+    $lists[$row['lid']]['lid'] = $row['lid'];
+    $lists[$row['lid']]['name'] = $row['name'];
+  }
+  return $lists;
+}
+
+function _formcorral_sort_submission($a, $b) {
+  if ($a == $b) { return 0; }
+  $ordering = ($a['sort'] == 'desc') ? -1 : 1;
+  return strcmp(strtolower($a[$a['order']]), strtolower($b[$b['order']])) * $ordering;
+}
+
+function formcorral_get_validators() {
+  $query = "SELECT vid, name, type, rule, error_message from {formcorral_validators} order by vid";
+  $resultset = db_query($query);
+  $validators = array();
+  while ($row = db_fetch_array($resultset)) {
+    $validators[$row['vid']] = $row;
+  }
+  return $validators;
+}
+
+
+function formcorral_validator_edit_form($vid = "") {
+  if ($vid) {
+    $validator = formcorral_get_validator($vid);
+    $name = $validator['name'];
+    $type = $validator['type'];
+    $rule = $validator['rule'];
+    $error_message = $validator['error_message'];
+  }
+
+  $form = array();
+  $markup_description = "Validation rules are re-usable rules for validating individual form ".
+    "fields.  WorkHabit Submission lists come with common validators for ".
+    "email, phone, and postal codes, among others.  You may define your ".
+    "own rules below.";
+  $form['markup_1'] = array("#type" => "markup",
+                            "#value" => $markup_description);
+  $form['name'] = array("#type" => "textfield",
+                        "#title" => t("Name"),
+                        "#default_value" => $name,
+                        "#required" => TRUE,
+                        "#description" => "The name of this validation rule as it should appear in the Submission List field builder.");
+
+  $type_options = array();
+  $type_options[''] = "Select...";
+  $type_options['regexp'] = "Regular Expression";
+  $type_options['callback'] = "PHP Function";
+
+  $form['type'] = array("#type" => "select", 
+                        "#title" => t("Type"),
+                        "#default_value" => $type,
+                        "#options" => $type_options,
+                        "#description" => t("Select the type of rule, e.g. Regular Expression.  See below for more info."));
+
+  $rule_description = t("For Regular Expressions, a valid regular expression that the value of a ".
+                        "field should match.<br/> For PHP Function, the name of a callback to call ".
+                        "that returns TRUE if valid, FALSE if not.");
+
+  $form['rule'] = array("#type" => "textarea",
+                         "#title" => t("Validation rule"),
+                        "#default_value" => $rule,
+                        "#description" => $rule_description
+                        );
+
+  $message_description = "This message will be shown when a field's validation fails.  Use ".
+                         "%fieldname as a placeholder for the actual field name.";
+  $form['error_message'] = array("#type" => "textarea",
+                                 "#title" => t("Error message"),
+                                 "#default_value" => $error_message,
+                                 "#description" => $message_description);
+
+  $form['submit'] = array("#type" => "submit",
+                          "#value" => "Save Validation Rule");
+  return $form;
+}
+
+function formcorral_validator_edit_form_validate($form_id, $form_values) {
+
+}
+
+function formcorral_validator_edit_form_submit($form_id, $form_values) {
+  formcorral_save_validator($form_values);
+  drupal_set_message("Validator saved.");
+  return "admin/settings/formcorral/validation";
+}
+
+
+function formcorral_save_validator($validator) {
+  if (!$validator['vid']) {
+    $validator['vid'] = db_next_id("formcorral_validator_vid");
+    $query = "INSERT INTO {formcorral_validators} (vid, name, type, rule, error_message) values(%d, '%s', '%s', '%s', '%s')";
+    
+    db_query($query, 
+             db_escape_string($validator['vid']),
+             db_escape_string($validator['name']),
+             db_escape_string($validator['type']),
+             db_escape_string($validator['rule']),
+             db_escape_string($validator['error_message']));
+  } else {
+    $query = "UPDATE {formcorral_validator} set name='%s', type='%s', value='%s', message='%s' where vid=%d";
+    db_query($query,
+             db_escape_string($validator['name']),
+             db_escape_string($validator['type']),
+             db_escape_string($validator['rule']),
+             db_escape_string($validator['error_message']));
+  }
+}
+
+function formcorral_validate_form($form_id, $form_values) {
+  $list = formcorral_get_list($form_values['lid']);
+  $validators = formcorral_get_validators();
+  foreach ($list['fields'] as $field) {
+    if ($field['vid']) {
+      $validator = $validators[$field['vid']];
+      formcorral_validate_field($validator, $field, $form_values[$field['fieldName']]);
+    }
+  }
+}
+
+function formcorral_validate_field($validator, $field, $value) {
+  if ($validator['type'] == "regexp") {
+    if (!preg_match("/" . $validator['rule'] . "/", $value) && $value != "") {
+      form_set_error($field['fieldName'], str_replace("%fieldname", $field['friendlyName'], $validator['error_message']));
+    }
+    // otherwise it passed 
+  } else if ($validator['type'] == "callback") {
+    $result = call_user_func($validator['rule'], $value);
+    if (!$result && $value != "") {
+      form_set_error($field['fieldName'], str_replace("%fieldname", $field['friendlyName'], $validator['error_message']));
+    }
+  }
+}
+
+?>

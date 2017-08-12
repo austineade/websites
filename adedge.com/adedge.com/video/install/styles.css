@@ -1,0 +1,31 @@
+html{ margin: 0; height: 100% }
+
+body{
+	background-image: url('images/background.gif');
+	font: 12px Tahoma, Trebuchet MS, Helvetica, Verdana, sans-serif;
+	color: #000000;
+	margin: 0;
+	height: 100%;
+}
+
+div.box{
+	background: #e5e5e5;
+	border: 1px solid #cccccc;
+	padding: 10px;
+	width: 300px;
+	margin: auto auto;
+}
+
+td {
+	background: #ffffff;
+	padding: 2px;
+	border: 1px solid #cecece;
+}
+
+table{
+	margin: 10px;
+}
+
+td.thead{
+	background: #cecece;
+}

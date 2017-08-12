@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<section name="Players" type="table" target="MPlayers" search="false" edit="true" add="true" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Type" target="type" type="textfield" visible="true" edit="true" add="true"/>
+    <field name="Code" target="code" type="textarea" visible="true" edit="true" add="true"/>
+    <field name="Embed" target="embed" type="textarea" visible="true" edit="true" add="true"/>
+</section>

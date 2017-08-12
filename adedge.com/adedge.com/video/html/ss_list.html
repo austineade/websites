@@ -1,0 +1,40 @@
+<div class="left" style="width:551px">
+	<div class="error"><#error/></div><br />
+	<form action="index.php" method="get" class="ss_form">
+		<#M_SUBSCRIBETO_USERNAME/><br />
+		<input type="hidden" name="m" value="users.subscribe"/>
+		<input type="text" name="to"/><br />
+		<input type="submit" value="<#T_SUBSCRIBE/>"/>
+	</form>
+	<form action="index.php" method="get" class="ss_form">
+		<#M_SUBSCRIBETO_TAGS/><br />
+		<input type="hidden" name="m" value="users.subscribe"/>
+		<input type="text" name="to"/><br />
+		<input type="hidden" name="tag" value="1"/>
+		<input type="submit" value="<#T_SUBSCRIBE/>"/>
+	</form>
+	<div class="brclear" style="width:390px"></div>
+	<br />
+	<div class="left" style="margin-top:15px">
+		<a name="stab" id="tab_0" class="stabh" href="index.php?m=users.subscriptions&amp;channel=New+Videos&amp;tag=1" onclick="get_url_contents('index.php?m=subscription&amp;channel=New+Videos&amp;tag=1','ajax_box'); highlight(this,'stab','#999999','#CCCCCC')"><#T_NEWVIDEOS/></a>
+		<script type="text/javascript">document.getElementById('tab_0').href='javascript:void(0)';</script>
+		<#list/>
+	</div>
+	<div class="left">
+		<div class="heading" style="width:410px"><h2><#T_MYSUBSCRIPTIONS/></h2></div>
+		<div class="box" style="width:390px">
+			<div id="ajax_box">
+				<#subscription/>
+				<script type="text/javascript">
+				get_url_contents('index.php?m=subscription&amp;channel=New+Videos&amp;tag=1','ajax_box');
+				</script>
+			</div>
+		</div>	
+	</div>
+
+	<div class="brclear" style="width:390px"></div>
+</div>
+<div class="left" style="margin-left:50px;">
+	<#ad1/>
+</div>
+<div class="brclear"></div>

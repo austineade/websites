@@ -1,0 +1,24 @@
+<div class="heading"><h2><#T_SIGNIN/></h2></div>
+		<div class="box">
+			<form action="index.php?m=login" method="post">
+				<fieldset>
+					<input type="hidden" name="redir" value="<#location/>" />
+					
+					<p class="error"><#error/></p>
+					
+					<label for="username"><#T_USERNAME/></label>
+					<p><input id="username" type="text" name="username" style="width:100px" /></p>
+
+					<label for="password"><#T_PASSWORD/></label>
+					<p><input id="password" type="password" name="password" style="width:100px" /></p>
+
+					<p>
+						<input type="submit" value="<#T_SIGNIN/>" />
+					</p>
+					<p>
+						<a href="index.php?m=reset_password"><#T_FORGOTPWD/></a> |
+						<a href="index.php?m=signup"><#T_NONMEMBER/></a>
+					</p>
+				</fieldset>
+			</form>
+		</div>

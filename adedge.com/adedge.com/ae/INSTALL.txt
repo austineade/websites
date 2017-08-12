@@ -1,0 +1,49 @@
+1) Get Drupal 5
+
+Get the latest version of Drupal from the Drupal website: http://drupal.org. Follow the instructions from the INSTALL.txt file but do not run the install.php script yet.
+
+2) Get necessary modules
+
+Here is the list of modules that need to be installed:
+
+    * cck
+    * date
+    * votingapi_field
+    * image
+    * image_attach
+    * creativecommons_lite
+    * i18n
+    * autolocale
+    * date_api
+    * diff
+    * panels
+    * pathauto
+    * pearwiki_filter
+    * recent_changes
+    * wikitools
+    * tagadelic
+    * video
+    * views
+    * nodecloud
+    * fivestar
+    * votingapi 
+
+3) Install FFPMEG
+
+*IMPORTANT*: FFMPEG helper being activated by default in the install profile, a wrong configuration of FFMPEG will result in problems on your Filmforge install.
+
+FFMPEG can be downloaded from the site: http://ffmpeg.mplayerhq.hu
+
+In order to use the FFMPEG helper you need to install FFMPEG on your server. The default path is '/usr/bin/ffmpeg' but you can change it in the filmforge.profile file by setting the 'video_ffmpeg_helper_ffmpeg_path' variable: variable_set('video_ffmpeg_helper_ffmpeg_path', '/path/to/ffmpeg');
+
+4) Install Flow Player
+
+Flow Player can be downloaded from the site: http://flowplayer.org
+
+Place the file ?FlowPlayer.swf at the website's root or, alternatively, set the path to the file by changing the variable 'video_flvplayerloader' in the filmforge.profile file. variable_set('video_flvplayerloader', 'path/to/FlowPlayer.swf');
+
+The variable 'video_flvplayerloader_fullscreen' needs to be set to the URL pointing to the fullscreen.js file, available as part of the ?FlowPlayer package. variable_set('video_flvplayerloader_fullscreen', 'http://myfilmforgesite.net/fullscreen.js');
+
+5) Run install profile
+
+Run the install.php script with the filmforge profile ie. http;//myfilmforgesite.net/install.php?profile=filmforge

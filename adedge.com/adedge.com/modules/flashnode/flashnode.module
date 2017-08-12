@@ -1,0 +1,1019 @@
+<?php
+// $Id: flashnode.module,v 1.10 2007/08/16 06:27:07 stuartgreenfield Exp $
+
+/**
+ * Implementation of hook_help
+ */
+function flashnode_help($section) {
+  switch ($section) {
+    case 'admin/settings/flashnode':
+      return t('Flash node lets you create nodes that store a piece of Flash animation. You can use it in a basic mode, where the Flash item is always displayed at the start of the node, or you can enable the flash filter to incorporate Flash content in to other nodes.');
+    case 'admin/help#flashnode':
+      return t('
+      <p>Flash node lets you create nodes that store a piece of <a href="!flashurl">Flash</a> animation. You can use it in a basic mode, where the Flash item is always displayed at the start of the node, but you can choose whether to have the Flash element displayed in both the teaser and the body, just the teaser, or just the body. You can define the height and width of the Flash element, or you can let the node use the Flash content\'s original settings.</p>
+
+      <p>The module also defines a new input filter called <strong>flash</strong> that you can use. This lets you re-use Flash content in other nodes by using the format <strong>[flash|nid=&lt;nid&gt;]</strong> in the body of a node. You can pass optional parameters to manipulate the display of the Flash content by including them in the macro. Allowable parameters are:
+
+      <ul><li>
+      <strong>width</strong> - set a specific width, in pixels
+      </li><li>
+      <strong>height</strong> - set a specific height, in pixels
+      </li><li>
+      <strong>scale</strong> - scale both width and height to a multiple of the original size
+      </li><li>
+      <strong>xscale</strong> - scale just the width to a multiple of the original size
+      </li><li>
+      <strong>yscale</strong> - scale just the height to a multiple of the original size
+      </li><li>
+      <strong>scalewidth</strong> - set a specific width, in pixels, and automatically adjust the height to maintain the aspect ratio
+      </li><li>
+      <strong>scaleheight</strong> - set a specific height, in pixels, and automatically adjust the width to maintain the aspect ratio
+      </li><li>
+      <strong>class</strong> - create the container div with a specific CSS class (the default class is <em>flash</em>)
+      </li></ul>
+
+      For example, to use Flash content from node 10, scaled to 50% of its original size, and with CSS class flash-left you would use <strong>[flash|nid=10|scale=0.5|class=flash-left]</strong></p>
+
+      <p>Flash content is inserted using the method that you specify in SWFTools.');
+  }
+}
+
+
+/**
+ * Implementation of hook_node_info
+ */
+function flashnode_node_info() {
+  return array(
+    'flashnode' => array(
+      'name' => t('Flash'),
+      'module' => 'flashnode',
+      'description' => t('Allows you to easily upload and display a Flash file. You can choose whether the animation appears in the teaser, the body, or both.'),
+    ),
+  );
+}
+
+
+/**
+ * Implementation of hook_perm
+ */
+function flashnode_perm() {
+  return array(
+    'create flash nodes',
+    'edit own flash nodes',
+    'administer flash node',
+  );
+}
+
+
+/**
+ * Implementation of hook_access
+ */
+function flashnode_access($op, $node) {
+  global $user;
+
+  if ($op == 'create' && user_access('create flash nodes')) {
+    return TRUE;
+  }
+
+  if ($op == 'update' || $op == 'delete') {
+    if (user_access('edit own flash nodes') && ($user->uid == $node->uid)) {
+      return TRUE;
+    }
+  }
+
+}
+
+
+/**
+ * Implementation of hook_menu
+ */
+function flashnode_menu($may_cache) {
+  $items = array();
+
+  if ($may_cache) {
+
+    $items[] = array(
+      'path' => 'node/add/flashnode',
+      'title' => t('Flash'),
+      'access' => user_access('create flash nodes'),
+    );
+
+    $items[] = array(
+      'path' => 'admin/media/swf/flashnode',
+      'title' => ('Flash node'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('flashnode_admin_settings'),
+      'access' => user_access('administer flash node'),
+      'type' => MENU_NORMAL_ITEM,
+      'description' => t('Set the directory where flash files are uploaded to.'),
+    );
+  }
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_cron (delete old temp files)
+ */
+function flashnode_cron() {
+
+  $path = variable_get('flashnode_default_path', 'flash') . '/temp';
+  $files = file_scan_directory(file_create_path($path), '.*');
+  foreach ($files as $file => $info) {
+    if (time() - filemtime($file) > 60*60*6) {
+      file_delete($file);
+    }
+  }
+}
+
+
+/**
+ * Implementation of hook_prepare().
+ */
+function flashnode_prepare(&$node) {
+
+  $field_name = 'flashfile';
+
+  // check if the upload is valid
+  if ($file = file_check_upload($field_name)) {
+
+    // Modification as swftools seems to be prepending the files directory by itself
+    // and this has broken the preview function. Path needs to be stored just as
+    // flash/movie.swf or flash/temp/movie.swf to avoid files/files/flash/movie.swf
+    $swf_path_fix = _flashnode_filename($file->filename, TRUE);
+
+    // if it is then save it to the flash/temp folder
+    $file = file_save_upload($field_name, $swf_path_fix);
+
+    // if the upload succeeds...
+    if ($file) {
+
+      // ...check to see we have either a flash movie, and flv, or an mp3
+      $file_mime = strtolower($file->filemime);
+      $file_ext = strtolower(substr(strrchr($file->filename, '.'), 1));
+
+      if (!(
+        $file_mime == 'video/mp4' ||
+        $file_ext == 'mp4' ||
+        $file_mime == 'video/mp4'
+        )) {
+        watchdog($field_name,t('Flash node was given %type for upload.', array('%type' => $node->file->filemime)));
+        form_set_error($field_name, t('The specified file is not a valid format.'));
+
+        // delete the uploaded file in case it is unsafe
+        file_delete($file->filepath);
+        return;
+      }
+    }
+    else {
+      return;
+    }
+
+    // add data to the $node->flashnode object
+
+    // original line commented as part of fix for swf_tools problem
+    //$node->flashnode['_flashnode'] = $file->filepath;
+    $node->flashnode['_flashnode'] = $swf_path_fix;
+    $node->flashnode['filemime'] = $file->filemime;
+    $node->new_file = TRUE;
+
+    // If upload is not swf, remind user to set movie size
+    if ($file_mime != 'application/x-shockwave-flash') {
+      drupal_set_message(t('Remember to set the movie size for flv or mp3 files as flash node cannot always automatically determine the player size!'));
+    }
+
+  }
+
+  // try to get the file settings for this file, using image_get_info
+  $info = image_get_info(file_create_path($node->flashnode['_flashnode']));
+  $node->flashnode['_height'] = $info['height'];
+  $node->flashnode['_width'] = $info['width'];
+
+}
+
+
+/**
+ * Implementation of hook_validate
+ */
+function flashnode_validate(&$node, $form) {
+
+  // Check if file is empty
+  if (empty($form['flashfile']['#value']) && empty($form['flashnode']['_flashnode']['#value'])) {
+    form_set_error('flashfile', t('You must specify a Flash file to upload.'));
+  }
+
+  // Check height is valid (not empty & not numeric)
+  if (!is_numeric($form['flashnode']['options']['height']['#value']) && !empty($form['flashnode']['options']['height']['#value'])) {
+    form_set_error('flashnode][height', t('You must enter a valid height.'));
+  }
+
+  // Check width is valid (not empty & not numeric)
+  if (!is_numeric($form['flashnode']['options']['width']['#value']) && !empty($form['flashnode']['options']['width']['#value'])) {
+    form_set_error('flashnode][width', t('You must enter a valid width.'));
+  }
+
+}
+
+
+/**
+ * Implementation of hook_form
+ */
+function flashnode_form(&$node, &$param) {
+
+  // Check folders exist and are writable
+  _flashnode_check_settings();
+
+  // Begin form construct
+  $form['#attributes'] = array("enctype" => "multipart/form-data");
+  $form['flashnode']['#tree'] = TRUE;
+
+  // Lifted from image.module to handle upload and previews - not sure why this works!
+  if ($node->new_file) {
+    $form['new_file'] = array('#type' => 'value', '#value' => TRUE);
+  }
+
+  if ($node->new_file) {
+    $form['flashnode']['_flashnode'] = array('#type' => 'hidden', '#value' => $node->flashnode['_flashnode']);
+    $form['flashnode']['filemime'] = array('#type' => 'hidden', '#value' => $node->flashnode['filemime']);
+    $form['flashnode']['_height'] = array('#type' => 'hidden', '#value' => $node->flashnode['_height']);
+    $form['flashnode']['_width'] = array('#type' => 'hidden', '#value' => $node->flashnode['_width']);
+  }
+  else {
+    $form['flashnode']['_flashnode'] = array('#type' => 'hidden', '#default_value' => $node->flashnode['_flashnode']);
+    $form['flashnode']['filemime'] = array('#type' => 'hidden', '#default_value' => $node->flashnode['filemime']);
+    $form['flashnode']['_height'] = array('#type' => 'hidden', '#default_value' => $node->flashnode['_height']);
+    $form['flashnode']['_width'] = array('#type' => 'hidden', '#default_value' => $node->flashnode['_width']);
+  }
+
+  // Title and body fields - this code from node_content_form() in node.module
+  $type = node_get_types('type', $node);
+
+  if ($type->has_title) {
+    $form['title'] = array(
+      '#type' => 'textfield',
+      '#title' => check_plain($type->title_label),
+      '#required' => TRUE,
+      '#default_value' => $node->title,
+      '#weight' => -5,
+    );
+  }
+
+  if ($type->has_body) {
+    $form['body_filter']['body'] = array(
+      '#type' => 'textarea',
+      '#title' => check_plain($type->body_label),
+      '#default_value' => $node->body,
+      '#rows' => 20,
+      '#required' => ($type->min_word_count > 0));
+    $form['body_filter']['format'] = filter_form($node->format);
+  }
+
+  // Flash node upload field
+  $form['flashnode']['flashfile'] = array(
+    '#type' => 'file',
+    '#title' => t('Flash file'),
+    '#description' => t('Click "Browse..." to select a swf, flv or mp3 file to upload.'),
+    '#tree' => FALSE,
+    '#after_build' => array('_flashnode_form_after_build'),
+  );
+
+  // Put other settings in a collapsible set for a clean input form
+  // We actually create two sections - basic and advance to shield basic users from complex stuff
+  // that they don't need to see!
+  $form['flashnode']['options1'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Basic flash node options'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#tree' => FALSE,
+  );
+
+  // We over-ride the #parents setting here to strip out ['options']
+  $form['flashnode']['options1']['display'] = array(
+    '#type' => 'radios',
+    '#title' => t('Display in'),
+    '#default_value' =>  $node->flashnode['display'] ? $node->flashnode['display'] : 0,
+    '#options' => array(
+      0 => t('Teaser and body'),
+      1 => t('Teaser only'),
+      2 => t('Body only'),
+    ),
+    '#parents' => array('flashnode', 'display'),
+  );
+
+  // We over-ride the #parents setting here to strip out ['options']
+  $form['flashnode']['options1']['width'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Width'),
+    '#default_value' => $node->flashnode['width'],
+    '#size' => 5,
+    '#maxlength' => 5,
+    '#description' => t('The width of the movie, in pixels. Leave blank to use the file\'s own settings.'),
+    '#parents' => array('flashnode', 'width'),
+    '#after_build' => array('_flashnode_form_after_build'),
+  );
+
+  // We over-ride the #parents setting here to strip out ['options']
+  $form['flashnode']['options1']['height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Height'),
+    '#default_value' => $node->flashnode['height'],
+    '#size' => 5,
+    '#maxlength' => 5,
+    '#description' => t('The height of the movie, in pixels. Leave blank to use the file\'s own settings.'),
+    '#parents' => array('flashnode', 'height'),
+    '#after_build' => array('_flashnode_form_after_build'),
+  );
+
+  // Put other settings in a collapsible set for a clean input form
+  // We actually create two sections - basic and advance to shield basic users from complex stuff
+  // that they don't need to see!
+  $form['flashnode']['options2'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Advanced flash node options'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#tree' => FALSE,
+  );
+
+  // We over-ride the #parents setting here to strip out ['options']
+  $form['flashnode']['options2']['substitution'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Substitution content'),
+    '#rows' => 5,
+    '#default_value' => $node->flashnode['substitution'],
+    '#parents' => array('flashnode', 'substitution'),
+    '#description' => t('If a javascript method is used to embed flash then this is the content that users will see if they are unable to, or choose not to, display the flash content. This content uses the same input format as the body. The default content may be used by entering @default.', array('@default' => '!default')),
+    '#after_build' => array('_flashnode_form_after_build'),
+  );
+
+  // We over-ride the #parents setting here to strip out ['options']
+  $form['flashnode']['options2']['flashvars'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Flashvars'),
+    '#rows' => 5,
+    '#default_value' => $node->flashnode['flashvars'],
+    '#parents' => array('flashnode', 'flashvars'),
+    '#description' => t('Specify any flashvars that need to be passed to the movie. If the input format allows PHP code you may use PHP to create a dynamic flashvars string.')
+  );
+
+  // We over-ride the #parents setting here to strip out ['options']
+  $form['flashnode']['options2']['base'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Base'),
+    '#default_value' => $node->flashnode['base'] ? $node->flashnode['base'] : variable_get('flashnode_default_base', './'.file_directory_path()),
+    '#parents' => array('flashnode', 'base'),
+    '#description' => t('Over-ride the default setting with a different base path here if necessary, e.g. if migrating existing content. This setting is only needed for movies that use the %loadmovie command with relative paths.', array('%loadmovie' => 'loadMovie()')),
+  );
+
+  // Need to call the _flashnode_form_after_build function
+  $form['flashnode']['#after_build'] = array('_flashnode_form_after_build');
+
+  // Return form
+  return $form;
+}
+
+
+/**
+ * Implementation of hook_load
+ */
+function flashnode_load(&$node) {
+
+  // Get the flash file associated with this node, it has filename _flash
+  $result = db_query("SELECT filepath FROM {files} WHERE nid=%d AND filename='%s'", $node->nid, '_flashnode');
+  $node->flashnode['_flashnode'] = db_result($result);
+
+  // Retrieve parameters associated with this file from flash table
+  $result = db_query("SELECT height, width, display, substitution, flashvars, base FROM {flashnode} WHERE nid=%d", $node->nid);
+
+  // Store all the settings in to the $node->flashnode object
+  $settings = db_fetch_object($result);
+
+  foreach ($settings as $parameter => $value) {
+    $node->flashnode[$parameter] = $value;
+  }
+
+}
+
+
+/**
+ * Implementation of hook_insert
+ */
+function flashnode_insert($node) {
+
+  // Call helper to do file copy, supply the nid, and the path and mime type of the current file
+  $fid = _flashnode_insert($node->nid, file_create_path($node->flashnode['_flashnode']), $node->flashnode['filemime']);
+
+  // If an fid was returned _flashnode_insert succeeded
+  if ($fid) {
+
+    // Update the flash table with the relevant data
+    db_query("INSERT INTO {flashnode} (nid, height, width, display, substitution, flashvars, base) VALUES (%d, %d, %d, %d, '%s', '%s', '%s')", $node->nid, $node->flashnode['height'], $node->flashnode['width'], $node->flashnode['display'], $node->flashnode['substitution'], $node->flashnode['flashvars'], $node->flashnode['base']);
+
+  }
+
+}
+
+
+/**
+ * Implementation of hook_update
+ */
+function flashnode_update($node) {
+
+  // Get the path of the old file
+  $old_path = db_result(db_query("SELECT filepath FROM {files} WHERE filename='%s' AND nid=%d", '_flashnode', $node->nid));
+
+  // This is a new file if the old path and the current path differ...
+  if ($old_path != $node->flashnode['_flashnode']) {
+
+    // ...so delete the old path
+    file_delete(file_create_path($old_path));
+
+    // Delete the entries for the old file from the database
+    db_query("DELETE FROM {files} WHERE filename='%s' AND nid=%d", '_flashnode', $node->nid);
+    db_query("DELETE FROM {flashnode} WHERE nid=%d", $node->nid);
+
+    // Call flashnode_insert to create the new entry
+    flashnode_insert($node);
+
+  }
+
+  else {
+
+    // We still have the same file, but we have some new settings to update in the database
+    db_query("UPDATE {flashnode} SET height=%d, width=%d, display=%d, substitution='%s', flashvars='%s', base='%s' WHERE nid=%d", $node->flashnode['height'], $node->flashnode['width'], $node->flashnode['display'], $node->flashnode['substitution'], $node->flashnode['flashvars'], $node->flashnode['base'], $node->nid);
+
+  }
+
+  // Reset the cache to ensure any pages using filters are updated
+  cache_clear_all('*', 'cache_filter', true);
+
+}
+
+
+/**
+ * Implementation of hook_delete.
+ */
+function flashnode_delete($node) {
+
+    // Delete the file
+    // Note use of file_create_path, files are stored with only flash/ prepended so has to be qualified
+    file_delete(file_create_path($node->flashnode['_flashnode']));
+
+    // Delete the relevant entries from the database
+    db_query("DELETE FROM {files} WHERE filename='%s' AND nid=%d", '_flashnode', $node->nid);
+    db_query("DELETE FROM {flashnode} WHERE nid=%d", $node->nid);
+
+}
+
+
+/**
+ * Implementation of hook_view
+ */
+function flashnode_view($node, $teaser, $page = 0) {
+
+  // Run through the filters before adding in code, so that <script> is not intercepted
+  $node = node_prepare($node, $teaser);
+
+  // Prepare markup of substitution content by running through node filter
+  $node->flashnode['substitution'] = check_markup($node->flashnode['substitution'], $node->format, FALSE);
+
+  // Check if PHP processing of flashvars is needed
+  $node->flashnode['flashvars'] = _flashnode_php_flashvars($node->flashnode['flashvars'], $node->format);
+
+  // Call flashnode_display to produce the HTML string
+  $flash = flashnode_display($node->flashnode);
+
+  // If we're not in body only mode add flash if a teaser was requested
+  if ($node->flashnode['display'] != 2 && $teaser) {
+    $node->content['body']['#value'] = $flash . $node->content['body']['#value'];
+  }
+
+  // If we're not in teaser only mode add flash if the body was requested
+  if ($node->flashnode['display'] != 1 && !$teaser) {
+    $node->content['body']['#value'] = $flash . $node->content['body']['#value'];
+  }
+
+  // Return the amended node
+  return $node;
+
+}
+
+
+/**
+ * Create the HTML for insertion of Flash using SWFTools to do the work
+ *
+ * This function is called by flashnode_display and flashnode_content.
+ *
+ * @param $file
+ *   A correctly structured array that defines an item of flash content. Must include
+ *   keys _flashnode (path to the file), width, height, substitution (string containing
+ *   HTML mark up for the substitution content), and optionally flashvars. Other keys
+ *   may be included and they will be passed through to SWFTools.
+ * @return
+ *   An HTML string for rendering the flash content
+ */
+function flashnode_display($file, $options = NULL) {
+
+  // Modify height and width to comply with limits, if required
+  $max_width = variable_get('flashnode_max_width',0);
+  $max_height = variable_get('flashnode_max_height',0);
+
+  // Check width first
+  if ($max_width) {
+    if ($file['width'] > $max_width) {
+      $scale = $max_width / $file['width'];
+      $file['width'] = $file['width'] * $scale;
+      $file['height'] = $file['height'] * $scale;
+    }
+  }
+
+  // Then check height
+  if ($max_height) {
+    if ($file['height'] > $max_height) {
+      $scale = $max_height / $file['height'];
+      $file['width'] = $file['width'] * $scale;
+      $file['height'] = $file['height'] * $scale;
+    }
+  }
+
+  // Add width, height and base to $params for SWFTools, rounding width and height to integers
+  $params = array(
+    'width'  => round($file['width']),
+    'height' => round($file['height']),
+    'base' => $file['base'],
+  );
+
+  // Retrieve default substitution content if required
+  // Note we are bypassing the filters here, so we assume the administrator
+  // created valid mark-up that everyone else can use!
+  $preview = t($file['substitution'], array('!default' => variable_get('flashnode_default_html_alt', 'You are missing some Flash content that should appear here! Perhaps your browser cannot display it, or maybe it did not initialise correctly.')));
+
+  // Construct filepath
+  //$filepath = base_path().file_create_path($file['_flashnode']);
+  $filepath = $file['_flashnode'];
+
+  // Call swf to generate output
+  //function swf($filepath, $html_alt = SWFDEFAULT, $params = SWFDEFAULT, $flashvars = SWFDEFAULT, $othervars = SWFDEFAULT, $method = SWFDEFAULT, $debug = FALSE)
+  $output .= swf($filepath, $params, $file['flashvars'], array('html_alt' => $preview), SWFDEFAULT, 0);
+
+  // Return the HTML
+  return $output;
+
+}
+
+
+/**
+ * Return the HTML string required to generate flash content, based on an array
+ * of user supplied arguments.
+ *
+ * The substitution content is filtered according to the specified format, and
+ * if no format is specified use the default. This function is called by the
+ * macro filter, but may also be called directly from PHP.
+ *
+ * @param $args
+ *   Key          Required?   Comment
+ *   nid          Yes         nid of the node containing the swf to display
+ *   scaleheight  No          Scale the movie height/width to get requested height
+ *   scalewidth   No          Scale the movie height/width to get the requested width
+ *   xscale       No          Scale movie width by the specified factor
+ *   yscale       No          Scale movie height by the specified factor
+ *   scale        No          Scale height and width by the specified factor
+ *   height       No          Over-ride stored height with the given value
+ *   width        No          Over-ride stored width with the given value
+ *   class        No          Include the given class in the $flash array
+ *   flashvars    No          Include the specified flashvars string in the $flash array
+ *   substitution No          Over-ride stored substitution markup
+ * @param $format
+ *   The filter format to apply to the substitution content. If no format is given
+ *   then apply the default format.
+ * @return
+ *   Returns the HTML mark up for inserting the flash content, or returns nothing
+ *   if the specified nid is not valid
+ */
+function flashnode_content($args = array(), $format = FILTER_FORMAT_DEFAULT ) {
+
+  // If no $args['nid'], or $arg['nid'] not numeric supplied then return
+  if (!is_numeric($args['nid'])) return;
+
+  // Get the filepath from the database
+  $flash['_flashnode'] = db_result(db_query("SELECT filepath FROM {files} WHERE filename='%s' AND nid=%d", '_flashnode', $args['nid']));
+
+  // Did we find a valid flashnode entry? If not, return empty
+  if (!$flash['_flashnode']) {
+    return;
+  }
+
+  // Retrieve parameters associated with this file from {flashnode}
+  $result = db_query("SELECT height, width, display, substitution, flashvars, base FROM {flashnode} WHERE nid=%d", $args['nid']);
+
+  // Store all the settings in to the $flash array
+  $result = db_fetch_object($result);
+  foreach ($result as $parameter => $value) {
+    $flash[$parameter] = $value;
+  }
+
+  /**
+   * Process flashvars for PHP. To make the site flexible we can choose to let the
+   * parent node use PHP format to create a dynamic flashvar. However, we might
+   * want to allow other nodes to use that dynamic flash, but without letting
+   * them have wider access to the PHP format. So we process flashvars against
+   * the input format of the *parent* node, not this node. If the parent allows
+   * PHP then the flashvars will be processed via the PHP filter. If the user
+   * supplies new flashvars via the macro format then we process again later,
+   * but this time against the format of the node where the macro is running.
+   * This is so that the user doesn't get access to the PHP format via the macro!
+   */
+
+  // Get parent format, accounting for the fact a revision might be in use
+  $parent_format = db_result(db_query('SELECT r.format FROM {node_revisions} r INNER JOIN {node} n ON n.vid = r.vid WHERE n.nid=%d', $args['nid']));
+
+  // Call the _flashnode_php_flashvars function to do the work
+  $flash['flashvars'] = _flashnode_php_flashvars($flash['flashvars'], $parent_format);
+
+  // Remove $args['nid'] from the array
+  unset ($args['nid']);
+
+  // Process the arguments array to modify the flash before rendering it
+  if ($args) {
+    foreach ($args as $parameter => $value) {
+
+      $xscale = $yscale = 1;
+
+      switch ($parameter) {
+
+        // Adjust to given width, maintaining aspect ratio
+        case 'scalewidth':
+
+          if (is_numeric($value)) {
+            $xscale = $yscale = $value / $flash['width'];
+          }
+          break;
+
+        // Adjust to given height, maintaining aspect ratio
+        case 'scaleheight':
+          if (is_numeric($value)) {
+            $xscale = $yscale = $value / $flash['height'];
+          }
+          break;
+
+        // Scale width by given factor
+        case 'xscale':
+          if (is_numeric($value)) {
+            $xscale = $value;
+          }
+          break;
+
+        // Scale height by given factor
+        case 'yscale':
+          if (is_numeric($value)) {
+            $yscale = $value;
+          }
+          break;
+
+        // Scale both width and height by given factor
+        case 'scale':
+          if (is_numeric($value)) {
+            $xscale = $yscale = $value;
+          }
+          break;
+
+        // Set height or width to specific value
+        case 'height':
+        case 'width':
+          if (is_numeric($value)) {
+            $flash[$parameter] = $value;
+          }
+          break;
+
+        // Add class to $flash array (this is from flashnode 5.1)
+        // This will need updating when SWFTools is finalised.
+        // May no longer be supported / relevant
+        case 'class':
+          $flash['class'] = $value;
+          break;
+
+        // Over-ride stored flashvars with alternatives
+        case 'flashvars':
+          // If flashvars was set by the macro this over-rides the stored values
+          // this is to allow flash to be re-used. If & has been replaced by &amp;
+          // by another filter then we need to reverse that first
+          $value = str_replace('&amp;', '&', $value);
+          $flash['flashvars'] = $value;
+
+          // Process for PHP content
+          $flash['flashvars'] = _flashnode_php_flashvars($flash['flashvars'], $format);
+          break;
+
+        // Over-ride stored substitution text with alternatives
+        // Can use !default to retrieve default content
+        case 'substitution':
+          $flash['substitution'] = $value;
+          break;
+
+        // If none of the above, add the parameter and value to $options array
+        default:
+          $options[$parameter] = $value;
+      }
+    }
+  }
+
+  // Process substitution content through filters for this node
+  $flash['substitution'] = check_markup($flash['substitution'], $format, FALSE);
+
+  // Return markup
+  return flashnode_display($flash, $options) ;
+
+}
+
+
+/**
+ * Process a macro string in to an array of keys and values. Pass the array to
+ * flashnode_content for processing and rendering in to an HTML string
+ */
+function flashnode_get_macros($text) {
+  $m = array();
+  preg_match_all('/ \[ ([^\[\]]+)* \] /x', $text, $matches);
+  $tag_match = (array) array_unique($matches[1]); // Don't process duplicates.
+
+  foreach ($tag_match as $macro) {
+    $current_macro = '['. $macro .']';
+    $param = array_map('trim', explode('|', $macro));
+
+    // The first macro param is assumed to be the function name.
+    $func_name = array_shift($param);
+
+    // If flash macro found, extra other settings
+    if ($func_name == 'flashnode') {
+      $vars = array();
+      foreach($param as $p) {
+        $pos = strpos($p, '=');
+        $varname = substr($p, 0, $pos);
+        $varvalue = substr($p, $pos + 1);
+        $vars[$varname] = $varvalue;
+      }
+
+      $m[$current_macro] = $vars;
+    }
+  }
+
+  return $m;
+}
+
+
+/**
+ * Implementation of hook_filter()
+ */
+function flashnode_filter($op, $delta = 0, $format = -1, $text = '') {
+
+  switch ($op) {
+
+    case 'list':
+      return array(0 => t('Flash node filter'));
+
+    case 'description':
+      return t('Add Flash from a flash node to your posts using a flash node macro.');
+
+    case 'process':
+      foreach(flashnode_get_macros($text) as $unexpanded_macro => $macro) {
+        $expanded_macro = flashnode_content($macro, $format);
+        $text = str_replace($unexpanded_macro, $expanded_macro, $text);
+      }
+      return $text;
+
+    default:
+      return $text;
+  }
+}
+
+
+/**
+ * Implementation of hook_filter_tips().
+ */
+function flashnode_filter_tips($delta, $format, $long = false) {
+  return t('Flash node macros can be added to this post.');
+}
+
+
+/**
+ * Settings callback
+ */
+function flashnode_admin_settings() {
+
+  // Check for folders, create if necessary
+  _flashnode_check_settings();
+
+  //Reset the cache to ensure any pages using filters are updated
+  // Necessary to ensure macro content regenerated in case the user modifies max_height or max_width settings
+  cache_clear_all('*', 'cache_filter', true);
+
+  $form['flashnode_updated'] = array(
+    '#type' => 'hidden',
+    '#value' => time(),
+  );
+
+  $form['flashnode_default_path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default flash path'),
+    '#default_value' => variable_get('flashnode_default_path', 'flash'),
+    '#description' => t('Subdirectory in the directory "%dir" where Flash files will be stored. Do not include a leading or trailing slash.', array('%dir' => variable_get('file_directory_path', 'files'))),
+  );
+
+  $form['flashnode_default_html_alt'] = array(
+    '#type' => 'textarea',
+    '#rows' => 5,
+    '#title' => t('Default substitution content'),
+    '#default_value' => variable_get('flashnode_default_html_alt', 'You are missing some Flash content that should appear here! Perhaps your browser cannot display it, or maybe it did not initialise correctly.'),
+    '#description' => t('If you are using a javascript method to embed flash then this is the content that users will see if they are unable to, or choose not to, display the flash content. Use this content in a node by entering %default in the substitution field when creating a flash node. Note that this content is NOT filtered when it is displayed in a node so you may use mark-up that would not otherwise be allowed.', array('%default' => '!default')),
+  );
+
+  $form['flashnode_default_base'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default base parameter'),
+    '#default_value' => variable_get('flashnode_default_base', './'.file_directory_path()),
+    '#description' => t('If you use the ActionScript command %loadmovie or similar then you may need to use this setting to tell the Flash player where to find supporting movies. The base path is used for any relative paths that occur in the movie file. If you upload files using Drupal\'s upload module then the default setting of %base should be used. Only change it if you are uploading files to a different directory using something like FTP. This setting can be over-ridden when a node is created.', array('%loadmovie' => 'loadMovie()', '%base' => './'.file_directory_path())),
+  );
+
+  $form['flashnode_max_width'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum displayed width'),
+    '#default_value' => variable_get('flashnode_max_width', 0),
+    '#description' => t('The maximum displayed width of a flash movie can be limited by entering a non-zero value here. If the movie width is greater than this width then the movie will be scaled down when it is displayed. A value of zero means that no scaling will occur. This setting can be useful to ensure that the page layout is not disrupted by a large flash movie.'),
+  );
+
+  $form['flashnode_max_height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum displayed height'),
+    '#default_value' => variable_get('flashnode_max_height', 0),
+    '#description' => t('The maximum displayed height of a flash movie can be limited by entering a non-zero value here. If the movie height is greater than this height then the movie will be scaled down when it is displayed. A value of zero means that no scaling will occur. This setting can be useful to ensure that the page layout is not disrupted by a large flash movie.'),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Validate flashnode_admin_settings to ensure that flashnode_max_width and flashnode_max_height are valid
+ */
+function flashnode_admin_settings_validate($form_id, $form_values) {
+
+  // Check max width - must be numeric and not negative
+  if ( !is_numeric($form_values['flashnode_max_width']) || $form_values['flashnode_max_width'] < 0) {
+    form_set_error('flashnode_max_width', t('The maximum displayed width must be zero or a positive number.'));
+  }
+
+  // Check max height - must be numeric and not negative
+  if ( !is_numeric($form_values['flashnode_max_height']) || $form_values['flashnode_max_height'] < 0) {
+    form_set_error('flashnode_max_height', t('The maximum displayed height must be zero or a positive number.'));
+  }
+
+}
+
+
+/**
+ * Verify that the flash folders exist and create them if they don't
+ */
+function _flashnode_check_settings() {
+
+  // Build the two relevant paths
+  $flashnode_path = file_create_path(variable_get('flashnode_default_path', 'flash'));
+  $temp_path = $flashnode_path . '/temp';
+
+  // Check they exist, create if not
+  file_check_directory($flashnode_path, FILE_CREATE_DIRECTORY, 'flashnode_default_path');
+  file_check_directory($temp_path, FILE_CREATE_DIRECTORY, 'flashnode_default_path');
+
+}
+
+
+/**
+ * Create a flash filename in the flash folder, or in the temporary flash folder
+ */
+function _flashnode_filename($filename, $temp = FALSE) {
+
+  // Get the flash path
+  $result = variable_get('flashnode_default_path', 'flash').'/';
+
+  // If this is a temporary file, append temp
+  if ($temp) {
+    $result .= 'temp/';
+  }
+
+  // Add the filename to build the path
+  $result .= $filename;
+
+  // Return the result
+  return $result;
+
+}
+
+
+/**
+ * Move a temporary file to the flash directory and store information in {files}
+ */
+function _flashnode_insert($nid, $flash, $mime) {
+
+  // Create the destination path and filename from the current name
+  $dest = _flashnode_filename(basename($flash));
+
+  // Try to move the flash file to the flash folder, auto renames if it already exists
+  if (file_move($flash, $dest)) {
+
+    // Add file data to $node->file
+    $file->filename = '_flashnode';
+    $file->filepath = _flashnode_filename(basename($flash));
+    $file->filemime = $mime;
+
+    // Note use of file_create_path, files are stored with only flash/ prepended so has to be qualified
+    $file->filesize = filesize(file_create_path($dest));
+
+    // Create new record in files table
+    $fid = db_next_id('{files}_fid');
+    db_query("INSERT INTO {files} (fid, nid, filename, filepath, filemime, filesize) VALUES (%d, %d, '%s', '%s', '%s', '%s')",
+             $fid, $nid, $file->filename, $file->filepath, $file->filemime, $file->filesize);
+
+    // Return the assigned fid
+    return $fid;
+
+  }
+
+}
+
+
+/**
+ * Implementation of hook_after_build to perform some form processing
+ *
+ * Various functions to manipulate the form after building in case default
+ * values are being reset. It also changes the description on the flash file
+ * field when a file has been uploaded, to help the user to identify which file
+ * is in use on this node. #parents is used as the identifier in case the title
+ * is being translated. Not sure if this is the right way to achieve this, but
+ * it appears to work!
+ *
+ * This function is also used to set the substitution text to !default when the
+ * form is first opened, but to then allow the user to submit blanks if they
+ * don't want any substitution to appear. If you just use
+ * $node->flashnode['substitution'] ? $node->flashnode['substitution'] : '!default'
+ * then a blank substitution is treated as an undefined node and !default gets
+ * put in, when the blank is in fact a valid value.
+ */
+function _flashnode_form_after_build($form, $form_values) {
+
+  // Change file upload description to reflect current upload if there is one
+  if (!empty($form_values['flashnode']['_flashnode']) && $form['#parents'][0] == 'flashfile') {
+    $form['#description'] = t('Current file is %filename. Click "Browse..." to upload a different file.', array('%filename' => basename($form_values['flashnode']['_flashnode'])));
+  }
+
+  // If width field is empty then reset it to the default width
+  if (empty($form_values['flashnode']['width']) && $form['#parents'][1] == 'width') {
+    $form['#value'] = $form_values['flashnode']['_width'];
+    form_set_value($form, $form_values['flashnode']['_width']);
+  }
+
+  // If height field is empty then reset it to the default height
+  if (empty($form_values['flashnode']['height']) && $form['#parents'][1] == 'height') {
+    $form['#value'] = $form_values['flashnode']['_height'];
+    form_set_value($form, $form_values['flashnode']['_height']);
+  }
+
+  // If there is no flash file name, set substitution text to !default as this is a new form, provided there
+  // isn't currently anything in the substitution area (in case user made an error and only partially completed
+  // the form) We do it this way so that the user can have a blank without that being over-ridden by !default
+  if (empty($form_values['flashnode']['_flashnode']) && $form['#parents'][1] == 'substitution' && empty($form_values['flashnode']['substitution'])) {
+    $form['#value'] = '!default';
+    form_set_value($form, '!default');
+  }
+
+  // Return the amended form element
+  return $form;
+}
+
+
+/**
+ * Check to see if PHP is allowed in this format, and if it is process the flashvars
+ * string through the PHP filter in case there is some code to be handled. Then
+ * the string for safe handling, but turn &amp; back in to & as that is what
+ * flash needs to define the variables in a flashvars string. Return the result.
+ */
+function _flashnode_php_flashvars($flashvars, $format = -1) {
+
+  // Get the list of filters for this node
+  $filters = filter_list_format($format);
+
+  // Look for module == filter and delta == 1
+  // If found that means we have PHP allowed for this node so process it
+  foreach ($filters as $filter) {
+    if ($filter->module == 'filter' && $filter->delta == 1) {
+      $flashvars = module_invoke($filter->module, 'filter', 'process', $filter->delta, $format, $flashvars);
+    }
+  }
+
+  // Encode flashvars to make it safe for inclusion on the page
+  $flashvars = check_plain($flashvars);
+
+  // But we need to undo conversion of & to &amp;
+  $flashvars = str_replace('&amp;', '&', $flashvars);
+
+  return $flashvars;
+
+}

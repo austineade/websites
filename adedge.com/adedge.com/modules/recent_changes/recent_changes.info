@@ -1,0 +1,8 @@
+; $Id: recent_changes.info,v 1.1 2007/02/07 00:16:26 roetzi Exp $
+name = Recent changes
+description = Display a list of recent changes.
+
+; Information added by drupal.org packaging script on 2007-03-07
+version = "5.x-1.1"
+project = "recent_changes"
+

@@ -1,0 +1,9 @@
+	<video>
+		<url><#videourl/></url>
+		<title><#title/></title>
+		<thumb><#thumb/></thumb>
+		<time><#time/></time>
+		<hits><#hits/></hits>
+		<rate><#rate/></rate>
+		<username><#username/></username>
+	</video>

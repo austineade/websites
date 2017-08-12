@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<section name="Permissions" type="table" target="MPermissions" search="false" edit="true" add="false" delete="false">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Resource" target="resource" type="textfield" visible="true" edit="false" add="true"/>
+    <field name="Level" target="level" type="textfield" visible="true" edit="true" add="true"/>
+</section>

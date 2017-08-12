@@ -1,0 +1,39 @@
+UPDATING FROM A PREVIOUS VERSION OF FLASH / FLASHNODE
+
+If you have previously used any version of flash.module or flashnode please
+please follow the instructions below to install the SWFTools version.
+
+0! Back up your existing flash table (just in case!)
+
+1. Disable your current flash module at Administer>Site building>Modules
+
+2. Remove the old flash.module directory (modules/flash unless you chose to
+   call the directory something different!)
+
+3. Download and install SWFTools.
+
+4. Upload the new flashnode directory to your modules directory.
+
+5. Enable Flashnode at Administer > Site building > Modules
+
+Upon installation flashnode will migrate your existing flash tables to the
+new schema. It will also update any node entries that use flash macros. Note
+that with Flashnode 5.2 the macro format has changed from [flash|nid=nn] to
+[flashnode|nid=nn]. This is necessary to (a) align the macro name with the
+module name, but also to avoid a possible future clash with flash_filter - it
+also uses macros by the name [flash]
+
+Note that migration is a one way process. Once you have installed Flash node
+5.2 or later you cannot automatically revert to Flash node 5.1.
+
+The module is now installed. Your content will display as normal. If you
+enabled the flash filter then this should have remained active for input
+formats you previously chose, and will be active for existing content.
+
+Note: you can choose the insertion method that SWFTools will use at
+Administer > SWFTools > Embedding settings > JavaScript embedding. If you are
+using flash macros then you must also check 'All pages' to ensure that the
+required script files are available to all pages.
+
+; $Id: UPDATE.txt,v 1.4 2007/06/04 19:45:55 stuartgreenfield Exp $
+

@@ -1,0 +1,12 @@
+; $Id: wijering.info,v 1.1.2.4 2007/06/13 04:11:11 sime Exp $
+name =  Wijering Flash
+description = SWF Tools support for Jeroen Wijering Flash Players.
+package = SWF Tools
+dependencies = swftools
+version = "$Name: DRUPAL-5--1-1 $"
+
+; Information added by drupal.org packaging script on 2007-06-13
+version = "5.x-1.1"
+project = "swftools"
+datestamp = "1181711110"
+

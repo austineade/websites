@@ -1,0 +1,141 @@
+# $Id: pt.po,v 1.1.2.1 2007/07/07 13:21:43 goba Exp $
+#
+# Portuguese translation of Drupal (autolocale.install)
+# Copyright 2007 Fernando Silva <fernando.silva@openquest.pt>
+# Generated from file:
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: autolocale\n"
+"POT-Creation-Date: 2007-01-16 13:28+0100\n"
+"PO-Revision-Date: 2007-03-19 20:31+0100\n"
+"Last-Translator: Fernando Silva <fernando.silva@openquest.pt>\n"
+"Language-Team: Fernando Silva <fernando.silva@openquest.pt>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: PORTUGAL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: autolocale.install:10
+msgid ""
+"Now you can <a href=\"@url\">import interface translations</a> automatically"
+msgstr ""
+"Agora pode <a href=\"@url\">importar traduções</a> automaticamente"
+
+#: autolocale.info:0
+msgid "Autolocale"
+msgstr "Autolocale"
+
+#: autolocale.info:0
+msgid "Automatically imports interface translations."
+msgstr "Importa traduções automaticamente."
+
+#: localized.profile:49
+msgid "Body"
+msgstr "Corpo"
+
+#: localized.profile:51
+msgid "Title"
+msgstr "Título"
+
+#: localized.profile:57
+msgid "Page"
+msgstr "Página"
+
+#: localized.profile:58
+msgid ""
+"If you want to add a static page, like a contact page or an about page, use "
+"a page."
+msgstr ""
+"Se quiser adicionar uma página estática, como por exemplo uma página de "
+"contactos ou uma página sobre os autores do site, utilize o tipo de conteúdo "
+"página."
+
+#: localized.profile:65
+msgid "Story"
+msgstr "Artigo"
+
+#: localized.profile:66
+msgid ""
+"Stories are articles in their simplest form: they have a title, a teaser and "
+"a body, but can be extended by other modules. The teaser is part of the body "
+"too. Stories may be used as a personal blog or for news articles."
+msgstr ""
+"Os artigos são o tipo de conteúdo mais simples: têm um título, um resumo e "
+"um corpo, mas pode ser extendidos por outros módulos. O resumo constitui "
+"também uma parte do corpo. Os artigos podem ser usados como um blogue "
+"pessoal para para notícias."
+
+#: autolocale.module:12
+msgid ""
+"Automatic import scans all enabled modules and themes for interface "
+"translation files under their directories and imports all files found for "
+"the selected language. This operation could be resource intensive, and is "
+"irreversible."
+msgstr ""
+"A importação automática, procura todos os módulos e temas activos por "
+"ficheiros de tradução nos seus directórios e importa todos os ficheiros encontrados "
+"para o idioma seleccionado. Esta operação poderá ser intensiva na utilização de "
+"recursos sendo irreversível."
+
+#: autolocale.module:31
+msgid "Automatic import"
+msgstr "Importação automática"
+
+#: autolocale.module:54
+msgid ""
+"No foreign language enabled on your site. You need to <a href=\"@urladd"
+"\">add</a> and <a href=\"@urlenable\">enable</a> at least one foreign "
+"language to import strings for."
+msgstr ""
+"Não se encontra nenhum idioma alternativo activo no site. Precisa de <a href=\"@urladd"
+"\">adicionar</a> e <a href=\"@urlenable\">activar</a> no mínimo um idioma alternativo "
+"para importar expressões traduzidas."
+
+#: autolocale.module:62
+msgid "Language"
+msgstr "Idioma"
+
+#: autolocale.module:65
+msgid "Select the language to autoimport translation files into."
+msgstr "Seleccione o idioma para o qual serão importados automaticamente os ficheiros de tradução."
+
+#: autolocale.module:70
+msgid "Remove existing translations first"
+msgstr "Remover as traduções existentes"
+
+#: autolocale.module:72
+msgid ""
+"It is advised to remove the existing translations in the given language for "
+"performance reasons, if you have no custom strings added, which are not "
+"available in the PO files to import. This removes strings left from upgrades "
+"or previously tried and removed modules."
+msgstr ""
+"Aconselha-se a remoção das traduções existentes no idioma respectivo por "
+"razões de desempenho, caso não tenha adicionado expressões traduzidas personalizadas "
+"(que não se encontram disponíveis nos ficheiros PO a importar). Esta opção remove "
+"textos deixados por actualizações ou por módulos anteriormente instalados e "
+"entretanto removidos."
+
+#: autolocale.module:77
+msgid "Perform automatic import"
+msgstr "Executar a importação automática"
+
+#: autolocale.module:89
+msgid "Invalid language code (@langcode) choosen for automatic import."
+msgstr "Código de idioma (@langcode) inválido para a importação automática."
+
+#: autolocale.module:102
+msgid "Existing translations removed from @language."
+msgstr "Traduções actuais removidas de @language."
+
+#: autolocale.module:109
+msgid "New @language strings imported."
+msgstr "Novas expressões traduzidas importadas para @language."
+
+#: autolocale.module:0
+msgid "autolocale"
+msgstr "autolocale"

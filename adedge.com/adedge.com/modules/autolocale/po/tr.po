@@ -1,0 +1,105 @@
+# $Id: tr.po,v 1.1.2.2 2007/05/10 16:31:04 erdemkose Exp $
+#
+# Turkish translation of autolocale (autolocale.install)
+# Copyright 2007 Erdem Köse <ceviri@drupaltr.org>
+# Generated from file:
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: autolocale\n"
+"POT-Creation-Date: 2007-01-16 13:28+0100\n"
+"PO-Revision-Date: 2007-05-10 19:26+0200\n"
+"Last-Translator: Erdem Köse <erdemkose@erdemkose.com>\n"
+"Language-Team: Erdem Köse <ceviri@drupaltr.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Turkish\n"
+"X-Poedit-Country: Turkey\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: autolocale.install:10
+msgid "Now you can <a href=\"@url\">import interface translations</a> automatically"
+msgstr "Şimdi arayüz çevirilerini otomatik olarak <a href=\"@url\">yükleyebilirsiniz</a>."
+
+#: autolocale.info:0
+msgid "Autolocale"
+msgstr "Autolocale"
+
+#: autolocale.info:0
+msgid "Automatically imports interface translations."
+msgstr "Arayüz çevirilerini otomatik olarak yükler."
+
+#: localized.profile:49
+msgid "Body"
+msgstr "Gövde"
+
+#: localized.profile:51
+msgid "Title"
+msgstr "Başlık"
+
+#: localized.profile:57
+msgid "Page"
+msgstr "Sayfa"
+
+#: localized.profile:58
+msgid "If you want to add a static page, like a contact page or an about page, use a page."
+msgstr "Eğer durağan bir sayfa eklemek istiyorsanız, bir iletişim sayfası veya hakkında sayfası gibi, bir sayfa kullanın."
+
+#: localized.profile:65
+msgid "Story"
+msgstr "Hikaye"
+
+#: localized.profile:66
+msgid "Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles."
+msgstr "Hikayeler en basit anlamda birer makaledirler: başlıkları, kırpılmış biçimi ve bir gövdeleri vardır; diğer eklentiler tarafından geliştirilebilirler. Kırpılmış kısım da gövdenin bir parçasıdır. Hikayeler kişisel ağ günlüğü veya haber yazısı gibi kullanılabilir."
+
+#: autolocale.module:12
+msgid "Automatic import scans all enabled modules and themes for interface translation files under their directories and imports all files found for the selected language. This operation could be resource intensive, and is irreversible."
+msgstr "Otomatik yükleme tüm etkin eklenti ve temalarınızı çeviri dosyası olup olmadığına bakmak için tarar. Bu kaynak harcayan bir işlemdir ve değiştirilemez."
+
+#: autolocale.module:31
+msgid "Automatic import"
+msgstr "Otomatik yükleme"
+
+#: autolocale.module:54
+msgid "No foreign language enabled on your site. You need to <a href=\"@urladd\">add</a> and <a href=\"@urlenable\">enable</a> at least one foreign language to import strings for."
+msgstr "Sitenizde tanımlı yabancı dil yok. Çevirileri yüklemek için en az bir yabancı dil <a href=\"@urladd\">eklemeli</a> ve <a href=\"@urlenable\">etkinleştirmelisiniz</a>."
+
+#: autolocale.module:62
+msgid "Language"
+msgstr "Dil"
+
+#: autolocale.module:65
+msgid "Select the language to autoimport translation files into."
+msgstr "Otomatik yüklenecek çeviri dosyalarının hangi dile gideceğini seçin."
+
+#: autolocale.module:70
+msgid "Remove existing translations first"
+msgstr "Önce kurulu çevirileri kaldır."
+
+#: autolocale.module:72
+msgid "It is advised to remove the existing translations in the given language for performance reasons, if you have no custom strings added, which are not available in the PO files to import. This removes strings left from upgrades or previously tried and removed modules."
+msgstr "Eğer PO dosyalarında olmayıp kendi eklediğiniz çeviri yoksa, performans açısından, var olan çevirilerin kaldırılması önerilir. Böylece güncelleştirmelerden veya denenip kaldırılmış eklentilerden kalan çeviriler kaldırılacaktır."
+
+#: autolocale.module:77
+msgid "Perform automatic import"
+msgstr "Otomatik yüklemeyi yap"
+
+#: autolocale.module:89
+msgid "Invalid language code (@langcode) choosen for automatic import."
+msgstr "Otomatik yükleme için geçersiz dil kodu (@language)."
+
+#: autolocale.module:102
+msgid "Existing translations removed from @language."
+msgstr "@language dilinde var olan çeviriler kaldırıldı."
+
+#: autolocale.module:109
+msgid "New @language strings imported."
+msgstr "@language çevirileri yüklendi."
+
+#: autolocale.module:0
+msgid "autolocale"
+msgstr "autolocale"
+

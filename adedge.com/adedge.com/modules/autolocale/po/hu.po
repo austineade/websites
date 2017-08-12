@@ -1,0 +1,138 @@
+# $Id: hu.po,v 1.1 2007/04/06 11:13:01 hass Exp $
+#
+# Hungarian translation of Drupal (autolocale.install)
+# Copyright Drupal.hu Fordítói Csapat <forditas [at] drupal.hu>
+# Generated from file: 
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 5.0\n"
+"POT-Creation-Date: 2007-01-16 13:28+0100\n"
+"PO-Revision-Date: 2007-01-16 13:31+0100\n"
+"Last-Translator: Drupal.hu Fordítói Csapat <forditas [at] drupal.hu>\n"
+"Language-Team: Drupal.hu Fordítói Csapat <forditas [at] drupal.hu>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=2; plural=n != 1;\n"
+
+#: autolocale.install:10
+msgid ""
+"Now you can <a href=\"@url\">import interface translations</a> automatically"
+msgstr ""
+"Most már <a href=\"@url\">automatikusan importálhatóak</a> a fordítások"
+
+#: autolocale.info:0
+msgid "Autolocale"
+msgstr "Autolocale"
+
+#: autolocale.info:0
+msgid "Automatically imports interface translations."
+msgstr "Automatikusan importálja a felület fordításokat."
+
+#: localized.profile:49
+msgid "Body"
+msgstr "Törzs"
+
+#: localized.profile:51
+msgid "Title"
+msgstr "Cím"
+
+#: localized.profile:57
+msgid "Page"
+msgstr "Oldal"
+
+#: localized.profile:58
+msgid ""
+"If you want to add a static page, like a contact page or an about page, use "
+"a page."
+msgstr ""
+"Statikus oldal, például kapcsolat vagy impresszum oldal hozzáadásához "
+"érdemes az oldal típust használni."
+
+#: localized.profile:65
+msgid "Story"
+msgstr "Írás"
+
+#: localized.profile:66
+msgid ""
+"Stories are articles in their simplest form: they have a title, a teaser and "
+"a body, but can be extended by other modules. The teaser is part of the body "
+"too. Stories may be used as a personal blog or for news articles."
+msgstr ""
+"Az írás a legegyszerűbb tartalom típus: rendelkezik címmel, bevezetővel és "
+"hosszabb tartalommal, de különböző modulok kiterjeszthetik a képességeit. A "
+"bevezető a hosszabb tartalom első része. Az írások felhasználhatóak "
+"személyes blog szerkesztésére, hírekként, cikkekként egyaránt."
+
+#: autolocale.module:12
+msgid ""
+"Automatic import scans all enabled modules and themes for interface "
+"translation files under their directories and imports all files found for "
+"the selected language. This operation could be resource intensive, and is "
+"irreversible."
+msgstr ""
+"Az automatikus importálás minden bekapcsolt modult és smink könyvtárában "
+"fordítási fájlokat keres, majd minden a kiválasztott nyelvhez megtalált "
+"fájlt importál. Ez a művelet sok memóriát és időt vehet igénybe, és ráadásul "
+"visszafordíthatatlan folyamat."
+
+#: autolocale.module:31
+msgid "Automatic import"
+msgstr "Automatikus import"
+
+#: autolocale.module:54
+msgid ""
+"No foreign language enabled on your site. You need to <a href=\"@urladd"
+"\">add</a> and <a href=\"@urlenable\">enable</a> at least one foreign "
+"language to import strings for."
+msgstr ""
+"Nincs bekapcsolt idegen nyelv a webhelyen. <a href=\"@urladd\">Hozzá kell "
+"adni</a> és <a href=\"@urlenable\">be kell kapcsolni</a> legalább egy idegen "
+"nyelvet, amelybe a fordítások importálhatók lesznek."
+
+#: autolocale.module:62
+msgid "Language"
+msgstr "Nyelv"
+
+#: autolocale.module:65
+msgid "Select the language to autoimport translation files into."
+msgstr "Az automatikus importálás célnyelve."
+
+#: autolocale.module:70
+msgid "Remove existing translations first"
+msgstr "Meglévő fordítások eltávolítása"
+
+#: autolocale.module:72
+msgid ""
+"It is advised to remove the existing translations in the given language for "
+"performance reasons, if you have no custom strings added, which are not "
+"available in the PO files to import. This removes strings left from upgrades "
+"or previously tried and removed modules."
+msgstr ""
+"Javasolt az adott nyelven korábban importált meglévő fordítások "
+"eltávolítása, hiszen ez javítja a rendszer teljesítményét. Figyelni kell "
+"azonban, hogy ilyenkor az egyedileg módosított vagy hozzáadott (PO fájlokban "
+"nem tárolt) fordítások is elvesznek. Ez a művelet alkalmas egy Drupal "
+"frissítés előttről bent maradt vagy kipróbált de nem használt modulokhoz "
+"importált fordítások eltávolítására."
+
+#: autolocale.module:77
+msgid "Perform automatic import"
+msgstr "Automatikus import végrehajtása"
+
+#: autolocale.module:89
+msgid "Invalid language code (@langcode) choosen for automatic import."
+msgstr "@langcode az automatikus importáláshoz nem érvényes nyelv azonosító."
+
+#: autolocale.module:102
+msgid "Existing translations removed from @language."
+msgstr "@language meglévő fordításai eltávolítva."
+
+#: autolocale.module:109
+msgid "New @language strings imported."
+msgstr "Új @language nyelvű fordítások importálva."
+
+#: autolocale.module:0
+msgid "autolocale"
+msgstr "autolocale"

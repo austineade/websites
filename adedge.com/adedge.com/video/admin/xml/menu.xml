@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<section name="Menu" type="table" target="MMenu" edit="true" add="true" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Title" target="title" type="textfield" link="index.php?p=menu&amp;parent_id={id}" visible="true" edit="true" add="true"/>
+    <field name="URL" target="url" type="textfield" visible="true" edit="true" add="true"/>
+    <field name="Parent" target="parent_id" type="select" table="menu" field="title" visible="true" edit="true" add="true"/>
+    <field name="Header" target="header" type="checkbox" visible="true" edit="true" add="true"/>
+    <field name="Footer" target="footer" type="checkbox" visible="true" edit="true" add="true"/>
+    <field name="Approved" target="approved" type="checkbox" visible="true" edit="true" add="true"/>
+</section>

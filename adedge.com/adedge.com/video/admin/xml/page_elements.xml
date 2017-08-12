@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<section name="Page Elements" type="table" target="MPageElements" search="false" edit="true" add="true" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+	<field name="Page" target="pages_id" type="select" table="pages" field="id" visible="true" edit="true" add="true"/>
+	<field name="Component" target="elements_id" type="xmllist" path="components" visible="true" edit="true" add="true"/>
+	
+</section>

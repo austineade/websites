@@ -1,0 +1,37 @@
+<div class="left">
+	<div class="left" style="margin-top:15px">
+		<span class="stab"><a class="white" href="index.php?m=users.create_playlist"><#T_NEWPL/></a></span>
+		<#list/>
+	</div>
+	<div class="left">
+		<div class="heading" style="width:410px"><h2><#T_MYPLAYLISTS/></h2></div>
+		<div class="box" style="width:390px">
+			<form name="playlist" action="index.php?m=users.actonplaylist" method="post" >
+				<div id="edit_playlist">
+					<textarea cols="10" rows="5" style="width:380px; height:50px" id="description" name="description"><#description/></textarea>
+				</div>
+				<div class="hsub" style="width:380px">
+					<input type="submit" name="route" value="<#T_REMOVE_SELECTED/>" />
+					<input type="submit" name="route" value="<#T_REARRANGE/>" />
+					<input type="submit" name="route" value="<#T_SAVE/>" />
+					<input type="submit" name="route" value="<#T_PLAY/>" />
+				</div>
+				<input type="hidden" name="p" id="playlist" value="<#plid/>"/>
+				<div id="ajax_box">
+					<#playlist/>
+					<script type="text/javascript">
+						var plid='<#plid/>';
+						if(plid!='') show_playlist(plid,"<#public/>","<#description/>");
+						else document.write('<#M_SELECTPL/>');
+					</script>
+				</div>
+			</form>
+		</div>	
+	</div>
+
+	<div class="brclear" style="width:390px"></div>
+</div>
+<div class="left" style="margin-left:30px;">
+	<#ad1/>
+</div>
+<div class="brclear"></div>

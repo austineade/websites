@@ -1,0 +1,23 @@
+<div class="left">
+	<div class="heading" style="width:785px"><h2><#username/></h2></div>
+	<div class="box" style="width:765px">
+		<div style="text-align:center">
+			<#if image==""/><#else/><img src="<#image/>"/><#endif/>
+		</div><br />
+		<#description/><br /><br />
+		<a class="subscribe" href="index.php?m=users.subscribe&amp;to=<#url_username/>"></a>
+	</div>
+</div>
+<div class="brclear"></div><br />
+<div class="left">
+	<#videos/>
+	<div class="brclear"></div>
+	<br />
+	<div id="comments_box">
+		<#comments/>
+	</div>
+</div>
+<div class="left">
+	<#ad1/>
+</div>
+<div class="brclear"></div>

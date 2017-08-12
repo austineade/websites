@@ -1,0 +1,110 @@
+<div style="margin: 0 0 10px 20px;">
+	<#ad2/>
+</div>
+<div class="left" style="margin-right:10px">
+	<div class="heading" style="width:465px"><h2><#title/></h2></div>
+			<div class="box" style="width:445px">
+				<div id="player_shadow">
+					<div id="player_wrap">
+						<#player/>
+					</div>
+				</div>
+				<div style="margin:10px">
+					<#description/>
+				</div>
+				<#if ratings_enabled=="true"/>
+					<div style="float:left; padding:10px">
+						<div id="stars"><#T_RATINGS/>:<br /><img src="images/stars-<#rate/>.gif" /><br /></div>
+						<div id="ajax_rate"><#T_RATE_VIDEO/>:<br />
+						<a id="sta1" rel="nofollow" href="index.php?m=rate&amp;id=<#id/>&amp;rate=1"><img src="images/star_off.gif" id="st1" class="star" onclick="rate(<#id/>,1)" onmouseover="light('on',1)" onmouseout="light('off',1)" title="<#T_POOR/>" alt="1" /></a><a id="sta2" rel="nofollow" href="index.php?m=rate&amp;id=<#id/>&amp;rate=2"><img src="images/star_off.gif" id="st2" class="star" onclick="rate(<#id/>,2)" onmouseover="light('on',2)" onmouseout="light('off',2)" title="<#T_NS/>" alt="2" /></a><a id="sta3" rel="nofollow" href="index.php?m=rate&amp;id=<#id/>&amp;rate=3"><img src="images/star_off.gif" id="st3" class="star" onclick="rate(<#id/>,3)" onmouseover="light('on',3)" onmouseout="light('off',3)" title="<#T_AVG/>" alt="3" /></a><a id="sta4" rel="nofollow" href="index.php?m=rate&amp;id=<#id/>&amp;rate=4"><img src="images/star_off.gif" id="st4" class="star" onclick="rate(<#id/>,4)" onmouseover="light('on',4)" onmouseout="light('off',4)" title="<#T_GOOD/>" alt="4" /><a id="sta5" rel="nofollow" href="index.php?m=rate&amp;id=<#id/>&amp;rate=5"><img src="images/star_off.gif" id="st5" class="star" onclick="rate(<#id/>,5)" onmouseover="light('on',5)" onmouseout="light('off',5)" title="<#T_AWESOME/>" alt="5" /></a>
+						</div>	
+						<script type="text/javascript">
+							for(i=1; i<=5; i++) document.getElementById('sta'+i).href="javascript:void(0)";
+							document.getElementById('stars').style.display='none';
+							rating=<#rate/>;
+							light_rating();
+						</script>
+					</div>
+				<#endif/>
+				<div class="detail_col" style="width:250px;min-height: 60px;">
+					<span class="small"><#T_TAGS/>: <#tags/></span><br />
+					<span class="small"><#T_ADDED/>: <#time/></span><br />
+					<span class="small"><#T_VIEWS/>: <#hits/></span><br />
+					<span class="small"><#T_FROM/>: <a id="author" href="index.php?m=channel&amp;channel=<#url_username/>" onclick="popup('index.php?m=channelpreview&amp;channel=<#url_username/>')"><#username/></a></span>
+					<script type="text/javascript">document.getElementById('author').href='javascript:void(0)';</script>
+				</div>
+				<div class="detail_col2">
+					<#if favorites_enabled=="true"/>
+						<a class="qlink" id="favlink" href="index.php?m=favorites_add&amp;id=<#id/>" onclick="add_to_favorites(<#id/>)"><img src="images/heart.png" alt="<#T_ADD_FAV/>" /> <#T_ADD_FAV/></a><br /><br />
+						<script type="text/javascript">document.getElementById('favlink').href="javascript:void(0)";</script>
+					<#endif/>
+					<#if playlists_enabled=="true"/>
+						<form action="index.php?m=favorites_add" method="post">
+						<img src="images/folder_table.png" alt="<#T_ADDTO_PL/>" />
+						<input type="hidden" name="id" value="<#id/>" />
+						<select name="p" onchange="add_to_playlist(<#id/>,this.options[this.selectedIndex].value)" class="qlink"> 
+							<option value="0">-- <#T_ADDTO_PL/> --</option>
+							<option value="new"><#T_NEWPL/>...</option>
+							<#playlists/>
+						</select><br />
+						<input type="submit" id="pl_add" value="<#T_ADD/>" style="width:30px;font-size:10px" />
+						</form>
+						<script type="text/javascript">document.getElementById('pl_add').style.display="none";</script>
+						<br /><br />
+					<#endif/>
+				</div>
+				<div class="detail_col2">
+					<a class="qlink" id="replink" rel="nofollow" href="index.php?m=report_video&amp;id=<#id/>" onclick="report_video(<#id/>)"><img src="images/flag_red.png" alt="<#T_REPORT_VIDEO/>" /> <#T_REPORT_VIDEO/></a><br /><br />
+					<script type="text/javascript">document.getElementById('replink').href="javascript:void(0)";</script>
+					<a class="subscribe" title="<#T_SUBSCRIBETO_USER/>" href="index.php?m=users.subscribe&amp;to=<#url_username/>"></a>
+				</div>
+				<div class="brclear"></div>
+			</div>
+			<br />
+			<#if embed_enabled=="true"/>
+			<div class="heading" style="width:465px"><h2><#T_EMBED/></h2></div>
+			<div class="box" style="width:445px">
+				<textarea cols="10" rows="5" style="width:430px;height:50px" onclick="this.select()"><#embed/></textarea>
+			</div>			
+			<br />
+			<#endif/>
+			<div id="comments_box">
+				<#comments/>
+			</div>
+</div>
+<div class="left">
+	<#if playlist=="true"/>
+		<div class="heading" style="width:310px;"><h2><#T_PLAYLIST/></h2></div>
+		<div class="box" style="width:290px;">
+			<div class="subscription_thumb">
+				<div>
+					<a href="index.php?m=video&amp;v=<#prev_id/>&amp;p=<#playlists_id/>" title="<#T_PREV/>"><img src="<#prev_thumb/>" width="120" height="90" alt="<#T_PREV/>" /></a>
+				</div>
+				<span class="small"><a href="index.php?m=video&amp;v=<#prev_id/>&amp;p=<#playlists_id/>" title="<#T_PREV/>"><b><#T_PREV/></b></a></span>
+			</div>
+			<div class="subscription_thumb" style="margin-right:0">
+				<div>
+					<a href="index.php?m=video&amp;v=<#next_id/>&amp;p=<#playlists_id/>" title="<#T_NEXT/>"><img src="<#next_thumb/>" width="120" height="90" alt="<#T_NEXT/>" /></a>
+				</div>
+				<span class="small"><a href="index.php?m=video&amp;v=<#next_id/>&amp;p=<#playlists_id/>" title="<#T_NEXT/>"><b><#T_NEXT/></b></a></span>
+			</div>
+			<div class="brclear" style="width:280px"></div>
+		</div>
+		<br />
+	<#endif/>
+	<div class="heading" style="width:310px;">
+		<a name="htab" class="htabh" onclick="get_url_contents('index.php?m=similar&amp;id=<#id/>','ajax_box'); highlight(this,'htab','#999999','#CCCCCC'); document.getElementById('viewall').href='index.php?m=searchsimilar&amp;v=<#id/>'"><#T_RELATED/></a>
+		<a name="htab" class="htab" onclick="get_url_contents('index.php?m=channelvideos&amp;v=<#id/>&amp;channel='+escape('<#username/>'),'ajax_box'); highlight(this,'htab','#999999','#CCCCCC'); document.getElementById('viewall').href='index.php?m=channel&amp;channel='+escape('<#username/>')"><#T_OTHER/></a>
+	</div>
+	<div class="box" style="width:290px;">
+		<div id="ajax_box">
+			<a href="index.php?m=searchsimilar&amp;v=<#id/>"><#T_RELATED/></a><br />
+			<a href="index.php?m=channel&amp;channel=<#url_username/>"><#T_OTHER/></a>
+			<script type="text/javascript">
+			get_url_contents('index.php?m=similar&amp;id=<#id/>','ajax_box');
+			</script>
+		</div>
+	</div>
+	<div class="bottom" style="width:310px;"><a class="pagenum" id="viewall" href="index.php?m=searchsimilar&amp;v=<#id/>"><#T_VIEWALL/></a></div>
+</div>
+<div class="brclear"></div>

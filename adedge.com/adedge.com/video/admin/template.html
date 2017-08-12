@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html>
+
+   <head> 
+   	  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+      <title>Admin Panel</title>
+      <style type="text/css">
+	  	@import "styles.css";
+	  </style>
+      <script type="text/javascript" src="functions.js"></script>
+      <script type="text/javascript" src="../functions.js"></script>
+      <script type="text/javascript">var baseurl="";</script>
+      <script type="text/javascript" src="../ajax.js"></script>
+   </head>
+
+   <body>
+		<div id="side">
+			<div id="logo">
+				<a class="tab" href="index.php">Summary</a>
+				<a class="tab" href="index.php?logout">Logout</a>
+			</div>
+			<#list/>
+			<div class="brclear"></div>
+		</div>
+		<div id="area">
+			<div id="ajax_box">
+				<#content/>
+			</div>
+			<div class="bottom">&nbsp;</div>
+		</div>
+		<div class="brclear"></div>
+		<div id="popup">
+			<div style="text-align:right"><a href="javascript:void(0)" onclick="close_popup()" title="Close">[x]</a></div>
+			<div id="popup_body"></div>
+		</div>
+   </body>
+</html>

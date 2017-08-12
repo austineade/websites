@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<section name="Languages" type="table" target="MLanguages" search="false" edit="true" add="true" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Code" target="code" type="textfield" link="index.php?p=text&amp;lang_id={id}" visible="true" edit="true" add="true"/>   
+    <field name="Enabled" target="approved" type="checkbox" visible="true" edit="true" add="true"/>
+</section>

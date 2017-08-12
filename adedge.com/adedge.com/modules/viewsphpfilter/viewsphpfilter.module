@@ -1,0 +1,93 @@
+<?php
+/* $Id: viewsphpfilter.module,v 1.1.2.1 2007/06/10 21:58:36 gnassar Exp $ */
+
+/**
+ * Implementation of hook_help().
+ */
+function viewsphpfilter_help() {
+  $output = '';
+  switch ($section) {
+    case "admin/help#viewsphpfilter":
+      $output = '<p>'.  t("A filter for the Views module."). '</p>';
+      $output = '<p>'.  t("This filter will appear in the Views Filter dialog as a \"Node: Node ID\".  This filter takes PHP code as its value, which should return an array of integers representing Node IDs to include or exclude.  The filter will evaluate the PHP and filter on the resulting array."). '</p>';
+      break;
+  }
+  return $output;
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function viewsphpfilter_disable() {
+  // should probably get rid of any saved PHP filter in a view
+}
+
+/**
+ * Implementation of hook_views_tables_alter() from Views API
+ *
+ */
+function viewsphpfilter_views_tables_alter(&$table_data) {
+    error_log('views_tables_alter is executing');
+  if (isset($table_data['node']['filters'])) {
+    error_log('views_tables_alter is passing data');
+    $table_data['node']['filters']['nid'] = array (
+      'name' => t('Node: Node ID'),
+      'operator' => 'views_handler_operator_or',
+      'cacheable' => 'no',
+      'handler' => 'views_handler_filter_nid',
+      'value' => array(
+        '#type' => 'textarea',
+        '#process' => array('views_filter_nid_process_form' => array()),
+      ),
+      'option' => array(
+        '#type' => 'select',
+        '#options' => array(
+          'php' => 'PHP code',
+          'id' => 'ID list'
+        ),
+      ),
+      'help' => t('This filter allows nodes to be filtered by Node ID.  PHP code should return an array with node IDs.  ID lists should be separated by commas.'),
+    );
+  }
+}
+
+function views_handler_filter_nid($op, $filter, $filterinfo, &$query) {
+  if (isset ($filter['value'])) {
+    if (is_array($filter['value'])) {
+      $filter['value']=trim(implode(',', $filter['value']));
+    }
+    // error_log('php: ' . print_r($filter['value'],TRUE));
+    if ($filter['options'] == 'php') {
+      $result = eval ($filter['value']);
+      // error_log('eval: ' . print_r($result,TRUE));
+      if ($result === FALSE) {
+        // PHP parse error; return error to user
+      }
+      else if ($result === NULL) {
+        // Nothing was returned; return error to user
+      }
+      else if (!is_array($result)) {
+        // An array was not returned
+      }
+      else {
+        $nids = trim(implode(',',$result)," \t\n\r\0\x0B,");
+      }
+    }
+    // error_log('result: ' . print_r($nids,TRUE));
+    if ($nids != '') {
+      if ($filter['operator'] == 'OR') {
+        $query->add_where("node.nid IN (%s)", $nids);
+      }
+      else {
+        $query->add_where("node.nid NOT IN (%s)", $nids);
+      }
+    }
+  }
+}
+
+function views_filter_nid_process_form($element) {
+  if (is_array($element['#value'])) {
+    $element['#value'] = implode(',', $element['#value']);
+  }
+  return $element;
+}

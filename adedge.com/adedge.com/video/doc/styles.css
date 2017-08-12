@@ -1,0 +1,23 @@
+table{
+  border: 1px solid #000033;
+}
+
+th{
+  background: #666699;
+  color: #ffffff;
+}
+
+td{
+  background: #ccccff;
+}
+
+td.htd{
+  background: #333366;
+  color: #ffffff;
+}
+
+p.syntax{
+  background: #ccccff;
+  font-size: 12px;
+  padding: 5px;
+}

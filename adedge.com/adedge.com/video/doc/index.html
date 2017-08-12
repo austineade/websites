@@ -1,0 +1,526 @@
+<html>
+	<head>
+		<style type="text/css">
+			@import "styles.css";
+		</style>
+	</head>
+	<body>
+		<h1>Video CMS documentation</h1>
+		<p>Version: 1.5</p>
+		<h2>Table of contents</h2>
+		<dl>
+			<dt><a href="#installation">Installation</a></dt>
+			<dt><a href="#configuration">Website configuration</a></dt>
+			<dd><a href="#configphp">config.php</a></dd>
+			<dd><a href="#siteadmin">Site Administration panel</a></dd>
+			<dt><a href="#templates">Templates</a></dt>
+			<dd><a href="#tplsyntax">The syntax of template files</a></dd>
+			<dd><a href="#tplfiles">Template files and available tags</a></dd>
+			<dd><a href="#ads">Advertisements</a></dd>
+			<dd><a href="#ml">Multilingual text</a></dd>
+			<dt><a href="#customize">Customizing pages</a></dt>
+			<dt><a href="#perms">Permissions</a></dt>
+			<dt><a href="#seo">Search engine friendly URLs</a></dt>
+			<dt><a href="#ts">Troubleshooting</a></dt>
+		</dl>
+		<h2><a name="installation">Installation</a></h2>
+		<ol>
+			<li>Download and read the End User License Agreement (EULA) file (<i>license.txt</i>) from <a taget="blank" href="http://www.codemight.com/index.php?m=users.licenses">CodeMight.com</a>. By installing Video CMS you agree with the terms of EULA.</li>
+			<li>
+				Copy the script files to the server using your favorite FTP client.
+			</li>
+			<li>Set the permissions to the following directories:
+				<ul>
+					<li><i>files</i> - set the permissions to 777</li>
+					<li><i>thumbnails</i> - set the permissions to 777</li>
+				</ul>
+				<p><b>Note:</b> it is recommended to set the permissions for these directories to 755 and set the owner of the directories to the user under which PHP is running. Consult your server administrator for more information.</p>
+			</li>
+			<li>Create a MySQL database (database name is <i>videocms</i> by default). Consult your server administrator for more information.</i>
+			<li>Edit <i>config.php</i> and set the database connection settings:
+				<ul>
+					<li>DB_SERVER - the address of the database server. By default it is set to <i>localhost</i>.</li>
+					<li>DB_USER - the user name to access the database server.</li>
+					<li>DB_PASSWORD - the password to access the database server.</li>
+					<li>DB_DATABASE - Video CMS database name. You don't need to change this setting unless there's a database name conflict.</li>
+					<li>ADMIN_USERNAME - The username for administration panel</li>
+					<li>ADMIN_PASSWORD - The password for administration panel</li>
+					<li>URL - full url to the site (without the trailing '/')</li>
+				</ul>
+				<p><b>Note:</b> if you don't know the details required to enter above, please consult your server administrator.</p>
+			</li>
+			<li>Set up a scheduled task to run the video conversion queue processor.
+			<p>To set up the queue processor, add a crontab entry on your server:<br />
+			<br /><i>* * * * * wget http://www.example.com/?m=processqueue</i></p></li>
+			<li>Run <i>install/index.php</i></li>
+			<li>Delete the <i>install</i> directory</li>
+			<li>Copy <i>license.txt</i> that you have downloaded in step one to the Video CMS root directory. It contains a license key code assigned to you upon the purchase and will be used as a prove that you have legaly purchased Video CMS and agreed with the terms of the End User License Agreement in case it needs to be proven.</li>
+		</ol>
+		<h2><a name="configuration">Website configuration</a></h2>
+		<p>There are two levels of website configuration: config.php and the administration panel. Below are the available settings of each level.</p>
+		<h3><a name="configphp">config.php</a></h3>
+		<ul>
+			<li>SITENAME - the name of the site</li>
+			<li>EMAIL - webste support e-mail address. This e-mail address is displayed on the messages sent to website members.</li>
+			<li>MOD_REWRITE - enable/disable mod_rewrite. Enable this setting only if mod_rewrite is present on your server.</li>
+		</ul>
+		<h3><a name="siteadmin">Site Administration panel settings</a></h3>
+		<p>
+			<table>
+				<tr><td class="htd" colspan="2">Videos</td></tr>
+				<tr><td>embed</td><td>Enable/disable your visitors to embed videos on their sites.</td></tr>
+				<tr><td>auto_approve</td><td>Automatically approve member uploaded videos.</td></tr>
+				<tr><td>remove_links</td><td>Remove links from the public posts.</td></tr>
+				<tr><td>bad_words</td><td>Enter the words to be censored in all public posts.</td></tr>
+				<tr><td>remove_videos</td><td>Allow members to remove approved videos.</td></tr>
+				
+				<tr><td class="htd" colspan="2">Features</td></tr>
+				<tr><td>subscriptions</td><td>Enable/disable video subscriptions. If you disable this feature, the members will not be able to subscribe to channels or tags.</td></tr>
+				<tr><td>ratings</td><td>Enable/disable video ratings. If you disable this feature, the members will not be able to rate videos.</td></tr>
+				<tr><td>favorites</td><td>Enable/disable favorite videos. If you disable this feature, the members will not be able to save their favorite videos.</td></tr>
+				<tr><td>playlists</td><td>Enable/disable playlists. If you disable this feature, the members will not be able to create video playlists.</td></tr>
+				<tr><td>comments</td><td>Enable/disable video and channel comments. If you disable this feature, the members will not be able to post comments on videos and channels.</td></tr>
+				
+				<tr><td class="htd" colspan="2">Video Conversion</td></tr>
+				<tr><td>ffmpeg_path</td><td>Path to ffmpeg. Clear this field to disable video conversion and keep the original format of the uploaded videos.</td></tr>
+				<tr><td>ffmpeg_size</td><td>Converted video frame size.</td></tr>
+				<tr><td>ffmpeg_ar</td><td>ffmpeg audio conversion rate. Change this setting to tweak the audio quality of a converted video.</td></tr>	
+				<tr><td>ffmpeg_bitrate</td><td>Bit rate of the converted videos.</td></tr>	
+				<tr><td>ffmpeg_thumbnail_size</td><td>Size of the video thumbnails.</td></tr>
+				<tr><td>conversion_queue</td><td>Enable/Disable video conversion queue. This setting reduces server load on heavy traffic websites.</td></tr>
+				<tr><td>skip_flv_conversion</td><td>Enable this option to skip the re-conversion of FLV video files.</td></tr>
+								
+				<tr><td class="htd" colspan="2">General</td></tr>
+				<tr><td>default_language</td><td>Select a default language.</td></tr>
+				
+				<tr><td class="htd" colspan="2">Membership</td></tr>
+				<tr><td>membership</td><td>Enable/Disable membership. If you disable this feature, the visitors will not be able to sign up and login.</td></tr>
+				<tr><td>levels</td><td>Enable the membership level system. Set the 'permissions' field for users to allow/restrict member accessibility of certain features.</td></tr>
+				<tr><td>default_level</td><td>Default membership level. This level will be automatically set to users during the sign up process.</td></tr>
+					
+				<tr><td class="htd" colspan="2">Uploading</td></tr>
+				<tr><td>uploads</td><td>Enable/disable video uploading. If you disable this feature, the members will not be able to upload new videos.</td></tr>
+				<tr><td>max_upload_size</td><td>Maximal video file size (in bytes) allowed to upload.</td></tr>	
+				<tr><td>flash_uploader</td><td>Enable/disable upload progress indicator. Recommended for big file uploads.</td></tr>
+				
+				<tr><td class="htd" colspan="2">Flash Player</td></tr>
+				<tr><td>overlay</td><td>Overlay image to display while playing videos. </td></tr>	
+				
+				<tr><td class="htd" colspan="2">Webcam</td></tr>
+				<tr><td>webcam</td><td>Enable/disable webcam video recording. </td></tr>
+				<tr><td>red5_streams</td><td>Absolute path to Red5 streams.</td></tr>
+				<tr><td>red5_server</td><td>Red5 RTMP server URL.</td></tr>
+			</table>
+		</p>
+		<h2><a name="templates">Templates</a></h2>
+		<p>The template files are located in the <i>html</i> directory. You can change these files to modify the look and feel of your website.</p>
+		<h3><a name="tplsyntax">The syntax of template files</a></h3>
+		<p>
+			There is a list of available tags for each template page. The following format of the template tags applies:
+			<p class="syntax">&lt;#tag_name/&gt;</p>
+		</p>
+		<p>
+			You can control the display of certain template parts with the help of simple control structures:
+			<p class="syntax">
+				&lt;#if variable_name=="value"/&gt;<br />
+				&nbsp;&nbsp; <i>The content to display if the condition evaluates to true</i><br />
+				[ &lt;#else/&gt;<br />
+				&nbsp;&nbsp; <i>The content to display if the condition evaluates to false</i> ]<br />
+				&lt;#endif/&gt;
+			</p>
+		</p>
+		<h3><a name="tplfiles">Template files and available tags (in alphabetical order)</a></h3>
+		<p>
+			<table>
+				<tr><td class="htd" colspan="2"><b>account.html</b> Member account modification form</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#error/&gt;</td><td>Error message displayed on failure</td></tr>
+				<tr><td>&lt;#email/&gt;</td><td>Member email</td></tr>
+				<tr><td class="htd" colspan="2"><b>cat_list.html</b> The list of the categories</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#list/&gt;</td><td>The list of the categories</td></tr>
+				<tr><td class="htd" colspan="2"><b>cat_list_item.html</b> A single item of the list of the categories</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#caturl/&gt;</td><td>URL to the category</td></tr>
+				<tr><td>&lt;#thumb/&gt;</td><td>Path to the category thumbnail image</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Category title</td></tr>
+				<tr><td>&lt;#videos/&gt;</td><td>Video count under the category</td></tr>
+				<tr><td>&lt;#tags/&gt;</td><td>The most popular tags of the videos of the category</td></tr>
+				<tr><td class="htd" colspan="2"><b>ch_item.html</b> A single item of the list of the categories</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#trigger/&gt;</td><td>A variable is 1 or 0 every second item. It can be used to alternate item colors</td></tr>
+				<tr><td>&lt;#channelurl/&gt;</td><td>URL to the channel</td></tr>
+				<tr><td>&lt;#thumb/&gt;</td><td>Path to the channel thumbnail image</td></tr>
+				<tr><td>&lt;#username/&gt;</td><td>User name of the channel owner and the title of the channel</td></tr>
+				<tr><td>&lt;#short_desc/&gt;</td><td>Short description of the channel</td></tr>
+				<tr><td>&lt;#videos/&gt;</td><td>Video count of the channel</td></tr>
+				<tr><td>&lt;#hits/&gt;</td><td>View count of all channel videos</td></tr>
+				<tr><td>&lt;#subscriptions/&gt;</td><td>The number of subscribers of the channel</td></tr>
+				<tr><td class="htd" colspan="2"><b>channel.html</b> Channel page</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#username/&gt;</td><td>User name of the channel owner and the title of the channel</td></tr>
+				<tr><td>&lt;#image/&gt;</td><td>Path to the channel image</td></tr>
+				<tr><td>&lt;#description/&gt;</td><td>Full description of the channel</td></tr>
+				<tr><td>&lt;#url_username/&gt;</td><td>URL encoded user name</td></tr>
+				<tr><td>&lt;#videos/&gt;</td><td>Channel videos</td></tr>
+				<tr><td>&lt;#comments/&gt;</td><td>Channel comments. Only available if the comments are enabled</td></tr>
+				<tr><td class="htd" colspan="2"><b>channels.html</b> The list of the channels</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#title/&gt;</td><td>"Channels"</td></tr>
+				<tr><td>&lt;#sort/&gt;</td><td>The order of channels. Possible values: <i>hits</i>, <i>tt</i> [new videos], <i>rate</i></td></tr>
+				<tr><td>&lt;#curl/&gt;</td><td>URL to the channels page</td></tr>
+				<tr><td>&lt;#list/&gt;</td><td>The list of the channels</td></tr>
+				<tr><td>&lt;#pagination/&gt;</td><td>The pagination of the list</td></tr>
+				<tr><td class="htd" colspan="2"><b>comments_item.html</b> A single comment</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#username/&gt;</td><td>The user name of the comment author</td></tr>
+				<tr><td>&lt;#time/&gt;</td><td>Date and time of the comment</td></tr>
+				<tr><td>&lt;#id/&gt;</td><td>ID of the comment</td></tr>
+				<tr><td>&lt;#text/&gt;</td><td>Comments text</td></tr>
+				<tr><td class="htd" colspan="2"><b>comments_list.html</b> List of the comments</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#list/&gt;</td><td>List of the comments</td></tr>
+				<tr><td>&lt;#pagination/&gt;</td><td>Pagination of the list</td></tr>
+				<tr><td>&lt;#curl/&gt;</td><td>URL of the current page</td></tr>
+				<tr><td class="htd" colspan="2"><b>create_playlist.html</b> A form to create a playlist</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#error/&gt;</td><td>The error message displayed on failure</td></tr>
+				<tr><td class="htd" colspan="2"><b>e_item.html</b> A single video item of editable list (favorites)</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#trigger/&gt;</td><td>A variable is 1 or 0 every second item. It can be used to alternate item colors</td></tr>
+				<tr><td>&lt;#id/&gt;</td><td>ID of the video</td></tr>
+				<tr><td>&lt;#videourl/&gt;</td><td>URL to the video</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>The title of the video</td></tr>
+				<tr><td>&lt;#thumb/&gt;</td><td>Path to the video thumbnail image</td></tr>
+				<tr><td>&lt;#duration/&gt;</td><td>The duration of the video</td></tr>
+				<tr><td>&lt;#rate/&gt;</td><td>The ratings of the video. Only available if the ratings are enabled</td></tr>
+				<tr><td>&lt;#tags/&gt;</td><td>The tags of the video</td></tr>
+				<tr><td>&lt;#time/&gt;</td><td>The date and time of when the video was added</td></tr>
+				<tr><td>&lt;#hits/&gt;</td><td>Total view count of the video</td></tr>
+				<tr><td>&lt;#username/&gt;</td><td>The username of the video author</td></tr>
+				<tr><td class="htd" colspan="2"><b>e_list.html</b> Editable list of the videos (favorites)</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of the list</td></tr>
+				<tr><td>&lt;#list/&gt;</td><td>The list of the videos</td></tr>
+				<tr><td>&lt;#pagination/&gt;</td><td>Pagination of the list</td></tr>
+				<tr><td class="htd" colspan="2"><b>edit_channel.html</b> A form to edit a channel</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#error/&gt;</td><td>The error message displayed on failure</td></tr>
+				<tr><td>&lt;#channelurl/&gt;</td><td>URL to the channel</td></tr>
+				<tr><td>&lt;#username/&gt;</td><td>User name of the channel owner</td></tr>
+				<tr><td>&lt;#short_desc/&gt;</td><td>Short description of the channel</td></tr>
+				<tr><td>&lt;#description/&gt;</td><td>Full description of the channel</td></tr>
+				<tr><td>&lt;#thumbs_id/&gt;</td><td>ID of the selected thumbnail</td></tr>
+				<tr><td>&lt;#thumbs/&gt;</td><td>Available thumbnails to choose for a channel</td></tr>
+				<tr><td class="htd" colspan="2"><b>esmall_item.html</b> Item of a editable list (playlist)</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#trigger/&gt;</td><td>A variable is 1 or 0 every second item. It can be used to alternate item colors</td></tr>
+				<tr><td>&lt;#id/&gt;</td><td>ID of the video</td></tr>
+				<tr><td>&lt;#ord/&gt;</td><td>Video order in the list</td></tr>
+				<tr><td>&lt;#videourl/&gt;</td><td>URL of the video</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of the video</td></tr>
+				<tr><td>&lt;#thumb/&gt;</td><td>Path to the video thumbnail image</td></tr>
+				<tr><td>&lt;#duration/&gt;</td><td>A duration of a video</td></tr>
+				<tr><td>&lt;#shorttitle/&gt;</td><td>Short title of a video</td></tr>
+				<tr><td>&lt;#rate/&gt;</td><td>Ratings of a video</td></tr>
+				<tr><td>&lt;#time/&gt;</td><td>The date and time of when the video was added</td></tr>
+				<tr><td>&lt;#hits/&gt;</td><td>Total view count of the video</td></tr>
+				<tr><td>&lt;#username/&gt;</td><td>The username of the video author</td></tr>
+				<tr><td class="htd" colspan="2"><b>footer_menu_item.html</b> An item of the footer menu</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#pageurl/&gt;</td><td>URL to a page</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of a link</td></tr>
+				<tr><td class="htd" colspan="2"><b>front.html</b> Front page of the website</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#subscriptions/&gt;</td><td>True if the subscriptions are enabled and the logged in user is a subscriber</td></tr>
+				<tr><td>&lt;#featured/&gt;</td><td>A list of featured videos</td></tr>
+				<tr><td>&lt;#pagination/&gt;</td><td>Pagination of the list</td></tr>
+				<tr><td class="htd" colspan="2"><b>index.html</b> Layout of the website</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Page title</td></tr>
+				<tr><td>&lt;#username/&gt;</td><td>The user name of the logged in user</td></tr>
+				<tr><td>&lt;#url/&gt;</td><td>URL of the website</td></tr>
+				<tr><td>&lt;#menu/&gt;</td><td>Main menu of the website</td></tr>
+				<tr><td>&lt;#submenu/&gt;</td><td>Sub-menu of the website</td></tr>
+				<tr><td>&lt;#content/&gt;</td><td>Contents of the page</td></tr>
+				<tr><td>&lt;#footer_menu/&gt;</td><td>The footer menu</td></tr>
+				<tr><td class="htd" colspan="2"><b>l_item.html</b> An item of a video list</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#id/&gt;</td><td>ID of the video</td></tr>				
+				<tr><td>&lt;#trigger/&gt;</td><td>A variable is 1 or 0 every second item. It can be used to alternate item colors</td></tr>
+				<tr><td>&lt;#videourl/&gt;</td><td>URL of the video page</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of the video</td></tr>
+				<tr><td>&lt;#duration/&gt;</td><td>Duration of the video</td></tr>
+				<tr><td>&lt;#rate/&gt;</td><td>The ratings of the video</td></tr>
+				<tr><td>&lt;#description/&gt;</td><td>The decription of the video</td></tr>
+				<tr><td>&lt;#tags/&gt;</td><td>The tags of the video</td></tr>
+				<tr><td>&lt;#time/&gt;</td><td>The date and time of when the video was added</td></tr>
+				<tr><td>&lt;#hits/&gt;</td><td>Total view count of the video</td></tr>
+				<tr><td>&lt;#username/&gt;</td><td>The user name of the author</td></tr>
+				<tr><td class="htd" colspan="2"><b>l_item.xml</b> An item of a XML video list</td></tr>
+				<tr><td colspan="2"><i>See l_item.html</i></td></tr>
+				<tr><td class="htd" colspan="2"><b>list.html</b> An list of videos</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#featured/&gt;</td><td>A list of related featured videos</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of the list</td></tr>
+				<tr><td>&lt;#sort/&gt;</td><td>The order of videos. Possible values: <i>hits, tt [date added], rate, duration</i></td></tr>
+				<tr><td>&lt;#list/&gt;</td><td>The list of videos</td></tr>
+				<tr><td>&lt;#pagination/&gt;</td><td>Pagination of the list</td></tr>
+				<tr><td class="htd" colspan="2"><b>list.xml</b> An XML video list</td></tr>
+				<tr><td colspan="2"><i>See list.html</i></td></tr>
+				<tr><td class="htd" colspan="2"><b>login.html</b> The login form</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#location/&gt;</td><td>The original location login form has been called from</td></tr>
+				<tr><td>&lt;#error/&gt;</td><td>The error message displayed on failure</td></tr>
+				<tr><td>&lt;#list/&gt;</td><td>The list of videos</td></tr>
+				<tr><td class="htd" colspan="2"><b>logo.xml</b> Logo for the FLV player</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#siteurl/&gt;</td><td>URL uf the website</td></tr>
+				<tr><td>&lt;#logourl/&gt;</td><td>URL of the logo image</td></tr>
+				<tr><td class="htd" colspan="2"><b>menu_item.html</b> An item of the menu</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#hl/&gt;</td><td>True if the item is selected</td></tr>
+				<tr><td>&lt;#pageurl/&gt;</td><td>URL of the target page</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of the target page</td></tr>
+				<tr><td class="htd" colspan="2"><b>message.html</b> A message</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#message/&gt;</td><td>Message text</td></tr>
+				<tr><td class="htd" colspan="2"><b>password_email.html</b> The email sent to recover a lost password</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#site/&gt;</td><td>Title of the website</td></tr>
+				<tr><td>&lt;#username/&gt;</td><td>The user name of the user recovering the lost password</td></tr>
+				<tr><td>&lt;#password/&gt;</td><td>The new generated password</td></tr>
+				<tr><td>&lt;#url/&gt;</td><td>URL of the website</td></tr>
+				<tr><td class="htd" colspan="2"><b>password_reset.html</b> The password recovery form</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#error/&gt;</td><td>The error message displayed on failure</td></tr>
+				<tr><td class="htd" colspan="2"><b>pl_item.html</b> An item of the list of playlists</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#selected/&gt;</td><td>True if the playlist is selected</td></tr>
+				<tr><td>&lt;#plid/&gt;</td><td>ID of the playlist</td></tr>
+				<tr><td>&lt;#description/&gt;</td><td>Description of the playlist</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of the playlist</td></tr>
+				<tr><td>&lt;#videos/&gt;</td><td>Number of videos in the playlist</td></tr>
+				<tr><td>&lt;#description/&gt;</td><td>Description of the playlist</td></tr>
+				<tr><td class="htd" colspan="2"><b>pl_list.html</b> A List of playlists</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#list/&gt;</td><td>The list of playlists</td></tr>
+				<tr><td>&lt;#description/&gt;</td><td>Description of the playlist</td></tr>
+				<tr><td>&lt;#plid/&gt;</td><td>ID of the playlist</td></tr>
+				<tr><td class="htd" colspan="2"><b>popup.html</b> Pop up window contents</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#list/&gt;</td><td>The thumbnails of the search results</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>The title of the pop up window</td></tr>
+				<tr><td>&lt;#allurl/&gt;</td><td>URL to the page of all seatch results</td></tr>
+				<tr><td class="htd" colspan="2"><b>signup.html</b> The sign up form</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#error/&gt;</td><td>The error message displayed on failure</td></tr>
+				<tr><td class="htd" colspan="2"><b>signup_email.html</b> The email sent to new user after signing up</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#site/&gt;</td><td>The name of your site</td></tr>
+				<tr><td>&lt;#url/&gt;</td><td>URL of your site</td></tr>
+				<tr><td>&lt;#username/&gt;</td><td>The username</td></tr>
+				<tr><td>&lt;#password/&gt;</td><td>The password</td></tr>
+				<tr><td class="htd" colspan="2"><b>signup_success.html</b> The message displayed after a succesfull sgin up</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td colspan="2"><i>No tags available</i></td></tr>
+				<tr><td class="htd" colspan="2"><b>small_item.html</b> An item of a simplified video list</td></tr>
+				<tr><td colspan="2"><i>See l_item.html</i></td></tr>
+				<tr><td class="htd" colspan="2"><b>ss_item.html</b> An item of a list of the subscriptions</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of the subscription</td></tr>
+				<tr><td>&lt;#tag/&gt;</td><td>1 if subscribed to video tags</td></tr>
+				<tr><td>&lt;#ssid/&gt;</td><td>ID of the subscription</td></tr>
+				<tr><td class="htd" colspan="2"><b>ss_list.html</b> List of the subscriptions</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#error/&gt;</td><td>The error message displayed on failure</td></tr>
+				<tr><td>&lt;#list/&gt;</td><td>The list of subscriptions</td></tr>
+				<tr><td class="htd" colspan="2"><b>submenu_item.html</b> An item of the sub-menu</td></tr>
+				<tr><td colspan="2"><i>See menu_item.html</i></td></tr>
+				<tr><td class="htd" colspan="2"><b>thumb_item.html</b> An item of a list of video thumbnails (ex. subscriptions on the front page)</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#videourl/&gt;</td><td>URL of the video page</td></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of the video</td></tr>
+				<tr><td>&lt;#short_title/&gt;</td><td>Short title of the video</td></tr>
+				<tr><td class="htd" colspan="2"><b>thumb_list.html</b> A list of video thumbnails (ex. subscriptions on the front page)</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#prev/&gt;</td><td>The numebr of previous page</td></tr>
+				<tr><td>&lt;#next/&gt;</td><td>The numebr of next page</td></tr>
+				<tr><td>&lt;#list/&gt;</td><td>The list of video thumbnails</td></tr>
+				<tr><td class="htd" colspan="2"><b>upload_success.html</b> The page displayed after a successful video upload</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td colspan="2"><i>No tags available</i></td></tr>
+				<tr><td class="htd" colspan="2"><b>upload_video_step1.html</b> The form of the first video upload step</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#error/&gt;</td><td>The error message displayed on failure</td></tr>
+				<tr><td>&lt;#categories/&gt;</td><td>The list of available categories</td></tr>
+				<tr><td class="htd" colspan="2"><b>upload_video_step2.html</b> The form of the second video upload step</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#max_upload_size_mb/&gt;</td><td>The maximal allowed video file size (in megabytes)</td></tr>
+				<tr><td>&lt;#max_upload_size/&gt;</td><td>The maximal allowed video file size (in bytes)</td></tr>
+				<tr><td>&lt;#upload_types/&gt;</td><td>The allowed video file extensions</td></tr>
+				<tr><td>&lt;#id/&gt;</td><td>ID of the upload process</td></tr>
+				<tr><td class="htd" colspan="2"><b>video.asx</b> ASX video feed for the player</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#filename/&gt;</td><td>URL of the video file</td></tr>
+				<tr><td class="htd" colspan="2"><b>video.html</b> The video page</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#title/&gt;</td><td>Title of the video</td></tr>
+				<tr><td>&lt;#player/&gt;</td><td>The video player</td></tr>
+				<tr><td>&lt;#description/&gt;</td><td>Description of the video</td></tr>
+				<tr><td>&lt;#ratings_enabled/&gt;</td><td>True if the ratings are enabled</td></tr>
+				<tr><td>&lt;#rate/&gt;</td><td>Rating of the video</td></tr>
+				<tr><td>&lt;#tags/&gt;</td><td>The tags of the video</td></tr>
+				<tr><td>&lt;#time/&gt;</td><td>The date and time of when the video was added</td></tr>
+				<tr><td>&lt;#hits/&gt;</td><td>Total view count of the video</td></tr>
+				<tr><td>&lt;#username/&gt;</td><td>The user name of the author</td></tr>
+				<tr><td>&lt;#url_username/&gt;</td><td>URL encoded user name</td></tr>
+				<tr><td>&lt;#id/&gt;</td><td>ID of the video</td></tr>
+				<tr><td>&lt;#next_id/&gt;</td><td>ID of the next video in playlist</td></tr>
+				<tr><td>&lt;#prev_id/&gt;</td><td>ID of the previous video in playlist</td></tr>
+				<tr><td>&lt;#next_thumb/&gt;</td><td>Thumbnail image of the next video in playlist</td></tr>
+				<tr><td>&lt;#prev_thumb/&gt;</td><td>Thumbnail image of the previous video in playlist</td></tr>
+				<tr><td>&lt;#playlist/&gt;</td><td>True if the playlist is being played</td></tr>				
+				<tr><td>&lt;#favorites_enabled/&gt;</td><td>True if the favorites are enabled</td></tr>
+				<tr><td>&lt;#playlists_enabled/&gt;</td><td>True if the playlists are enalbed</td></tr>
+				<tr><td>&lt;#playlists/&gt;</td><td>The list of available playlists</td></tr>
+				<tr><td>&lt;#embed_enabled/&gt;</td><td>True if video embedding is enabled</td></tr>
+				<tr><td>&lt;#embed/&gt;</td><td>The code to embed the video</td></tr>
+				<tr><td>&lt;#comments/&gt;</td><td>Video comments. Only available if the comments are enabled</td></tr>
+				<tr><td class="htd" colspan="2"><b>video.xml</b> XML video feed for the player</td></tr>
+				<tr><th>Tag</th><th>Description</th></tr>
+				<tr><td>&lt;#filename/&gt;</td><td>URL of the video file</td></tr>
+			</table>
+		</p>
+		<h3><a name="customize">Customizing Pages</a></h3>
+		<p>
+			Video CMS allows you to customize your site pages in any way you like (version 1.5 allows you to customize front page and your custom pages).
+		</p>
+		<p>
+			For each page you can set various components, that display various dynamic elements of Video CMS (such as latest videos, top videos, etc.). To add a component to a page, go to the Administration Panel and select Page Components from the main menu.
+		</p>
+		<p>
+			Page Components section allows you to select your present pages and add components. Once you add a component, a tag representing that component appears on your page. For example: <i>&lt;#top_videos/&gt;</i>
+		</p>
+		<p>
+			Once you add the required components, you can modify the page layout in Pages section.
+		</p>
+		<h3><a name="perms">Permissions</a></h3>
+		<p>
+			The Video CMS permissions system allows you to create membership roles and give access only to certain areas of your site. The permissions system is turned off by default.
+		</p>
+		<p>
+			To enable the use of permissions, enable the <i>levels</i> option at Administration Panel, Settings section, Membership tab.
+		</p>
+		<p>
+			After enabling this options, select the required permission level to access parts of site by choosing the Permissions tab and adjusting the following settings:
+			<table>
+				<tr><td>featured</td><td>Membership level required to view Front page featured videos</td></tr>
+				<tr><td>videos</td><td>Membership level required to access all videos</td></tr>
+				<tr><td>channels</td><td>Membership level required to browse video channels</td></tr>
+				<tr><td>favorites</td><td>Membership level required to manage favorite videos</td></tr>
+				<tr><td>playlists</td><td>Membership level required to create and manage playlists videos</td></tr>
+				<tr><td>subscriptions</td><td>Membership level required to create and manage video subscriptions</td></tr>
+				<tr><td>comments</td><td>Membership level required to comment videos</td></tr>
+				<tr><td>upload</td><td>Membership level required to upload videos</td></tr>
+			</table>
+		</p>
+		<p>
+			The permissions are set to users in Users section. The permissions can be set manually or by 3rd party membership management software.
+		</p>
+		<h3><a name="ads">Advertisements</a></h3>
+		<p>
+			You can display 7 different advertisements on a single page. To display advertisements, create template files: <i>ad1.html, ad2.html, ..., ad7.html</i> in the <i>html</i> directory. Include the HTML source code of each advertisement to these files.
+		</p>
+		<p>
+			On every page you can use these tags: <i>&lt;#ad1/&gt;, &lt;#ad2/&gt;, ..., &lt;#ad7/&gt;</i>. The advertisements from respective files will be displayed.
+		</p>
+		<h3><a name="ml">Multilingual text</a></h3>
+		<p>
+			Throughout all of the templates, there are multilingual tags used in order to display the text in different languages. You can add these tags and/or modify them in the Administration Panel.
+		</p>
+		<h2><a name="seo">Search engine friendly URLs</a></h2>
+		<p>
+			If mod_rewrite (or equivalent) is present on your server, you can change the way URLs are displayed. Follow these steps to enable URL rewriting:
+		</p>
+		<ol>
+			<li>Add this code to .htaccess file in your web server root directory:
+			<p class="syntax">
+				RewriteEngine on<br /><br />
+				RewriteRule ^categories/?$ index.php?m=categories<br />
+				RewriteRule ^category/([0-9]+)/?$ index.php?m=category&c=$1<br />
+				RewriteRule ^videos/?$ index.php?m=videos<br />
+				RewriteRule ^videos/latest/?$ index.php?m=videos&sort=tt<br />
+				RewriteRule ^videos/most-viewed/?$ index.php?m=videos&sort=hits<br />
+				RewriteRule ^videos/top-rated/?$ index.php?m=videos&sort=rate<br />
+				RewriteRule ^channels/?$ index.php?m=channels<br />
+				RewriteRule ^channel/([-0-9a-zA-Z_%]*)/?$ index.php?m=channel&channel=$1<br />
+				RewriteRule ^video/([0-9]+)/?$ index.php?m=video&v=$1<br />
+				RewriteRule ^upload/?$ index.php?m=users.upload<br />
+			</p>
+			If you have installed Video CMS to a sub-directory, use this code instead:
+			<p class="syntax">
+				RewriteEngine on<br /><br />
+				RewriteRule ^subdir/categories/?$ index.php?m=categories<br />
+				RewriteRule ^subdir/category/([0-9]+)/?$ index.php?m=category&c=$1<br />
+				RewriteRule ^subdir/videos/?$ index.php?m=videos<br />
+				RewriteRule ^subdir/videos/latest/?$ index.php?m=videos&sort=tt<br />
+				RewriteRule ^subdir/videos/most-viewed/?$ index.php?m=videos&sort=hits<br />
+				RewriteRule ^subdir/videos/top-rated/?$ index.php?m=videos&sort=rate<br />
+				RewriteRule ^subdir/channels/?$ index.php?m=channels<br />
+				RewriteRule ^subdir/channel/([-0-9a-zA-Z_%]*)/?$ index.php?m=channel&channel=$1<br />
+				RewriteRule ^subdir/video/([0-9]+)/?$ index.php?m=video&v=$1<br />
+				RewriteRule ^subdir/upload/?$ index.php?m=users.upload<br />		
+			</p>
+			<p>Where <i>subdir</i> is the name of the sub-directory Video CMS is installed in.</p>
+			</li>
+			<li>Change the MOD_REWRITE setting in the <i>config.php</i> to <i>true</i></li>
+			<li>Edit the menu URLs in the Administration Panel (Menu tab):
+				<ul>
+					<li>Categories: /categories</li>
+					<li>Videos: /videos</li>
+					<li>Latest: /videos/latest</li>
+					<li>Most Viewed: /videos/most-viewed</li>
+					<li>Top Rated: /videos/top-rated</li>
+					<li>Channels: /channels</li>
+					<li>Upload: /upload</li>
+				</ul>
+				<p><b>Note:</b> To turn the friendly URLs off, use these URLs:</p>
+				<ul>
+					<li>Categories: /index.php?m=categories</li>
+					<li>Videos: /index.php?m=videos</li>
+					<li>Latest: /index.php?m=videos&sort=tt</li>
+					<li>Most Viewed: /index.php?m=videos&sort=hits</li>
+					<li>Top Rated: /index.php?m=videos&sort=rate</li>
+					<li>Channels: /index.php?m=channels</li>
+					<li>Upload: /index.php?m=users.upload</li>
+				</ul>
+			</li>
+		</ol> 
+		<h2><a name="ts">Troubleshooting</a></h2>
+		<p>
+			In this chapter some known issues and possible solutions are described.
+		</p>
+		<h3>Flash uploader fails to upload the video files</h3>
+		<p>
+			Flash uploader may not function properly on some server configurations. The main cause of this issue is mod_security Apache module. To turn this module off, include the following code in the .htaccess file in your web server root directory:
+		</p>
+		<p class="syntax">
+			SecFilterEngine Off<br />
+			SecFilterScanPOST Off 
+		</p>
+		<p>If that doesn't solve the problem, please consult your server administrator or turn the flash uploader off in the Administration Panel (Settings tab).</p>
+		<h3>Uploaded videos are not converted to Flash Video format and the thumbnails are not created upon upload</h3>
+		<p>
+			In order for this function to work, <a target="_blank" href="http://ffmpeg.mplayerhq.hu/">ffmpeg</a> must be installed on your server. Consult your server administrator about the installation of this application. Once ffmpeg is installed, enter the full path to it in the Administration Panel (Settings tab).
+		</p>
+		<h3>Still having trouble?</h3>
+		<p>
+			Go to <a href="http://www.codemight.com/index.php?m=users.tickets">CodeMight.com</a> to post a support ticket or report a bug.
+		</p>
+		<hr />
+		<p>
+			<small>Copyright &copy; 2007 <a href="http://www.codemight.com">CodeMight.com</a></small>
+		</p>
+	</body>
+</html>

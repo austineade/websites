@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<component name="T_FEATURED">
+	<model name="MFeaturedVideos">
+		<order dir="DESC">tt</order>
+		<limit>10</limit>
+	</model>
+	<view name="VCategory">
+		<tplfile>feat_list.html</tplfile>
+		<tplitemfile>l_item.html</tplitemfile>
+		<showad>false</showad>
+	</view>
+</component>

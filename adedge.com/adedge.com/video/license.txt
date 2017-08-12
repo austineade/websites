@@ -1,0 +1,55 @@
+LICENSE KEY CODE: 2bbfffccecfe3d071dc96841e9159aa7
+
+END-USER LICENSE AGREEMENT (this "License Agreement") is between CodeMight.com and Consumer ("You").
+
+THIS LICENSE AGREEMENT RELATES TO ALL WEB SOFTWARE DOWNLOADED ELECTRONICALLY, AND THE ACCOMPANYING USER DOCUMENTATION CONTAINED WITHIN THE DOWNLOADED CONTENT (THE "SOFTWARE"). THE SOFTWARE IS COPYRIGHTED AND LICENSED (NOT SOLD) TO YOU. BY USING THE SOFTWARE, YOU ARE ACCEPTING AND AGREEING TO THE TERMS OF THIS LICENSE AGREEMENT. THIS LICENSE AGREEMENT REPRESENTS THE ENTIRE AGREEMENT BETWEEN YOU AND LICENSOR CONCERNING THE SOFTWARE. IF YOU DO NOT AGREE TO THE TERMS OF THIS LICENSE AGREEMENT, DO NOT INSTALL THIS SOFTWARE, AND REMOVE ALL PORTIONS OF THE SOFTWARE, IF ANY, THAT HAVE BEEN INSTALLED. IF YOU ARE THE ORIGINAL INSTALLER OF THE SOFTWARE AND DO NOT AGREE TO THE TERMS OF THIS LICENSE AGREEMENT, YOU MAY PROMPTLY REMOVE ANY AND ALL COPIES OF THE SOFTWARE FROM YOUR COMPUTER'S HARD DRIVE AND/OR THE SERVER THE SOFTWARE HAS BEEN INSTALLED IN.
+
+	1. License Grant. Licensor hereby grants to you, and you accept, a non-exclusive license to use the Software on a single server only. Unless otherwise stipulated in the License Agreement, concurrent use on two or more servers is not permitted. You agree that you will not assign, sublicense, transfer, pledge, lease, rent, or share your rights under this License Agreement, except that you may permanently transfer all of your rights under this License Agreement, provided that you retain no copies, transfer all of the Software (including all related media and printed materials and any upgrades), and the transferee agrees to the terms of this License Agreement.
+
+	2. Licensor's Rights. You acknowledge and agree that the Software is the proprietary product of Licensor. You further acknowledge and agree that all right, title and interest in and to the Software, including any associated intellectual property rights, are and shall remain with Licensor. This License Agreement does not convey to you an interest in or to the Software, but only a revocable limited right of use revocable in accordance with the terms of this License Agreement. You are responsible for, and must use your best efforts to prevent the breaking of these terms by any other person.
+
+	3.1. Scope of Rights. You may:
+
+		a. Install the Software on your server or a server that you are granted a right to use;
+
+		b. Retain the Software on your computer for backup purposes;
+
+	3.2. Restrictions on Use. You may not:
+	
+		a. Install and use the Software on more than one server at a time;
+
+		a. Use, copy, modify, or distribute the Software (electronically or otherwise), or any copy, adaptation, transcription, or merged portion thereof, except as expressly authorized by Licensor;
+
+		b. Transfer, lease, assign, or sublicense your rights except for a transfer of the Software in its entirety;
+
+		c. Reproduce, republish or reuse any photograph or any other element or content of the Software, individually or in combination, but applicable copyright law may give you such rights. If you are uncertain about your rights, please contact an attorney;
+		
+		d. Remove the reference to CodeMight.com displayed in the bottom of every web page of the Software.
+
+	4. Fees and Payments.  The license fees paid by you are paid in consideration of the licenses granted under this License Agreement.
+
+	5. Term. This License Agreement is effective upon your downloading of this Software, as applicable, and shall continue until terminated. You may terminate this License Agreement at any time by following those steps set forth in the third paragraph of this License Agreement which address what to do in the event that the terms hereof are not accepted by you. Licensor may terminate this License Agreement upon the breach by you of any term hereof. Upon such termination by Licensor, you agree to delete from your computer’s hard drive and the server the Software has been installed in any and all electronic copies of the Software. There shall be no refund in the event of termination under the provisions of this paragraph.
+
+	6. Limited Warranty.
+
+		a. Excluding the internet website link(s), CodeMight.com warrants, for your benefit alone, for a period of 180 days from the date of commencement of this License Agreement (referred to as "Warranty Period") that the Software is free from defects in material and workmanship. If during the Warranty Period, a defect in the Software appears, you may notify CodeMight.com and request an upgrade or replacement of the Software. You agree that the foregoing constitutes your sole and exclusive remedy for breach by CodeMight.com of any warranties made under this Agreement. EXCEPT FOR THE WARRANTIES SET FORTH ABOVE, THE SOFTWARE, AND THE SOFTWARE CONTAINED THEREIN, ARE LICENSED "AS IS," AND CODEMIGHT.COM DISCLAIMS ANY AND ALL OTHER WARRANTIES, WHETHER EXPRESS OR IMPLIED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES OF MERCHANTIBILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+		b. This product may contain hyperlinks to web sites on the World Wide Web other than under the domain of CodeMight.com (the "Linked Sites"). You acknowledge and agree that (i) the Linked Sites are not under the control of CodeMight.com; (ii) CodeMight.com is not responsible or liable for the content, advertising, expiration, availability, changes or updates related to any Linked Sites or hyperlink contained in a Linked Site, or any goods or services made available on such Linked Sites; and (iii) CodeMight.com is not responsible for webcasting, software, download or any other form of transmission or media received from any Linked Site. Linked Sites are provided to you only as a convenience, and the inclusion of any Linked Sites does not imply endorsement by CodeMight.com of any such Linked Sites. You acknowledge and agree that CodeMight.com shall not be responsible or liable, either directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance upon any content, goods or services available on or through any such Linked Site.
+
+		YOU ASSUME RESPONSIBILITY FOR ALL USE OF OR ACCESS TO LINKED SITES, AND ACCESS THE SAME AT YOUR OWN RISK.  CODEMIGHT.COM EXPRESSLY DISCLAIMS ANY RESPONSIBILITY FOR LINKED SITES.  LINKED SITES ARE MADE AVAILABLE TO YOU WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF TITLE, NONINFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. NO ADVICE OR INFORMATION GIVEN BY ENCORE, ITS AFFILIATES OR ITS CONTRACTORS OR THEIR RESPECTIVE EMPLOYEES SHALL CREATE ANY WARRANTY.
+
+
+	7. Limitation of Liability. The cumulative liability of Licensor to you for all claims relating to the Software and this agreement, including any cause of action sounding in contract, tort, or strict liability, shall not exceed the license fee paid to Licensor for use of the Software.	IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY LOSS OF PROFITS; ANY INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES; OR ANY CLAIMS OR DEMANDS BROUGHT AGAINST YOU, EVEN IF LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH CLAIMS OR DEMANDS.
+
+	8. Proprietary Protection. Licensor shall retain sole and exclusive ownership of all right, title, and interest in and to the Software and all modifications and enhancements. This License Agreement does not provide you with title or ownership of the Software, but only a right of limited use. 
+	
+	9. Costs of Litigation. If any action is brought by either party to this License Agreement against the other party regarding the subject matter hereof, the prevailing party shall be entitled to recover, in addition to any other relief granted, reasonable attorney fees and expenses of litigation.
+
+	10. Severability. In the event that any terms of this License Agreement are or become or are declared to be invalid or void by any court of competent jurisdiction, such determination shall have no effect on the remaining terms of this Agreement, which shall remain in full force and effect.
+
+	11. No Waiver. The failure of either party to enforce any rights granted hereunder or to take action against the other party in the event of any breach hereunder shall not be deemed a waiver by that party as to subsequent enforcement of rights or subsequent action in the event of future breaches.	
+
+	12. No Adequate Legal Remedy.  You acknowledge that, in the event of your breach of any of the foregoing provisions, Licensor will not have an adequate remedy in money or damages. Licensor shall therefore be entitled to obtain an injunction against such breach from any court of competent jurisdiction immediately upon request. Licensor's right to obtain injunctive relief shall not limit its right to seek further remedies.
+
+
+(c) 2007 CodeMight.com. All rights reserved.

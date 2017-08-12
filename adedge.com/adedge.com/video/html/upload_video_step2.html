@@ -1,0 +1,45 @@
+<div class="left">
+		<div class="heading"><h2><#T_UPLOAD_STEP2/></h2></div>
+		<div class="box">
+			<p class="error"><#error/></p>
+			<p><#M_UPLOAD_FILE/>
+			</p>
+			<#if flash_uploader=="true"/>
+			<object type="application/x-shockwave-flash" 
+			  data="uploader.swf?id=<#id/>&maxFileSize=<#max_upload_size/>&fileExtension=<#upload_types/>" 
+			  width="550" height="100" id="VideoPlayback">
+			  <param name="movie" 
+			    value="uploader.swf?id=<#id/>&amp;maxFileSize=<#max_upload_size/>&amp;fileExtension=<#upload_types/>" />
+			  <param name="allowScriptAcess" value="sameDomain" />
+			  <param name="quality" value="best" />
+			  <param name="bgcolor" value="#FFFFFF" />
+			  <param name="scale" value="noScale" />
+			  <param name="salign" value="TL" />
+			  <param name="FlashVars" value="playerMode=embedded" />
+			</object>
+			<#else/>
+			<form action="index.php?m=uploadfile.uploadform&id=<#id/>&redir" method="post" enctype="multipart/form-data">
+				<input type="file" name="Filedata" />
+				<input type="submit" value="<#T_UPLOAD/>" />
+			</form>
+			<#endif/>
+			<#if webcam=="true"/>
+			<p><#M_WEBCAM/></p>
+			<object type="application/x-shockwave-flash" 
+			  data="webcam.swf?id=<#id/>&rtmp=<#rtmp/>" 
+			  width="550" height="400" id="WebcamRecorder">
+			  <param name="movie" value="webcam.swf?id=<#id/>&rtmp=<#rtmp/>" />
+			  <param name="allowScriptAcess" value="sameDomain" />
+			  <param name="quality" value="best" />
+			  <param name="bgcolor" value="#FFFFFF" />
+			  <param name="scale" value="noScale" />
+			  <param name="salign" value="TL" />
+			  <param name="FlashVars" value="playerMode=embedded" />
+			</object>
+			<#endif/>
+		</div>
+</div>
+<div class="left" style="margin-left:30px;">
+	<#ad1/>
+</div>
+<div class="brclear"></div>

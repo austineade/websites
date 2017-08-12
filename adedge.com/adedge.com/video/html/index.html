@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+
+   <head> 
+   	  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+      <title><#if title==""/>Video CMS<#else/><#title/> - Video CMS<#endif/></title>
+      <base href="<#url/>/" />
+      <style type="text/css">
+    		@import "styles.css";
+	  </style>
+      <script type="text/javascript">var baseurl="<#url/>/";</script>
+	  <script type="text/javascript" src="ajax.js"></script>
+	  <script type="text/javascript" src="functions.js"></script>
+   </head>
+
+   <body>
+   <div id="wrapper">
+		<div id="header">
+			<div id="logo"></div>
+			<div class="right">
+					<small>Choose your language:</small> <#languages/><br /><br />
+					<#if username==""/>
+					<a class="white" href="<#url/>/index.php?m=users.">[ <#T_SIGNIN/> ]</a>
+					<a class="white" href="<#url/>/index.php?m=signup">[ <#T_SIGNUP/> ]</a>
+					<#else/>
+					<b><#username/></b>
+					<a class="white" href="<#url/>/index.php?m=logout">[ <#T_SIGNOUT/> ]</a>
+					<#endif/>
+					<br />
+				<form class="search" action="index.php" method="get">
+				 	<input type="hidden" name="m" value="search" />
+					<#T_SEARCH/>: <input type="text" onkeyup="livesearch(this.value)" name="search" value="" />
+					<input type="submit" value="<#T_GO/>" /> 
+				</form>
+			</div>
+			<div class="brclear"></div>
+		</div>
+		<div id="navbar">
+			<#menu/>
+			<div class="brclear"></div>
+		</div>
+		<div class="line">
+			<div style="padding-left:15px">
+				<#submenu/>
+			</div>
+		</div>
+		<div id="contents">
+			<#content/>
+		</div>
+		<div class="footer">
+			<div style="padding-left:15px">
+				<#footer_menu/><br /><br />
+				Powered by <a class="white" href="http://www.codemight.com">Video CMS</a>
+			</div>
+		</div>
+	</div>
+	<div id="popup">
+		<div style="text-align:right"><a href="javascript:void(0)" onclick="close_popup()" title="<#T_CLOSE/>">[x]</a></div>
+		<div id="popup_body"></div>
+	</div>
+   </body>
+</html>

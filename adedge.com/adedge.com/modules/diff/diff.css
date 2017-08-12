@@ -1,0 +1,33 @@
+/* $Id: diff.css,v 1.2.2.3 2007/01/31 18:05:55 dww Exp $ */
+
+table.diff {
+  width: 100%;
+  margin-bottom: 20px;
+}
+td.diff-prevlink {
+  text-align: left;
+}
+td.diff-nextlink {
+  text-align: right;
+}
+td.diff-section-title, div.diff-section-title {
+  background-color: #f0f0ff;
+  font-size: 0.83em;
+  font-weight: bold;
+  padding: 0.1em 1em;
+}
+td.diff-deletedline {
+  background-color: #ffa;
+  width: 50%;
+}
+td.diff-addedline {
+  background-color: #afa;
+  width: 50%;
+}
+td.diff-context {
+  background-color: #fafafa;
+}
+span.diffchange {
+  color: #f00;
+  font-weight: bold;
+}

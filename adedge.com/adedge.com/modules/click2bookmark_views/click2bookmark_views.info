@@ -1,0 +1,13 @@
+; $Id: click2bookmark_views.info,v 1.3 2007/06/29 10:22:07 ericdes Exp $
+name = "Click2bookmark Views"
+description = "Add-on to Click2bookmark: now users may also bookmark views."
+version = "$Name: HEAD $"
+project = "click2bookmark"
+dependencies = click2bookmark views
+
+
+; Information added by drupal.org packaging script on 2007-06-29
+version = "5.x-1.x-dev"
+project = "click2bookmark"
+datestamp = "1183118541"
+

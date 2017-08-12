@@ -1,0 +1,28 @@
+<div class="hupl"></div><div class="hmid"><h2>Upload Video</h2></div><div class="hupr"></div><div class="brclear"></div>
+		<div class="box">
+			<form action="index.php?m=users.upload&step=finish" method="post" enctype="multipart/form-data">
+				<div class="error"><#error/></div><br />
+				<div class="left" style="width:100px">Title: </div>
+				<div><input type="text" name="title" style="width:200px" /></div>
+				<div class="brclear"></div>
+				<div class="left" style="width:100px">Description: </div>
+				<div><textarea name="description" style="width:200px;height:200px"></textarea></div>
+				<div class="brclear"></div>
+				<div class="left" style="width:100px">Category: </div>
+				<div>
+					<select type="text" name="category" style="width:100px">
+						<#categories/>
+					</select>
+				</div>
+				<div class="brclear"></div>
+				<div class="left" style="width:100px">Tags: </div>
+				<div><input type="text" name="tags" style="width:200px" />(ex. fun animation show)</div>
+				<div class="brclear"></div>
+				<div class="left" style="width:100px">File: </div>
+				<div><input type="file" name="file" style="width:200px" /></div>
+				<div class="brclear"></div>
+				<div style="width:200px;text-align:center">
+					<input type="submit" value="Upload" />
+				</div>
+			</form>
+		</div>

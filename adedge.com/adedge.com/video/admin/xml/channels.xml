@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<section name="Channels" type="table" target="MChannels" search="true" edit="true" add="false" delete="true">
+    <field name="ID" target="username" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Username" target="username" type="textfield" link="index.php?p=users&amp;username={id}" visible="true" edit="false" add="false"/>
+    <field name="Description" target="description" type="textarea" visible="true" edit="true" add="false" />
+    <field name="Link" target="link" type="textfield" visible="true" edit="true" add="true"/>
+    <field name="Link title" target="link_title" type="textfield" visible="true" edit="true" add="true"/>
+    <field name="Image" target="image" link="javascript:popup('image.php?i={id}','center')" type="textfield" visible="true" edit="true" add="false" />
+    <field name="Approved" target="approved" type="checkbox" visible="true" edit="true" add="false"/>
+	<field name="Videos" target="" type="element" default="Videos" link="index.php?p=videos&amp;username={id}" visible="true" edit="false" add="false"/>
+	<field name="Comments" target="" type="element" default="Comments" link="index.php?p=comments&amp;channel={id}" visible="true" edit="false" add="false"/>
+</section>

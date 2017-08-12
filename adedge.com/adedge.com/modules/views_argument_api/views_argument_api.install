@@ -1,0 +1,100 @@
+<?php
+// $Id: views_argument_api.install,v 1.1.2.2 2007/07/12 00:43:27 morrissinger Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function views_argument_api_install() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+			$r = db_query("CREATE TABLE {views_argument_api} (
+  			view varchar(32) NOT NULL default '0',
+  			argid varchar(32) NOT NULL default '0',
+  			element varchar(32) NOT NULL default '0'
+			) /*!40100 DEFAULT CHARACTER SET utf8 */;");
+			$r2 = db_query("CREATE TABLE {views_argument_api_args} (
+  			api_id varchar(32) NOT NULL default '0',
+  			api_values longtext
+			) /*!40100 DEFAULT CHARACTER SET utf8 */;");
+			break;
+    case 'pgsql':
+      $r = db_query("CREATE TABLE {views_argument_api} (
+  			view varchar(32) NOT NULL default '0',
+  			argid varchar(32) NOT NULL default '0',
+  			element varchar(32) NOT NULL default '0'
+			)");
+      $r2 = db_query("CREATE TABLE {views_argument_api_args} (
+  			api_id varchar(32) NOT NULL default '0',
+  			api_values text
+			)");
+      break;
+  }
+
+	$weight = db_result(db_query_range("SELECT s.weight FROM {system} s ORDER BY s.weight ASC", 0, 1));
+  $weight = empty($weight) ? 0 : $weight - 1;
+  
+	$r3 = db_query("UPDATE {system} SET weight = %d WHERE name = '%s'", $weight, 'views_argument_api');
+
+  if($r && $r2) {
+    drupal_set_message(t("Views Argument API tables created successfully."));
+  } else {
+  	drupal_set_message(t('Views Argument API tables could not be created.'), 'error');
+  }
+
+  if($r3) {
+    drupal_set_message(t("Views Argument API module weight moved to the top"));
+  }
+  
+}
+
+/**
+ * Update 1
+ */
+function views_argument_api_update_1() {
+	views_argument_api_install();
+}
+/**
+ * Update 2
+ */
+function views_argument_api_update_2() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+			$r = db_query("CREATE TABLE {views_argument_api_args} (
+  			api_id varchar(32) NOT NULL default '0',
+  			api_values longtext
+			) /*!40100 DEFAULT CHARACTER SET utf8 */;");
+			break;
+    case 'pgsql':
+      $r = db_query("CREATE TABLE {views_argument_api_args} (
+  			api_id varchar(32) NOT NULL default '0',
+  			api_values longtext
+			)");
+      break;
+  }
+  if($r) {
+  	drupal_set_message(t("Views Argument API Arguments table created successfully."));
+  } else {
+  	drupal_set_message(t('Views Argument API Arguments table created successfully.'), 'error');
+  }
+}
+
+/**
+ * Update 3
+ */
+function views_argument_api_update_3() {
+	db_query("ALTER TABLE {views_argument_api} DROP PRIMARY KEY");
+}
+
+/**
+ * Update 4
+ */
+function views_argument_api_update_4() {
+	$weight = db_result(db_query_range("SELECT s.weight FROM {system} s ORDER BY s.weight ASC", 0, 1));
+  $weight = empty($weight) ? 0 : $weight - 1;
+  
+	$r3 = db_query("UPDATE {system} SET weight = %d WHERE name = '%s'", $weight, 'views_argument_api');
+
+  drupal_set_message(t("Views Argument API module weight moved to the top"));
+}

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<section name="Featured Videos" type="table" target="MFeaturedVideos" edit="false" add="true" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Video" target="videos_id" type="select" table="videos" field="title" visible="true" edit="true" add="true"/>
+</section>

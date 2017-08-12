@@ -1,0 +1,131 @@
+<?php
+# FileName="Connection_php_mysql.htm"
+# Type="MYSQL"
+# HTTP="true"
+$hostname_AdEdgeMySql = "adedgeftp.db.9827619.hostedresource.com";
+$database_AdEdgeMySql = "adedgeftp";
+$username_AdEdgeMySql = "adedgeftp";
+$password_AdEdgeMySql = "aeMYS5692";
+$AdEdgeMySql = mysql_pconnect($hostname_AdEdgeMySql, $username_AdEdgeMySql, $password_AdEdgeMySql) or trigger_error(mysql_error(),E_USER_ERROR); 
+
+// BEGIN MyReel Functionality
+
+$Month = 2592000 + time(); //set Month to 30 days from today
+if(isset($_COOKIE['MReel'])) {
+	$MReelContentsTemp = explode(",", $_COOKIE['MReel']);
+	$MReelContents = array_unique($MReelContentsTemp);
+	}
+
+// Adding a new item to the reel
+if (isset($_GET['add'])) {
+	$MReelContents[] = $_GET['add'];
+	$MReelCookieCont = implode(",", $MReelContents);
+	setcookie("MReel", $MReelCookieCont, $Month);
+	}
+	
+//Removing an item from the reel
+if (isset($_GET['del'])) {
+	array_splice($MReelContents, array_search($_GET['del'], $MReelContents), 1);
+	$MReelCookieCont = implode(",", $MReelContents);
+	setcookie("MReel", $MReelCookieCont, $Month);
+	}
+	
+// Set-up links for "Add To My Reel"
+$AddToMyReelLabelNotAdded = "<img src='/files/images/add_to_favs.gif'>Add this ad to My Favorites";
+$AddToMyReelLabelAdded = "<img src='/files/images/remove_from_favs.gif'>Remove from My Favorites";
+if (isset($_GET['v']) && !empty($MReelContents)) {
+
+	if (in_array($_GET['v'], $MReelContents)) {
+		$AddToMyReelLabel = $AddToMyReelLabelAdded;
+		$AddToMyReelLabelLink = $_SERVER['SCRIPT_NAME']."?v=".$_GET['v']."&del=".$_GET['v'];
+	} else {
+		$AddToMyReelLabel = $AddToMyReelLabelNotAdded;
+		$AddToMyReelLabelLink = $_SERVER['SCRIPT_NAME']."?v=".$_GET['v']."&add=".$_GET['v'];
+		}
+
+} else {
+		$AddToMyReelLabel = $AddToMyReelLabelNotAdded;
+		$AddToMyReelLabelLink = $_SERVER['SCRIPT_NAME']."?v=".$_GET['v']."&add=".$_GET['v'];
+}	
+
+// Build recordset for MyReel display
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+
+  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = $theValue;
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? "'" . doubleval($theValue) . "'" : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+}
+
+$colname_RSGetNodeList = "-1";
+if (isset($_GET['category'])) {
+  $colname_RSGetNodeList = $_GET['category'];
+}
+mysql_select_db($database_AdEdgeMySql, $AdEdgeMySql);
+$query_RSTestNavList = "SELECT term_data.tid, term_data.name, term_hierarchy.parent FROM term_data LEFT JOIN term_hierarchy on term_data.tid = term_hierarchy.tid WHERE term_hierarchy.parent = 0 AND term_data.vid = 1 ORDER BY term_data.name ASC";
+$RSTestNavList = mysql_query($query_RSTestNavList, $AdEdgeMySql) or die(mysql_error());
+$row_RSTestNavList = mysql_fetch_assoc($RSTestNavList);
+$totalRows_RSTestNavList = mysql_num_rows($RSTestNavList);
+
+mysql_select_db($database_AdEdgeMySql, $AdEdgeMySql);
+$query_RSSubNavList = sprintf("SELECT term_data.tid, term_data.name, term_hierarchy.parent FROM term_data LEFT JOIN term_hierarchy on term_data.tid = term_hierarchy.tid WHERE term_hierarchy.parent = %s ORDER BY term_data.name ASC", GetSQLValueString($colname_RSGetNodeList, "int"));
+$RSSubNavList = mysql_query($query_RSSubNavList, $AdEdgeMySql) or die(mysql_error());
+$row_RSSubNavList = mysql_fetch_assoc($RSSubNavList);
+$totalRows_RSSubNavList = mysql_num_rows($RSSubNavList);
+
+mysql_select_db($database_AdEdgeMySql, $AdEdgeMySql);
+$query_RSCategoryList = "SELECT term_data.tid, term_data.name, term_hierarchy.parent FROM term_data LEFT JOIN term_hierarchy on term_data.tid = term_hierarchy.tid WHERE term_data.vid = 3 ORDER BY term_data.name ASC";
+$RSCategoryList = mysql_query($query_RSCategoryList, $AdEdgeMySql) or die(mysql_error());
+$row_RSCategoryList = mysql_fetch_assoc($RSCategoryList);
+$totalRows_RSCategoryList = mysql_num_rows($RSCategoryList);
+
+mysql_select_db($database_AdEdgeMySql, $AdEdgeMySql);
+$query_RSTagList = "SELECT term_data.tid, term_data.name, term_hierarchy.parent FROM term_data LEFT JOIN term_hierarchy on term_data.tid = term_hierarchy.tid WHERE term_data.vid = 4 ORDER BY term_data.name ASC";
+$RSTagList = mysql_query($query_RSTagList, $AdEdgeMySql) or die(mysql_error());
+$row_RSTagList = mysql_fetch_assoc($RSTagList);
+$totalRows_RSTagList = mysql_num_rows($RSTagList);
+
+
+$colname_RSGetMyReelList = "-1";
+if (isset($MReelContents)) {
+  $colname_RSGetMyReelList = implode(",", $MReelContents);
+}
+
+$imgtype_RSGetMyReelList = "thumbnail";
+mysql_select_db($database_AdEdgeMySql, $AdEdgeMySql);
+
+if (!empty($MReelContents)) {
+	$query_RSGetMyReelList = sprintf("SELECT node.nid, files.filename, files.filepath, node.title FROM node LEFT JOIN image_attach ON node.nid = image_attach.nid LEFT JOIN files ON files.nid = image_attach.iid WHERE node.nid IN (%s) AND files.filename = %s", GetSQLValueString($colname_RSGetMyReelList, "int"),GetSQLValueString($imgtype_RSGetMyReelList, "text"));
+	$RSGetMyReelList = mysql_query($query_RSGetMyReelList, $AdEdgeMySql) or die(mysql_error());
+	$row_RSGetMyReelList = mysql_fetch_assoc($RSGetMyReelList);
+	$totalRows_RSGetMyReelList = mysql_num_rows($RSGetMyReelList);
+}
+
+$colname_RSGetTestimonial = "testimonial";
+	$query_RSGetTestimonial = sprintf("SELECT node.nid, node.title, content_type_testimonial.field_testimonial_copy_value FROM node LEFT JOIN content_type_testimonial ON node.nid = content_type_testimonial.nid WHERE node.type = %s ORDER BY RAND() LIMIT 1", GetSQLValueString($colname_RSGetTestimonial, "text"));
+	$RSGetTestimonial = mysql_query($query_RSGetTestimonial, $AdEdgeMySql) or die(mysql_error());
+	$row_RSGetTestimonial = mysql_fetch_assoc($RSGetTestimonial);
+	$totalRows_RSGetTestimonial = mysql_num_rows($RSGetTestimonial);
+
+?>

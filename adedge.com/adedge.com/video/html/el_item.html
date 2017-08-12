@@ -1,0 +1,16 @@
+		<div name="erow" class="<#if trigger=="1"/>color1<#else/>color2<#endif/>">
+			<div class="left" style="margin-right:10px">
+				<input type="checkbox" name="v[]" value="<#id/>" />
+				<a href="<#videourl/>"><img src="<#thumb/>" width="120" height="90" alt="<#title/> Video" border="0"/></a>
+			</div>
+			<div class="left">
+				<a href="<#videourl/>"><h3><#title/></h3></a><br />
+				<img alt="<#title/> ratings" src="images/stars-<#rate/>.gif" /><br />
+				<#description/><br />
+				<span class="small">Tags: <#tags/></span><br />
+				<span class="small">Added: <#time/></span><br />
+				<span class="small">Views: <#hits/></span><br />
+				<span class="small">From: <a href="index.php?m=channel&channel=<#username/>"><#username/></a></span><br />
+			</div>
+			<div class="brclear"></div>
+		</div>

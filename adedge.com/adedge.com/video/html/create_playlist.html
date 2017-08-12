@@ -1,0 +1,20 @@
+<div class="heading"><h2><#T_CREATEPL/></h2></div>
+		<div class="box">
+			<form action="index.php?m=users.create_playlist&amp;step=finish" method="post">
+				<fieldset>
+					<p class="error"><#error/></p>
+					
+					<label for="title"><#T_TITLE/></label>
+					<p><#M_PLTITLE/></p>
+					<p><input id="title" type="text" name="title" style="width:500px" /></p>
+
+					<label for="description"><#T_DESC/>: </label>
+					<p><#M_PLDESC/></p>
+					<p><textarea id="description" cols="10" rows="5" name="description" style="width:500px;height:200px"></textarea></p>
+
+					<p>
+						<input type="submit" value="<#T_CREATEPL/>" />
+					</p>
+				</fieldset>
+			</form>
+		</div>

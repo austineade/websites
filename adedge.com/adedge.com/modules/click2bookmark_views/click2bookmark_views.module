@@ -1,0 +1,181 @@
+<?php
+// $Id: click2bookmark_views.module,v 1.2 2007/06/29 10:22:07 ericdes Exp $
+
+define('CLICK2BOOKMARK_VIEW',                 'click2bookmark_view_');   
+// Const for perm:
+define('CLICK2BOOKMARK_VIEWS_PERM',           'bookmark views');  
+define('CLICK2BOOKMARK_ADMIN',                'administer Click2bookmark');
+
+
+/**
+ * Implementation of hook_help()
+ */
+function click2bookmark_views_help($section) {
+  switch ($section) {
+    case 'admin/help#click2bookmark_views':
+      return t(
+      "<p>Enable the bookmarking feature for views which are selected in the administrative settings of Click2bookmark.<p />
+      "
+      );
+  }
+}
+
+
+/**
+ * Implementation of hook_perm().
+ */
+function click2bookmark_views_perm() {
+  return array(CLICK2BOOKMARK_VIEWS_PERM, CLICK2BOOKMARK_ADMIN);
+}
+
+
+/**
+ * Implementation of hook_menu().
+ */
+function click2bookmark_views_menu($may_cache) {
+  
+  $items = array();
+
+  if ($may_cache) {
+    $items[] = array(
+      'path'     => 'bookmark/search/add',
+      'callback' => '_click2bookmark_views_bookmark_add',
+      'type'     => MENU_CALLBACK,
+      'access'   => user_access(CLICK2BOOKMARK_VIEWS_PERM),
+    );
+  }
+  
+  return $items;
+}
+
+
+function _click2bookmark_views_bookmark_add($vid) {
+  global $user, $base_url;    
+  
+  $uri_request = str_replace("bookmark/search/add/$vid/", '', $_REQUEST['q']);   // what is after the ?q= 
+  $view = views_get_view($vid);
+  if (!$view->vid) {
+    drupal_set_message(t('This content can\'t be bookmarked...')); 
+    drupal_goto($uri_request);
+    return false;
+  }
+
+  if (!variable_get(CLICK2BOOKMARK_VIEW . $view->name, 0)) {
+    // View can't be bookmarked but previous release of this module might have allowed these:
+    if (isset($view->click2bookmark_enabled) && ($view->click2bookmark_enabled)) { 
+      // We allow them for compatibility reasons
+    } else {  
+      return; 
+    };
+  };  
+   
+  $argument_list = str_replace($view->url . '/', '' , $uri_request);
+  $args = split('/', $argument_list);
+  $context = 'page';
+  
+  // Section taken from views.module, in function views_get_title
+  if (is_array($args)) {
+    $rargs = array_reverse(array_keys($args));
+    foreach ($rargs as $arg_id) {
+      if ($title = $view->argument[$arg_id]['title']) {
+        break;
+      }
+    }
+  }
+
+  if (!$title && ($context == 'menu' || $context == 'page' || $context == 'admin')) {
+    $title = $view->page_title;
+  }
+
+  if (!$title && $context == 'block' || $context == 'admin') {
+    $title = $view->block_title;
+  }
+
+  if (!$view->argument) {
+    drupal_set_message(t('Error while processing this bookmark...')); 
+    drupal_goto($uri_request);
+    return $title;
+  }
+
+  views_load_cache();
+  $arginfo = _views_get_arguments();
+  foreach ($view->argument as $i => $arg) {
+    if (!isset($args[$i])) {
+      break;
+    }
+    $argtype = $arg['type'];
+    if ($arg['wildcard'] == $args[$i] && $arg['wildcard_substitution'] != '') {
+      $title = str_replace("%" . ($i + 1), $arg['wildcard_substitution'], $title);
+    }
+    else if (function_exists($arginfo[$argtype]['handler'])) {
+      // call the handler
+      $rep = $arginfo[$argtype]['handler']('title', $args[$i], $argtype);
+      $title = str_replace("%" . ($i + 1), $rep, $title);
+    }
+  }
+  // End Section
+  
+  
+  if ($user->uid) { 
+    // Store into database 
+    $result = db_query('SELECT path FROM {click2bookmark} WHERE path="%s" AND uid="%d"', $uri_request, $user->uid);
+    if ($result && db_num_rows($result) > 0) {
+      drupal_set_message(t('This page is already bookmarked by you!'));
+    } else {  
+      $result = db_query('INSERT INTO {click2bookmark} (uid, path, title) VALUES (%d, \'%s\', \'%s\')', $user->uid, $uri_request, $title ? $title : $view->page_title);
+      if ($result) { 
+        drupal_set_message(t('Bookmark saved!')); 
+      } else {
+        drupal_set_message(t('Error while saving bookmark...')); 
+      }; 
+    };   
+  } else {
+    // Store into cookie
+    if (isset($_SESSION['click2bookmark']) && ($_SESSION['click2bookmark'])) {
+      $_SESSION['click2bookmark'] .= '::' . $uri_request . '|' . ($title ? $title : $view->page_title);   
+    } else {
+      $_SESSION['click2bookmark'] = $uri_request . '|' . ($title ? $title : $view->page_title);
+    }  
+    drupal_set_message(t('Bookmark saved!'));     
+  };  
+    
+  drupal_goto($uri_request);
+  
+}
+
+ 
+/**
+ * Implementation of hook_views_pre_view().
+ */
+function click2bookmark_views_views_pre_view(&$view) {
+  
+  if (!user_access(CLICK2BOOKMARK_VIEWS_PERM)) { return; };    
+  if (!isset($view->click2bookmark_enabled)) { return; };
+  if (isset($view->click2bookmark_enabled) && $view->click2bookmark_enabled == 0) { return; };
+  
+  $links = array();
+  $links['click2bookmark_add_bookmark'] = array(
+    'title' => t('Bookmark this search'),
+    'href' => 'bookmark/search/add/'.$view->vid . $_SERVER['REQUEST_URI'],     // what is after ?q=
+    'attributes' => array('class' => 'click2bookmark-view', 'title' => t('Click to bookmark this search'), 'rel' => 'nofollow',),
+  );
+  
+  return theme('add_bookmark_link', $links);  
+  
+};
+  
+
+
+/**
+ * Implementation themable functions.
+ */
+ 
+function theme_add_bookmark_link($links = array()) {
+ 
+  if ($links) {
+    foreach ($links as $link) {
+      return l($link['title'], $link['href'], $link['attributes']);
+    };  
+  };  
+  
+}

@@ -1,0 +1,11 @@
+; $Id: nodecloud.info,v 1.1 2007/06/26 18:10:04 mfredrickson Exp $
+name = Node Cloud
+description = Turn a view into a cloud, using the fields of your choice
+dependencies = views
+package = "Views"
+
+; Information added by drupal.org packaging script on 2007-06-26
+version = "5.x-1.0"
+project = "nodecloud"
+datestamp = "1182882308"
+

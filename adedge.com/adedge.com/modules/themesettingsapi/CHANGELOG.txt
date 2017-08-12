@@ -1,0 +1,15 @@
+Theme Settings API 5.x-2.1
+  #142907: backport of the committed DRUPAL-6 custom theme settings API. Changed
+    the name of "settings.php" to "theme-settings.php".
+
+Theme Settings API 5.x-2.0
+  #142907: backport of the proposed DRUPAL CORE custom theme settings API
+  * Completely updated API, but with easy migration path.
+  * Added ability to switch themes when displaying the theme settings.
+
+Theme Settings API 5.x-1.4
+  * Moved Theme Settings API module to a separate project.
+  * Added German translation (contributed by Hass.)
+
+Theme Settings API 5.x-1.0
+  Initial release

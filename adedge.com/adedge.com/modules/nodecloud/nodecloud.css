@@ -1,0 +1,9 @@
+/* $Id: nodecloud.css,v 1.1 2007/06/26 18:10:04 mfredrickson Exp $ */
+
+div.nodecloud-cloud {
+  text-align : center;
+}
+
+div.nodecloud-cloud span.view-item {
+  margin: 0 .5em 0;
+}

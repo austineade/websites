@@ -1,0 +1,90 @@
+# $Id: ja.po,v 1.1.2.2 2007/05/30 15:06:39 imagine Exp $
+# -----------------------------------------------------------------------------
+# Japanese translation of Drupal (autolocale.module)
+#
+# Copyright (c) 2006-2007  Drupal Japan  ( http://drupal.jp/ )  /
+#                          Drupal Nippon ( http://drupon.org/ ) /
+#                          Takafumi      ( jp.drupal@imagine **reverse order**)
+#
+# Generated from file:
+#  autolocale.module,v 1.6 2007/02/03 21:11:38 goba
+#  autolocale.info,v 1.2 2006/12/27 16:01:08 goba
+#  autolocale.install,v 1.7 2007/04/06 21:57:57 goba
+#
+# -----------------------------------------------------------------------------
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2007-05-30 22:59+0900\n"
+"Last-Translator: Takafumi <jp.drupal@imagine **reverse order**>\n"
+"Language-Team: Drupal Japan / Drupal Nippon\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: autolocale.module:12
+msgid "Automatic import scans all enabled modules and themes for interface translation files under their directories and imports all files found for the selected language. This operation could be resource intensive, and is irreversible."
+msgstr "自動インポートは、すべての有効化されたモジュールとテーマのディレクトリからインターフェースの翻訳ファイルを探し出し、見つかったすべてのファイルを選択された言語にインポートします。 この操作は、大量のメモリを消費することもあり、また、元に戻すことはできません。"
+
+#: autolocale.module:31
+msgid "Automatic import"
+msgstr "自動インポート"
+
+#: autolocale.module:54
+msgid "No foreign language enabled on your site. You need to <a href=\"@urladd\">add</a> and <a href=\"@urlenable\">enable</a> at least one foreign language to import strings for."
+msgstr "サイト上で有効になっている外国語がありません。 少なくとも1つ、文字列をインポートする外国語を<a href=\"@urladd\">追加</a>し、<a href=\"@urlenable\">有効化</a>する必要があります。"
+
+# ----------
+#: autolocale.module:62
+msgid "Language"
+msgstr "言語"
+
+#: autolocale.module:65
+msgid "Select the language to autoimport translation files into."
+msgstr "翻訳ファイルを自動インポートする言語を選択してください。"
+
+#: autolocale.module:70
+msgid "Remove existing translations first"
+msgstr "はじめに既存の翻訳文字列を削除する"
+
+#: autolocale.module:72
+msgid "It is advised to remove the existing translations in the given language for performance reasons, if you have no custom strings added, which are not available in the PO files to import. This removes strings left from upgrades or previously tried and removed modules."
+msgstr "インポートの前に、既存の翻訳文字列を削除するかどうかを指定してください。 独自の文字列を追加していない場合は、パフォーマンス上の理由から、所定の言語にある既存の翻訳文字列を削除することをお勧めします。 これは、アップグレードの際に不要になっていたり、すでに使用していないモジュールの翻訳文字列を削除します。"
+
+#: autolocale.module:77
+msgid "Perform automatic import"
+msgstr "自動インポートの実行"
+
+#: autolocale.module:89
+msgid "Invalid language code (@langcode) choosen for automatic import."
+msgstr "自動インポートに無効な言語コード（@langcode）が選択されました。"
+
+#: autolocale.module:102
+msgid "Existing translations removed from @language."
+msgstr "@language から既存の翻訳文字列が削除されました。"
+
+#: autolocale.module:109
+msgid "New @language strings imported."
+msgstr "新しい @language の文字列がインポートされました。"
+
+#: autolocale.module:0
+#: autolocale.info:0
+msgid "autolocale"
+msgstr "autolocale"
+
+#: autolocale.install:10
+msgid "Now you can <a href=\"@url\">import interface translations</a> automatically"
+msgstr "今、あなたは自動的に<a href=\"@url\">インターフェース翻訳のインポート</a>を行えます"
+
+#: autolocale.install:69
+msgid "Imported translation file @filename"
+msgstr "翻訳ファイル @filename をインポートしました。"
+
+#: autolocale.info:0
+msgid "Autolocale"
+msgstr "オートロケール"
+
+#: autolocale.info:0
+msgid "Automatically imports interface translations."
+msgstr "インターフェースの翻訳文字列を自動的にインポートします。"
+

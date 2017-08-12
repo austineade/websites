@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<section name="Thumbnails" type="table" target="MThumbnails" search="true" edit="false" add="true" delete="true">
+    <field name="ID" target="id" type="idbox" visible="true" edit="true" add="false"/>
+    <field name="Video" target="videos_id" type="select" table="videos" field="title" visible="true" edit="true" add="true"/>
+    <field name="Filename" target="filename" link="javascript:popup('image.php?i={id}','center')" type="upload" visible="true" edit="true" add="false"/>
+</section>
